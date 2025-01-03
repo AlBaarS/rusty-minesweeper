@@ -9,7 +9,7 @@ unit-tests:
   script:
     - cargo install cargo-tarpaulin
     - cargo tarpaulin
-  coverage: '^\d+\.\d+/% coverage, \d+/\d+ lines covered'
+  coverage: '^\d+\.\d+/% coverage,*'
 
 building:
   stage: build
