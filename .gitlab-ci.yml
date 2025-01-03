@@ -1,0 +1,17 @@
+image: Rust:latest
+
+stages:
+  - test
+  - build
+
+unit-tests:
+  stage: test
+  script:
+    - cargo install tarpaulin
+    - cargo tarpaulin
+  coverage: '\s*([0-9.]+)\s*([0-9.]+)\.\s*([0-9.]+)\s*([0-9.]+)%/ coverage'
+
+building:
+  stage: build
+  script:
+    - cargo build
