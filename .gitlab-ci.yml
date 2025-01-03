@@ -9,9 +9,11 @@ unit-tests:
   script:
     - cargo install cargo-tarpaulin
     - cargo tarpaulin
+    - echo $COVERAGE
   coverage: '/^\d+\.\d+/% coverage,*/'
 
 building:
   stage: build
   script:
     - cargo build
+    - echo $COVERAGE
