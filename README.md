@@ -1,3 +1,4 @@
+![coverage](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/coverage.svg?job=unit-test-job) ![status](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/pipeline.svg?ignore_skipped=true)
 # Rusty Minesweeper
 Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars as his individual project at Sogyo.
 
