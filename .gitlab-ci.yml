@@ -9,7 +9,7 @@ unit-tests:
   script:
     - cargo install tarpaulin
     - cargo tarpaulin
-  coverage: '\s*([0-9.]+)\.\s*([0-9.]+)\%/ coverage'
+  # coverage: '\s*([0-9.]+)\.\s*([0-9.]+)\%/ coverage'
 
 building:
   stage: build
