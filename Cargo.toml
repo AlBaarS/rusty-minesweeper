@@ -1,3 +1,8 @@
+bin = [
+  { name = "main", path = "domain/main.rs" },
+  { name = "main", path = "domain/main.rs" },
+]
+
 [package]
 name = "rusty-minesweeper"
 version = "0.1.0"
