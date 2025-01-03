@@ -1,6 +1,7 @@
 bin = [
-  { name = "main", path = "domain/main.rs" },
-  { name = "main", path = "domain/main.rs" },
+  { name = "main", path = "src/main.rs" },
+  { name = "dummy", path = "src/domain/logic/dummy.rs" },
+  { name = "test_dummy", path = "tests/test_dummy.rs" },
 ]
 
 [package]
