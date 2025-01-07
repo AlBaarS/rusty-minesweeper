@@ -2,15 +2,15 @@ use rand::prelude::*;
 use rand::{distributions::Uniform, Rng};
 use itertools::*;
 
-use super::two_d_vector::*;
+use crate::domain::logic::two_d_vector::TwoDVector;
 
 // Building up the board
-pub fn generate_seed() -> u64 {
+fn generate_seed() -> u64 {
     let mut rng: ThreadRng = rand::thread_rng();
     rng.gen()
 }
 
-pub fn generate_mine_indices(number_of_squares: u32, seed: u64) -> Vec<u32> {
+fn generate_mine_indices(number_of_squares: u32, seed: u64) -> Vec<u32> {
     let mut rng_seeded: StdRng = StdRng::seed_from_u64(seed);
     let range = Uniform::from(0..number_of_squares);
     let number_to_generate: u32 = number_of_squares * 100;
