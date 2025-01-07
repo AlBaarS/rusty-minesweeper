@@ -2,7 +2,8 @@ use rand::prelude::*;
 use rand::{distributions::Uniform, Rng};
 use itertools::*;
 
-use crate::domain::logic::two_d_vector::TwoDVector;
+mod two_d_vector;
+use two_d_vector::TwoDVector;
 
 // Building up the board
 fn generate_seed() -> u64 {
@@ -47,6 +48,10 @@ impl GameState {
         let board: TwoDVector<bool> = TwoDVector::new(mine_vector, board_size);
         return board;
     }
+
+    // pub fn calculate_vicinity(board: TwoDVector<bool>) -> TwoDVector<u8> {
+
+    // }
 }
 
 
