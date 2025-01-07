@@ -30,3 +30,5 @@ mod tests {
         println!("{}", generate_mine_indices(255, test_seed).len());
     }
 }
+
+fn main() {}

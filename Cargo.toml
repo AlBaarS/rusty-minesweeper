@@ -4,6 +4,8 @@ bin = [
   { name = "test_dummy", path = "tests/test_dummy.rs" },
   { name = "game_state", path = "src/domain/logic/game_state.rs" },
   { name = "test_game_state", path = "tests/test_game_state.rs" },
+  { name = "two_d_vector", path = "src/domain/logic/two_d_vector.rs" },
+  { name = "test_two_d_vector", path = "tests/test_two_d_vector.rs" },
 ]
 
 [package]
