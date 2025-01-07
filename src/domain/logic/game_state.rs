@@ -1,7 +1,8 @@
 use rand::prelude::*;
 use rand::{distributions::Uniform, Rng};
 use itertools::*;
-use rusty_minesweeper::domain::logic::two_d_vector::TwoDVector;
+
+use super::two_d_vector::*;
 
 // Building up the board
 pub fn generate_seed() -> u64 {
@@ -17,10 +18,6 @@ pub fn generate_mine_indices(number_of_squares: u32, seed: u64) -> Vec<u32> {
     let values: Vec<u32> = range.sample_iter(&mut rng_seeded).take(number_to_generate.try_into().unwrap()).unique().take(mine_density.try_into().unwrap()).sorted().collect();
     return values;
 }
-
-// fn vector_to_matrix(vector: Vec<T>, matrix_size: u32) -> Vec<Vec<T>> {
-    
-// }
 
 
 
@@ -41,8 +38,8 @@ impl GameState {
         }
     }
 
-    fn generate_mines(board_size: u32, seed: u64) -> TwoDVector<bool> {
-        let number_of_squares: u32 = board_size^2;
+    pub fn generate_mines(board_size: usize, seed: u64) -> TwoDVector<bool> {
+        let number_of_squares: u32 = (board_size * board_size).try_into().unwrap();
         let mine_indices: Vec<u32> = generate_mine_indices(number_of_squares, seed);
         let mine_vector: Vec<bool> = (0..number_of_squares)
             .map(|x: u32| mine_indices.contains(&x))
@@ -54,8 +51,4 @@ impl GameState {
 
 
 
-fn main() {
-    let seed: u64 = 1234567890;
-    println!("{:?}", generate_mine_indices(255, seed));
-    println!("{}", generate_mine_indices(255, seed).len());
-}
+fn main() {}
