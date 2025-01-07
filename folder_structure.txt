@@ -1,0 +1,16 @@
+rusty-minesweeper/
+├── Cargo.toml
+├── Cargo.lock
+├── src/
+│   ├── lib.rs
+│   ├── main.rs
+│   └── domain/
+│       ├── logic/
+│       │   └── dummy.rs
+│       │   └── game_state.rs
+│       │   └── mod.rs
+│       │   └── two_d_vector.rs
+├── tests/
+    └── test_dummy.rs
+    └── test_game_state.rs
+    └── test_two_d_vector.rs
