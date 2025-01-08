@@ -1,7 +1,8 @@
 bin = [
   { name = "main", path = "src/main.rs" },
-  { name = "game_state", path = "src/domain/logic/game_state.rs" },
-  { name = "two_d_vector", path = "src/domain/logic/two_d_vector.rs" },
+  { name = "game_generation", path = "src/domain/game_generation.rs" },
+  { name = "game_state", path = "src/domain/game_state.rs" },
+  { name = "two_d_vector", path = "src/domain/two_d_vector.rs" },
 ]
 
 [package]
