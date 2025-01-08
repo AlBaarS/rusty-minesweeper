@@ -8,6 +8,9 @@
 Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars as his individual project at Sogyo.
 
 
+# How to install:
+To add
+
 # MoSCoW
 ## Must
 * Generate a board with clickable squares
