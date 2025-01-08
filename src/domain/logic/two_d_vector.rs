@@ -1,17 +1,28 @@
+#[derive(Clone)]
 pub struct TwoDVector<T: Clone> {
     matrix: Vec<Vec<T>>,
+    size: u8,
 }
 
 impl<T: Clone> TwoDVector<T> {
-    pub fn new(vector: Vec<T>, size: usize) -> Self {
-        let matrix: Vec<Vec<T>> = vector.chunks(size).map(|s| s.into()).collect();
-        Self {
+    pub fn new(vector: Vec<T>, size: u8) -> Self {
+        let matrix: Vec<Vec<T>> = vector.chunks(size.into()).map(|s| s.into()).collect();
+        return Self {
             matrix,
-        }
+            size,
+        };
     }
 
     pub fn get_vec(&self) -> Vec<Vec<T>> {
-        self.matrix.clone()
+        return self.matrix.clone();
+    }
+
+    pub fn get_size(&self) -> u8 {
+        return self.size.clone();
+    }
+
+    pub fn get_element(&self, x: usize, y: usize) -> T {
+        return self.get_vec()[x][y].clone();
     }
 }
 
@@ -37,5 +48,12 @@ mod tests {
             vec!["Frodo".to_string(), "Sam".to_string()], 
             vec!["Merry".to_string(), "Pippin".to_string()]
         ])
+    }
+
+    #[test]
+    fn get_specific_element_from_2d_vector() -> () {
+        let vector_numeric: Vec<u8> = vec![1,2,3,4];
+        let vector: TwoDVector<u8> = TwoDVector::new(vector_numeric, 2);
+        assert_eq!(vector.get_element(1, 0), 3);
     }
 }

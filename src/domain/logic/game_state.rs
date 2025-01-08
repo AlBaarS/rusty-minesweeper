@@ -39,7 +39,7 @@ impl GameState {
         }
     }
 
-    pub fn generate_mines(board_size: usize, seed: u64) -> TwoDVector<bool> {
+    pub fn generate_mines(board_size: u8, seed: u64) -> TwoDVector<bool> {
         let number_of_squares: u32 = (board_size * board_size).try_into().unwrap();
         let mine_indices: Vec<u32> = generate_mine_indices(number_of_squares, seed);
         let mine_vector: Vec<bool> = (0..number_of_squares)
@@ -49,9 +49,34 @@ impl GameState {
         return board;
     }
 
-    // pub fn calculate_vicinity(board: TwoDVector<bool>) -> TwoDVector<u8> {
+    fn calculate_vicinity(board: TwoDVector<bool>, x: i32, y: i32) -> u8 {
+        // get elements neighbouring coordinate, count trues, return
+        let mut nearby_squares: Vec<bool> = Vec::new();
+        for xs in (x - 1..x + 2) {
+            for ys in (y - 1..y + 2) {
+                if (ys < board.get_size().into() && ys >= 0) && (xs < board.get_size().into() && xs >= 0) {
+                    nearby_squares.push(board.get_element(xs.try_into().unwrap(), ys.try_into().unwrap()));
+                }
+            }
+        };
+        return nearby_squares.iter().filter(|&n| *n).count().try_into().unwrap();
+    }
 
-    // }
+    pub fn make_vicinity_table(board: TwoDVector<bool>) -> TwoDVector<u8> {
+        let board_vec: Vec<Vec<bool>> = board.clone().get_vec();
+        let size: usize = board_vec.len();
+        let mut vicinity: Vec<u8> = Vec::new();
+        for (x, row) in board_vec.iter().enumerate() {
+            for (y, elem) in row.iter().enumerate() {
+                if *elem {
+                    vicinity.push(9);
+                } else {
+                    vicinity.push(GameState::calculate_vicinity(board.clone(), x.try_into().unwrap(), y.try_into().unwrap()));
+                }
+            }
+        };
+        TwoDVector::new(vicinity, size.try_into().unwrap())
+    }
 }
 
 
@@ -61,31 +86,32 @@ fn main() {}
 
 #[cfg(test)]
 mod tests {
-    use crate::GameState;
+    use crate::{two_d_vector::TwoDVector, GameState};
 
     #[test]
     fn assert_board_generation_is_consistent_with_seed() -> () {
         let test_seed: u64 = 1234567890;
-        let test_field: Vec<Vec<bool>> = vec![
+        let reference_field: Vec<Vec<bool>> = vec![
             vec![false, false, false, false, true], 
             vec![false, false, false, false, false], 
             vec![false, false, true, false, false], 
             vec![true, true, false, true, false], 
             vec![false, false, false, false, false]
         ];
-        assert_eq!(GameState::generate_mines(5, test_seed).get_vec(), test_field);
+        assert_eq!(GameState::generate_mines(5, test_seed).get_vec(), reference_field);
     }
-    // #[test]
-    // fn test_if_mine_vicinity_function_works_correctly() -> () {
-    //     let test_seed: u64 = 1234567890;
-    //     let test_field: Vec<Vec<u8>> = vec![
-    //         vec![0,0,0,1,9],
-    //         vec![0,1,1,2,1],
-    //         vec![2,3,9,2,1],
-    //         vec![9,9,3,9,1],
-    //         vec![2,2,2,1,1]
-    //     ];
-    //     let board: TwoDVector<u8> = GameState::generate_mines(5, test_seed);
-    //     assert_eq!(GameState::calculate_vicinity(board).get_vec(), test_field);
-    // }
+
+    #[test]
+    fn test_if_mine_vicinity_function_works_correctly() -> () {
+        let test_seed: u64 = 1234567890;
+        let reference_field: Vec<Vec<u8>> = vec![
+            vec![0,0,0,1,9],
+            vec![0,1,1,2,1],
+            vec![2,3,9,2,1],
+            vec![9,9,3,9,1],
+            vec![2,2,2,1,1]
+        ];
+        let board: TwoDVector<bool> = GameState::generate_mines(5, test_seed);
+        assert_eq!(GameState::make_vicinity_table(board).get_vec(), reference_field);
+    }
 }
