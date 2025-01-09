@@ -9,12 +9,14 @@ unit-tests:
   stage: test
   script:
     - cargo install cargo-tarpaulin
+    - cd backend
     - cargo tarpaulin
   coverage: '/^\d+.\d+% coverage/'
 
 building:
   stage: build
   script:
+    - cd backend
     - cargo build
 
 release_job:
