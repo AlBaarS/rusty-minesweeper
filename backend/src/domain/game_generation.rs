@@ -20,6 +20,7 @@ impl GameGeneration {
     }
 }
 
+fn main() {}
 
 
 #[cfg(test)]
