@@ -1,5 +1,5 @@
 bin = [
-  { name = "main", path = "src/main.rs" },
+  { name = "rusty-minesweeper", path = "src/rusty-minesweeper.rs" },
   { name = "game_generation", path = "src/domain/game_generation.rs" },
   { name = "game_state", path = "src/domain/game_state.rs" },
   { name = "two_d_vector", path = "src/domain/two_d_vector.rs" },
