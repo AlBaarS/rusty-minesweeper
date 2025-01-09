@@ -27,7 +27,7 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use crate::{GameGeneration};
+    use crate::GameGeneration;
 
     #[test]
     fn test_generate_mine_indices() {
