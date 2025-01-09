@@ -27,8 +27,6 @@ impl<T: Clone> TwoDVector<T> {
 }
 
 
-fn main() {}
-
 
 #[cfg(test)]
 mod tests {

@@ -46,9 +46,9 @@ async fn main() {
         .route("/create-user", post(create_user))
         .route("/users", get(list_users));
 
-    println!("Running on http://localhost:3000");
+    println!("Running on http://localhost:3001");
     // Start Server
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3001").await.unwrap();
     axum::serve(listener, app.into_make_service())
         .await
         .unwrap();

@@ -93,9 +93,6 @@ impl GameState {
 
 
 
-fn main() {}
-
-
 #[cfg(test)]
 mod tests {
     use crate::{two_d_vector::TwoDVector, GameState};

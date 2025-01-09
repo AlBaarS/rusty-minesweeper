@@ -20,9 +20,6 @@ impl GameGeneration {
     }
 }
 
-fn main() {
-    println!("{:?}", GameGeneration::generate_mine_indices(5, 1234567890));
-}
 
 
 #[cfg(test)]
