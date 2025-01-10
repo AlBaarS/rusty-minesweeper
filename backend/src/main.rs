@@ -1,4 +1,5 @@
 mod api;
-mod app;
+mod domain;
+use domain::play::Play;
 
 fn main() -> () {}

@@ -1,6 +1,6 @@
 use itertools::*;
 
-use super::base::{game_generation::GameGeneration, two_d_vector::TwoDVector};
+use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
 pub struct GameState {
     mines: TwoDVector<bool>,
