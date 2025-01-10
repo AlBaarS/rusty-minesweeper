@@ -7,6 +7,8 @@ use axum::{
 };
 use serde::Serialize;
 
+use super::super::backend::main::Play;
+
 
 #[derive(Serialize)]
 struct User {
@@ -53,4 +55,14 @@ async fn main() {
     axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::super::backend::main::Play;
+
+    #[test]
+    fn test_import_of_Play() -> () {
+        assert!(Play::test_import());
+    }
 }

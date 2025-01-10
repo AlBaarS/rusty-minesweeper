@@ -28,6 +28,10 @@ impl Play {
     pub fn get_progress(&self) -> &Progress {
         return &self.progress;
     }
+
+    pub fn test_import() -> bool {
+        return true;
+    }
 }
 
 fn main() -> () {}
