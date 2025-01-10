@@ -87,7 +87,7 @@ impl GameState {
 }
 
 
-
+#[allow(dead_code)]
 fn main() {}
 
 
