@@ -20,14 +20,12 @@ impl GameGeneration {
     }
 }
 
-fn main() {
-    println!("{:?}", GameGeneration::generate_mine_indices(5, 1234567890));
-}
+fn main() {}
 
 
 #[cfg(test)]
 mod tests {
-    use crate::{GameGeneration};
+    use super::*;
 
     #[test]
     fn test_generate_mine_indices() {
