@@ -32,7 +32,7 @@ fn main() {}
 
 #[cfg(test)]
 mod tests {
-    use crate::TwoDVector;
+    use super::*;
 
     #[test]
     fn create_2d_vector_from_numeric_vector() -> () {

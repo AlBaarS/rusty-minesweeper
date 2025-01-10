@@ -7,6 +7,9 @@ use axum::{
 };
 use serde::Serialize;
 
+pub mod domain;
+use domain::game_state::GameState;
+
 #[derive(Serialize)]
 struct User {
     id: u64,

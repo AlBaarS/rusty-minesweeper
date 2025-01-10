@@ -1,11 +1,6 @@
 use itertools::*;
 
-mod two_d_vector;
-use two_d_vector::TwoDVector;
-
-mod game_generation;
-use game_generation::GameGeneration;
-
+use super::base::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
 pub struct GameState {
     mines: TwoDVector<bool>,
@@ -98,7 +93,7 @@ fn main() {}
 
 #[cfg(test)]
 mod tests {
-    use crate::{two_d_vector::TwoDVector, GameState};
+    use super::*;
 
     #[test]
     fn assert_board_generation_is_consistent_with_seed() -> () {
