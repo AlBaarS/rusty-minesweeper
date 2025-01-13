@@ -1,4 +1,4 @@
-use super::logic::{base_components::game_generation::GameGeneration, game_state::GameState};
+use super::logic::game_state::GameState;
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -15,8 +15,8 @@ pub struct Play {
 }
 
 impl Play {
-    pub fn new() -> Self {
-        let game: GameState = GameState::generate_starting_state(16, GameGeneration::generate_seed());
+    pub fn new(seed: u64) -> Self {
+        let game: GameState = GameState::generate_starting_state(16, seed);
         let progress: Progress = Progress::InProgress;
         return Self {
             game,
