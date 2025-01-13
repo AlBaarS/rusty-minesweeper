@@ -21,7 +21,7 @@ async fn main() {
 
     // Define API routes
     let api_router = Router::new()
-        .route("/minesweeper", get(api::test_import));
+        .route("/test", get(api::test_import));
 
     // Create the application and add routes
     let app = Router::new()

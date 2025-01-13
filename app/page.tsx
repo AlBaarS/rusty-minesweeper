@@ -1,10 +1,10 @@
-import MinesweeperClient from './MinesweeperClient';
+import TestAndDeployMinesweeper from './MinesweeperClient';
 
 export default function HomePage() {
   console.log("Rendering HomePage");
   return (
       <div>
-          <MinesweeperClient />
+          <TestAndDeployMinesweeper />
       </div>
   );
 }

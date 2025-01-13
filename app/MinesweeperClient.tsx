@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react';
 import testAPI from './api/testAPI';
 
-function MinesweeperClient() {
+export const TestAndDeployMinesweeper = () => {
+    // Verification of the API
     console.log("Rendering MinesweeperClient");
-    const [data, setData] = useState<any | null>(null);
+    console.log("Testing API connection");
+    const [testData, setData] = useState<any | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,12 +25,25 @@ function MinesweeperClient() {
 
     console.log("Returning MinesweeperClient")
 
+
+
+    // Embedded page functions
+    function MineSweeperStartingPage({data}) {
+        return (
+            <div>
+                <p>Received API connection: {data}</p>
+            </div>
+        )
+    }
+
+
+
+    // Returning the main page
     return (
         <div>
-            <h1>Data from Rust API</h1>
-            {data ? (
+            {testData ? (
                 <div>
-                    <p>Received API connection: {data}</p>
+                    <MineSweeperStartingPage data={testData} />
                 </div>
             ) : (
                 <p>Loading...</p>
@@ -37,4 +52,4 @@ function MinesweeperClient() {
     );
 }
 
-export default MinesweeperClient;
+export default TestAndDeployMinesweeper;
