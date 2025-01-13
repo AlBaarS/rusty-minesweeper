@@ -1,19 +1,14 @@
-use axum::{
-    body::Body,
-    http::StatusCode,
-    response::{IntoResponse, Response},
-    routing::{get, post},
-    Json, Router,
-};
+use super::logic::{base_components::game_generation::GameGeneration, game_state::GameState};
 use serde::Serialize;
 
-use super::logic::{base_components::game_generation::GameGeneration, game_state::GameState};
-
+#[derive(Serialize)]
 pub enum Progress {
     Win,
     Lose,
     InProgress,
 }
+
+#[derive(Serialize)]
 pub struct Play {
     game: GameState,
     progress: Progress,
@@ -37,8 +32,8 @@ impl Play {
         return &self.progress;
     }
 
-    pub fn test_import() -> bool {
-        return true;
+    pub fn test_import() -> String {
+        return String::from("It works!");
     }
 }
 
@@ -51,6 +46,6 @@ mod tests {
 
     #[test]
     fn test_import_of_Play() -> () {
-        assert!(Play::test_import());
+        assert_eq!(Play::test_import(), String::from("It works!"));
     }
 }

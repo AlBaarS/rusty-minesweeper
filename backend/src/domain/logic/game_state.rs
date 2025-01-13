@@ -1,7 +1,9 @@
 use itertools::*;
+use serde::Serialize;
 
 use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
+#[derive(Serialize)]
 pub struct GameState {
     mines: TwoDVector<bool>,
     vicinity: TwoDVector<u8>,

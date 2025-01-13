@@ -6,3 +6,4 @@
 /.idea
 /backend/.idea
 folder_structure.txt
+.env.local
