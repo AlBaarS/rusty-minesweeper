@@ -1,38 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react';
 import testAPI from './api/testAPI';
+import getGameAPI from './api/getGameAPI';
+import DisplayBoard from './board';
+import getDataFromAPI from './functions/getDataFromAPI'
+import getSeed from './functions/getSeed';
 
-// Top-level functions
-function getSeed() {
-    const  min = Math.ceil(0);
-    const max = Math.floor(Math.pow(2, 64));
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export const TestAndDeployMinesweeper = () => {
+export const DeployMinesweeper = () => {
     // Verification of the API
     console.log("Rendering MinesweeperClient");
-    console.log("Testing API connection");
-    const [testData, setData] = useState<any | null>(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await testAPI();
-                console.log("Data fetched:", result);
-                setData(result);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    console.log("Returning MinesweeperClient")
-
-
 
     // Embedded page functions
     function MineSweeperStartingPage({data}) {
@@ -43,13 +19,14 @@ export const TestAndDeployMinesweeper = () => {
         )
     }
 
-    function GetBoard() {
-        const seed = getSeed();
-    }
-
 
 
     // Returning the main page
+    const testData = getDataFromAPI(testAPI);
+    const seed = getSeed();
+    let board = getDataFromAPI(getGameAPI, seed);
+    console.log("Starting board:", board);
+    console.log("Returning MinesweeperClient");
     return (
         <div>
             {testData ? (
@@ -63,4 +40,4 @@ export const TestAndDeployMinesweeper = () => {
     );
 }
 
-export default TestAndDeployMinesweeper;
+export default DeployMinesweeper;

@@ -3,7 +3,7 @@ use serde::Serialize;
 
 use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct GameState {
     mines: TwoDVector<bool>,
     vicinity: TwoDVector<u8>,
@@ -41,7 +41,7 @@ impl GameState {
 
     // Functions
     fn generate_mines(size: u8, seed: u64) -> TwoDVector<bool> {
-        let number_of_squares: u32 = (size * size).try_into().unwrap();
+        let number_of_squares: u32 = (size * size).into();
         let mine_indices: Vec<u32> = GameGeneration::generate_mine_indices(size.into(), seed);
         let mine_vector: Vec<bool> = (0..number_of_squares)
             .map(|x: u32| mine_indices.contains(&x))

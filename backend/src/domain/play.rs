@@ -1,14 +1,14 @@
 use super::logic::game_state::GameState;
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub enum Progress {
     Win,
     Lose,
     InProgress,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct Play {
     game: GameState,
     progress: Progress,
@@ -38,7 +38,10 @@ impl Play {
 }
 
 
-fn main() {}
+fn main() {
+    let game: Play = Play::new(1234567890);
+    println!("Game: ${:?}", game);
+}
 
 #[cfg(test)]
 mod tests {
@@ -47,5 +50,11 @@ mod tests {
     #[test]
     fn test_import_of_Play() -> () {
         assert_eq!(Play::test_import(), String::from("It works!"));
+    }
+
+    #[test]
+    fn test_game_generation() -> () {
+        let game: Play = Play::new(1234567890);
+        println!("Game: ${:?}", game);
     }
 }

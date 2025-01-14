@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Debug)]
 pub struct TwoDVector<T: Clone> {
     matrix: Vec<Vec<T>>,
     size: u8,
