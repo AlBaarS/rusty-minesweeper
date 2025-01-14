@@ -41,7 +41,8 @@ impl GameState {
 
     // Functions
     fn generate_mines(size: u8, seed: u64) -> TwoDVector<bool> {
-        let number_of_squares: u32 = (size * size).into();
+        let size_u32: u32 = size.into();
+        let number_of_squares: u32 = size_u32 * size_u32;
         let mine_indices: Vec<u32> = GameGeneration::generate_mine_indices(size.into(), seed);
         let mine_vector: Vec<bool> = (0..number_of_squares)
             .map(|x: u32| mine_indices.contains(&x))
@@ -80,10 +81,11 @@ impl GameState {
     }
 
     pub fn generate_starting_state(size: u8, seed: u64) -> GameState {
+        let size_usize: usize = size.into();
         let board: TwoDVector<bool> = GameState::generate_mines(size, seed);
         let vicinity: TwoDVector<u8> = Self::make_vicinity_table(board.clone());
-        let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, (size * size).try_into().unwrap()).collect(), size);
-        let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, (size * size).try_into().unwrap()).collect(), size);
+        let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
+        let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
         return GameState::new(board, vicinity, revealed, flagged);
     }
 }
