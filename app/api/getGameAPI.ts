@@ -1,7 +1,7 @@
-const getGameAPI = async (seed: number): Promise<string> => {
+const getGameAPI = async (seed: number): Promise<object> => {
     console.log("Calling getGameAPI with seed", seed)
     const url = process.env.NEXT_PUBLIC_API_URL;
-    const response = await fetch(`${url}/api/create/`, {
+    const response = await fetch(`${url}/api/create`, {
         method: "POST",
         headers: {
             Accept: "application/json",

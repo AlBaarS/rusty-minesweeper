@@ -17,6 +17,7 @@ async fn main() {
     // Define the CORS layer
     let cors = CorsLayer::new()
         .allow_origin(Any) // Allow all origins
+        .allow_headers(Any) // Allow all types of headers
         .allow_methods(vec![Method::GET, Method::POST]); // Allow GET and POST methods
 
     // Define API routes

@@ -10,11 +10,11 @@ pub async fn test_import() -> Json<serde_json::Value> {
 
 pub async fn start_game(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Value> {
     println!("API call received for start_game() with body ${}", payload);
-    
-    let Ok(seed) = match payload["seed"].as_str() {
+
+    let seed: u64 = match payload["seed"].as_u64() {
         Some(s) => s,
         None => return Json(json!({"playboard" : "invalid input"})),
-    }.parse::<u64>() else { return Json(json!({"playboard" : "invalid input"})) };
+    };
 
     println!("Seed registered: ${}. Returning a new board to front-end.", seed);
     return Json(json!({ "playboard": Play::new(seed)}));
