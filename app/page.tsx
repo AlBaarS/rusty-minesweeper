@@ -1,4 +1,4 @@
-import DeployMinesweeper from './MinesweeperClient';
+import DeployMinesweeper from './MinesweeperStart';
 
 export default function HomePage() {
   console.log("Rendering HomePage");
