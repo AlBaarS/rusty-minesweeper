@@ -1,4 +1,4 @@
-import { Gamestate, Progress, Play } from "../types/game";
+import { Gamestate, Progress, GameState } from "../types/game";
 
 function buildBoard() {
     

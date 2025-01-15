@@ -4,14 +4,14 @@ use serde::Serialize;
 use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
 #[derive(Serialize, Debug)]
-pub struct GameState {
+pub struct Board {
     mines: TwoDVector<bool>,
     vicinity: TwoDVector<u8>,
     revealed: TwoDVector<bool>,
     flagged: TwoDVector<bool>,
 }
 
-impl GameState {
+impl Board {
     // Constructor
     fn new(mines: TwoDVector<bool>, vicinity: TwoDVector<u8>, revealed: TwoDVector<bool>, flagged: TwoDVector<bool>) -> Self {
         Self {
@@ -73,20 +73,20 @@ impl GameState {
                 if *elem {
                     vicinity.push(9);
                 } else {
-                    vicinity.push(GameState::calculate_vicinity(board.clone(), x.try_into().unwrap(), y.try_into().unwrap()));
+                    vicinity.push(Board::calculate_vicinity(board.clone(), x.try_into().unwrap(), y.try_into().unwrap()));
                 }
             }
         };
         TwoDVector::new(vicinity, size.try_into().unwrap())
     }
 
-    pub fn generate_starting_state(size: u8, seed: u64) -> GameState {
+    pub fn generate_starting_state(size: u8, seed: u64) -> Board {
         let size_usize: usize = size.into();
-        let board: TwoDVector<bool> = GameState::generate_mines(size, seed);
+        let board: TwoDVector<bool> = Board::generate_mines(size, seed);
         let vicinity: TwoDVector<u8> = Self::make_vicinity_table(board.clone());
         let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
         let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
-        return GameState::new(board, vicinity, revealed, flagged);
+        return Board::new(board, vicinity, revealed, flagged);
     }
 }
 
@@ -109,7 +109,7 @@ mod tests {
             vec![true, true, false, true, false], 
             vec![false, false, false, false, false]
         ];
-        assert_eq!(GameState::generate_mines(5, test_seed).get_vec(), reference_field);
+        assert_eq!(Board::generate_mines(5, test_seed).get_vec(), reference_field);
     }
 
     #[test]
@@ -122,7 +122,7 @@ mod tests {
             vec![9,9,3,9,1],
             vec![2,2,2,1,1]
         ];
-        let board: TwoDVector<bool> = GameState::generate_mines(5, test_seed);
-        assert_eq!(GameState::make_vicinity_table(board).get_vec(), reference_field);
+        let board: TwoDVector<bool> = Board::generate_mines(5, test_seed);
+        assert_eq!(Board::make_vicinity_table(board).get_vec(), reference_field);
     }
 }

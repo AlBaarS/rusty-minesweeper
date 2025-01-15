@@ -1,8 +1,13 @@
-export type Gamestate = {
-    mines: [[boolean]],
-    vicinity: [[number]],
-    flagged: [[boolean]],
-    revealed: [[boolean]],
+export type TwoDVector = {
+    matrix: [[any]],
+    size: number,
+}
+
+export type Board = {
+    mines: TwoDVector,
+    vicinity: TwoDVector,
+    flagged: TwoDVector,
+    revealed: TwoDVector,
 }
 
 export enum Progress {
@@ -11,8 +16,11 @@ export enum Progress {
     InProgress,
 }
 
-export type Play = {
-    Gamestate: Gamestate,
+export type GameState = {
+    game: Board,
     progress: Progress,
 }
 
+export function isGameState(gameState: unknown): gameState is GameState {
+    return (gameState as GameState).game !== undefined;
+}

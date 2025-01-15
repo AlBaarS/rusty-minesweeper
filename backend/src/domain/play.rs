@@ -1,4 +1,4 @@
-use super::logic::game_state::GameState;
+use super::logic::game_state::Board;
 use serde::Serialize;
 
 #[derive(Serialize, Debug)]
@@ -10,13 +10,13 @@ pub enum Progress {
 
 #[derive(Serialize, Debug)]
 pub struct Play {
-    game: GameState,
+    game: Board,
     progress: Progress,
 }
 
 impl Play {
     pub fn new(seed: u64) -> Self {
-        let game: GameState = GameState::generate_starting_state(16, seed);
+        let game: Board = Board::generate_starting_state(16, seed);
         let progress: Progress = Progress::InProgress;
         return Self {
             game,
@@ -24,7 +24,7 @@ impl Play {
         };
     }
 
-    pub fn get_game(&self) -> &GameState {
+    pub fn get_game(&self) -> &Board {
         return &self.game;
     }
 
@@ -45,7 +45,7 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain::logic::game_state::GameState;
+    use crate::domain::logic::game_state::Board;
     use super::Play;
 
     #[test]
@@ -56,8 +56,8 @@ mod tests {
     #[test]
     fn test_game_generation() -> () {
         let play: Play = Play::new(1234567890);
-        let test_board: &GameState = play.get_game();
-        let ref_board: GameState = GameState::generate_starting_state(16, 1234567890);
+        let test_board: &Board = play.get_game();
+        let ref_board: Board = Board::generate_starting_state(16, 1234567890);
         println!("{:?}", test_board);
         assert_eq!(test_board.get_mines().get_vec(), ref_board.get_mines().get_vec());
     }

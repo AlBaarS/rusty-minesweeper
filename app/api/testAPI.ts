@@ -5,7 +5,7 @@ const testAPI = async (): Promise<string> => {
         method: "GET",
     });
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error in testAPI. status: ${response.status}`);
     }
     const data = await response.json();
     return data.message;
