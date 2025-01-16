@@ -11,7 +11,6 @@ import MinesweeperPlay from "./MinesweeperPlay";
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const [alert, setAlert] = useState<string | null>(null);
-    let [start, setStart] = useState<true | false>(false);
 
     const onSubmit = async (seed?: number) => {
 
@@ -25,7 +24,6 @@ export const MinesweeperStart = () => {
         if (isGameState(result)) {
             setGameState(result);
             console.log("Obtained gamestate:", result);
-            setStart(true);
         } else {
             console.log("Failed to obtain gameState:", result.statusText);
             setAlert(`${result.statusCode} ${result.statusText}`);
@@ -70,7 +68,7 @@ export const MinesweeperStart = () => {
         )
     }
 
-    return start ? <MinesweeperPlay /> : (
+    return(
         <div className="`relative h-full w-screen bg-cover bg-center bg-no-repeat p-12 text-centerbg-white">
             <div className="absolute2 bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed bg-black/60">
                 <div className="flex h-full items-center justify-center">
