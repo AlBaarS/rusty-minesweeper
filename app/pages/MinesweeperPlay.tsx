@@ -13,6 +13,7 @@ import cell8 from '../../public/cell_textures/cell8.png';
 import mine from '../../public/cell_textures/blast.png';
 import flag from '../../public/cell_textures/cellflag.png'
 import button from '../../public/cell_textures/cellup.png'
+import { useState } from "react";
 
 const images = {
     0: cell0,
@@ -73,10 +74,18 @@ export const MinesweeperPlay = () => {
     function Square({x, y}) {
         const vic = vicinity[y][x];
         const cellImg = getImage(vic);
-        return(
+        let [clicked, setClicked] = useState<true | false>(false)
+        return clicked ? (
             <div className="object-cover">
                 <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
             </div>
+        ) : (
+            <button 
+                type = "button"
+                onClick = {() => setClicked(true)}
+            >
+                <Image src={button} alt="Cell Texture" width={32} height={32} />
+            </button>
         )
     }
 
