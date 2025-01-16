@@ -1,4 +1,31 @@
 import { useMinesweeper } from "../context/MinesweeperContext";
+import Image from 'next/image';
+
+import cell0 from '../../public/cell_textures/celldown.png';
+import cell1 from '../../public/cell_textures/cell1.png';
+import cell2 from '../../public/cell_textures/cell2.png';
+import cell3 from '../../public/cell_textures/cell3.png';
+import cell4 from '../../public/cell_textures/cell4.png';
+import cell5 from '../../public/cell_textures/cell5.png';
+import cell6 from '../../public/cell_textures/cell6.png';
+import cell7 from '../../public/cell_textures/cell7.png';
+import cell8 from '../../public/cell_textures/cell8.png';
+import mine from '../../public/cell_textures/blast.png';
+import flag from '../../public/cell_textures/cellflag.png'
+import button from '../../public/cell_textures/cellup.png'
+
+const images = {
+    0: cell0,
+    1: cell1,
+    2: cell2,
+    3: cell3,
+    4: cell4,
+    5: cell5,
+    6: cell6,
+    7: cell7,
+    8: cell8,
+    9: mine
+};
 
 export const MinesweeperPlay = () => {
 
@@ -8,6 +35,10 @@ export const MinesweeperPlay = () => {
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
 
+    function getImage(type: number, flag?: boolean, revealed?: boolean) {
+        return images[type] || null;
+    }
+
     function FlagsLeft() {
         return(<div></div>)
     }
@@ -16,7 +47,7 @@ export const MinesweeperPlay = () => {
         return(<div></div>)
     }
 
-    function Row({x}) {
+    function Column({x}) {
         return(
             <div className="grid grid-flow-row">
                 <Square x={x} y={0} />
@@ -40,35 +71,39 @@ export const MinesweeperPlay = () => {
     }
 
     function Square({x, y}) {
+        const vic = vicinity[y][x];
+        const cellImg = getImage(vic);
         return(
-            <div>
-                {vicinity[y][x]}
+            <div className="object-cover">
+                <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
             </div>
         )
     }
 
 
     return(
-        <div>
-            <div>
+        <div className="grid">
+            <div><br /></div>
+            <div className="place-self-center">
                 <FlagsLeft /> <Timer />
-                <div className="grid grid-flow-col">
-                    <Row x={0}/>
-                    <Row x={1}/>
-                    <Row x={2}/>
-                    <Row x={3}/>
-                    <Row x={4}/>
-                    <Row x={5}/>
-                    <Row x={6}/>
-                    <Row x={7}/>
-                    <Row x={8}/>
-                    <Row x={9}/>
-                    <Row x={10}/>
-                    <Row x={11}/>
-                    <Row x={12}/>
-                    <Row x={13}/>
-                    <Row x={14}/>
-                    <Row x={15}/>
+                <div><br /></div>
+                <div className="grid grid-flow-col justify-start">
+                    <Column x={0}/>
+                    <Column x={1}/>
+                    <Column x={2}/>
+                    <Column x={3}/>
+                    <Column x={4}/>
+                    <Column x={5}/>
+                    <Column x={6}/>
+                    <Column x={7}/>
+                    <Column x={8}/>
+                    <Column x={9}/>
+                    <Column x={10}/>
+                    <Column x={11}/>
+                    <Column x={12}/>
+                    <Column x={13}/>
+                    <Column x={14}/>
+                    <Column x={15}/>
                 </div>
             </div>
         </div>

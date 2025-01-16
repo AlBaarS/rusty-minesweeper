@@ -6,7 +6,6 @@ import { useMinesweeper } from "../context/MinesweeperContext";
 import classNames from "classnames";
 import getGameAPI from "../api/getGameAPI";
 import getSeed from "../functions/getSeed";
-import MinesweeperPlay from "./MinesweeperPlay";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
