@@ -1,4 +1,12 @@
+import { useMinesweeper } from "../context/MinesweeperContext";
+
 export const MinesweeperPlay = () => {
+
+    const { gameState, setGameState } = useMinesweeper();
+    const mines = gameState?.game.mines.matrix;
+    const vicinity = gameState?.game.vicinity.matrix;
+    const flagged = gameState?.game.flagged.matrix;
+    const revealed = gameState?.game.revealed.matrix;
 
     function FlagsLeft() {
         return(<div></div>)
@@ -34,7 +42,7 @@ export const MinesweeperPlay = () => {
     function Square({x, y}) {
         return(
             <div>
-                x={x}, y={y}
+                {vicinity[y][x]}
             </div>
         )
     }
