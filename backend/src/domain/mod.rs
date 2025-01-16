@@ -1,2 +1,2 @@
-pub mod base;
-pub mod game_state;
+pub mod logic;
+pub mod play;

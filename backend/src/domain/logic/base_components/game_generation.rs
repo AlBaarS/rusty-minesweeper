@@ -20,6 +20,8 @@ impl GameGeneration {
     }
 }
 
+
+#[allow(dead_code)]
 fn main() {}
 
 

@@ -1,15 +1,17 @@
 use itertools::*;
+use serde::Serialize;
 
-use super::base::{game_generation::GameGeneration, two_d_vector::TwoDVector};
+use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
-pub struct GameState {
+#[derive(Serialize, Debug)]
+pub struct Board {
     mines: TwoDVector<bool>,
     vicinity: TwoDVector<u8>,
     revealed: TwoDVector<bool>,
     flagged: TwoDVector<bool>,
 }
 
-impl GameState {
+impl Board {
     // Constructor
     fn new(mines: TwoDVector<bool>, vicinity: TwoDVector<u8>, revealed: TwoDVector<bool>, flagged: TwoDVector<bool>) -> Self {
         Self {
@@ -39,7 +41,8 @@ impl GameState {
 
     // Functions
     fn generate_mines(size: u8, seed: u64) -> TwoDVector<bool> {
-        let number_of_squares: u32 = (size * size).try_into().unwrap();
+        let size_u32: u32 = size.into();
+        let number_of_squares: u32 = size_u32 * size_u32;
         let mine_indices: Vec<u32> = GameGeneration::generate_mine_indices(size.into(), seed);
         let mine_vector: Vec<bool> = (0..number_of_squares)
             .map(|x: u32| mine_indices.contains(&x))
@@ -70,24 +73,25 @@ impl GameState {
                 if *elem {
                     vicinity.push(9);
                 } else {
-                    vicinity.push(GameState::calculate_vicinity(board.clone(), x.try_into().unwrap(), y.try_into().unwrap()));
+                    vicinity.push(Board::calculate_vicinity(board.clone(), x.try_into().unwrap(), y.try_into().unwrap()));
                 }
             }
         };
         TwoDVector::new(vicinity, size.try_into().unwrap())
     }
 
-    pub fn generate_starting_state(size: u8, seed: u64) -> GameState {
-        let board: TwoDVector<bool> = GameState::generate_mines(size, seed);
+    pub fn generate_starting_state(size: u8, seed: u64) -> Board {
+        let size_usize: usize = size.into();
+        let board: TwoDVector<bool> = Board::generate_mines(size, seed);
         let vicinity: TwoDVector<u8> = Self::make_vicinity_table(board.clone());
-        let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, (size * size).try_into().unwrap()).collect(), size);
-        let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, (size * size).try_into().unwrap()).collect(), size);
-        return GameState::new(board, vicinity, revealed, flagged);
+        let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
+        let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
+        return Board::new(board, vicinity, revealed, flagged);
     }
 }
 
 
-
+#[allow(dead_code)]
 fn main() {}
 
 
@@ -105,7 +109,7 @@ mod tests {
             vec![true, true, false, true, false], 
             vec![false, false, false, false, false]
         ];
-        assert_eq!(GameState::generate_mines(5, test_seed).get_vec(), reference_field);
+        assert_eq!(Board::generate_mines(5, test_seed).get_vec(), reference_field);
     }
 
     #[test]
@@ -118,7 +122,7 @@ mod tests {
             vec![9,9,3,9,1],
             vec![2,2,2,1,1]
         ];
-        let board: TwoDVector<bool> = GameState::generate_mines(5, test_seed);
-        assert_eq!(GameState::make_vicinity_table(board).get_vec(), reference_field);
+        let board: TwoDVector<bool> = Board::generate_mines(5, test_seed);
+        assert_eq!(Board::make_vicinity_table(board).get_vec(), reference_field);
     }
 }

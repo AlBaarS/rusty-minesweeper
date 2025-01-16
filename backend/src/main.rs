@@ -1,58 +1,38 @@
+mod api;
+mod app;
+mod domain;
+
 use axum::{
     body::Body,
-    http::StatusCode,
+    http::{Method, StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
 };
 use serde::Serialize;
-
-pub mod domain;
-use domain::game_state::GameState;
-
-#[derive(Serialize)]
-struct User {
-    id: u64,
-    name: String,
-    email: String,
-}
-
-// Handler for /create-user
-async fn create_user() -> impl IntoResponse {
-    Response::builder()
-        .status(StatusCode::CREATED)
-        .body(Body::from("User created successfully"))
-        .unwrap()
-}
-// Handler for /users
-async fn list_users() -> Json<Vec<User>> {
-    let users = vec![
-        User {
-            id: 1,
-            name: "Elijah".to_string(),
-            email: "elijah@example.com".to_string(),
-        },
-        User {
-            id: 2,
-            name: "John".to_string(),
-            email: "john@doe.com".to_string(),
-        },
-    ];
-    Json(users)
-}
+use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
 async fn main() {
-    // Define Routes
-    let app = Router::new()
-        .route("/", get(|| async { "Hello, Rust!" }))
-        .route("/create-user", post(create_user))
-        .route("/users", get(list_users));
+    // Define the CORS layer
+    let cors = CorsLayer::new()
+        .allow_origin(Any) // Allow all origins
+        .allow_headers(Any) // Allow all types of headers
+        .allow_methods(vec![Method::GET, Method::POST]); // Allow GET and POST methods
 
-    println!("Running on http://localhost:3001");
-    // Start Server
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3001").await.unwrap();
-    axum::serve(listener, app.into_make_service())
+    // Define API routes
+    let api_router = Router::new()
+        .route("/test", get(api::test_import))
+        .route("/create", post(api::start_game));
+
+    // Create the application and add routes
+    let app = Router::new()
+        .nest("/api", api_router)
+        .layer(cors); // Attach the CORS layer
+
+    // Start the server
+    axum::Server::bind(&"0.0.0.0:3001".parse().unwrap())
+        .serve(app.into_make_service())
         .await
         .unwrap();
 }

@@ -1,0 +1,9 @@
+/backend/target
+/api/target
+/target
+/node_modules
+/.next
+/.idea
+/backend/.idea
+folder_structure.txt
+.env.local
