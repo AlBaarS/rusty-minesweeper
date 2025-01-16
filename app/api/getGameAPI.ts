@@ -13,11 +13,17 @@ const getGameAPI = async (seed: number): Promise<object> => {
             seed: seed,
         }),
     });
-    if (!response.ok) {
-        throw new Error(`HTTP error in getGameAPI. status: ${response.status}`);
+    
+    if (response.ok) {
+        const gameState = await response.json();
+        console.log("getGameAPI call successful:", gameState);
+        return gameState.playboard as GameState;
+    } else {
+        return {
+            statusCode: response.status,
+            statusText: response.statusText
+        };
     }
-    const data = await response.json();
-    return data.playboard as GameState;
 };
 
 export default getGameAPI;

@@ -1,6 +1,12 @@
-export type TwoDVector = {
-    matrix: [[any]],
-    size: number,
+export type GameState = {
+    game: Board,
+    progress: Progress,
+}
+
+export enum Progress {
+    Win,
+    Lose,
+    InProgress,
 }
 
 export type Board = {
@@ -10,17 +16,11 @@ export type Board = {
     revealed: TwoDVector,
 }
 
-export enum Progress {
-    Win,
-    Lose,
-    InProgress,
-}
-
-export type GameState = {
-    game: Board,
-    progress: Progress,
+export type TwoDVector = {
+    matrix: [[any]],
+    size: number,
 }
 
 export function isGameState(gameState: unknown): gameState is GameState {
-    return (gameState as GameState).game !== undefined;
+    return gameState !== undefined && (gameState as GameState).game !== undefined;
 }
