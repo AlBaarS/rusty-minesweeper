@@ -1,5 +1,4 @@
 mod api;
-mod app;
 mod domain;
 
 use axum::{

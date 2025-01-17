@@ -9,7 +9,34 @@ Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars
 
 
 # How to install:
-To add
+## Download Rusty Minesweeper
+You can download a [release](https://git.sogyo.nl/abaars/rusty-minesweeper/-/releases/permalink/latest) or clone the source code using git:
+
+`git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git`
+
+Alternatively, you can download the source code using wget:
+
+`wget https://git.sogyo.nl/abaars/rusty-minesweeper.git`
+
+## Install dependencies 
+
+First and foremost, make sure that [Rust](https://www.rust-lang.org/tools/install) is installed on your system. You can check using `rustup --help` on your CLI. Next, install [nvm and Node.js](https://nodejs.org/en/download).
+
+With Rust, nvm, and Node.js installed, you can install the project dependencies with the following commands:
+
+```
+cd rusty-minesweeper/
+npm install
+npm update
+```
+
+Finally, open two CLI windows or `screen`s. Navigate to the project root `rusty-minesweeper/` in one and to `rusty-minesweeper/backend/` in the other.
+
+In `rusty-minesweeper/backend/`, execute the command `cargo run`.
+
+In `rusty-minesweeper/`, execute the command `npm run dev`.
+
+Open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play!
 
 # MoSCoW
 ## Must
