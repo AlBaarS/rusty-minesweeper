@@ -1,31 +1,31 @@
 import { useMinesweeper } from "../context/MinesweeperContext";
 import Image from 'next/image';
 
-import cell0 from '../../public/cell_textures/celldown.png';
-import cell1 from '../../public/cell_textures/cell1.png';
-import cell2 from '../../public/cell_textures/cell2.png';
-import cell3 from '../../public/cell_textures/cell3.png';
-import cell4 from '../../public/cell_textures/cell4.png';
-import cell5 from '../../public/cell_textures/cell5.png';
-import cell6 from '../../public/cell_textures/cell6.png';
-import cell7 from '../../public/cell_textures/cell7.png';
-import cell8 from '../../public/cell_textures/cell8.png';
-import mine from '../../public/cell_textures/blast.png';
-import flag from '../../public/cell_textures/cellflag.png'
-import button from '../../public/cell_textures/cellup.png'
+import cell0_texture from '../../public/cell_textures/celldown.png';
+import cell1_texture from '../../public/cell_textures/cell1.png';
+import cell2_texture from '../../public/cell_textures/cell2.png';
+import cell3_texture from '../../public/cell_textures/cell3.png';
+import cell4_texture from '../../public/cell_textures/cell4.png';
+import cell5_texture from '../../public/cell_textures/cell5.png';
+import cell6_texture from '../../public/cell_textures/cell6.png';
+import cell7_texture from '../../public/cell_textures/cell7.png';
+import cell8_texture from '../../public/cell_textures/cell8.png';
+import mine_expl_texture from '../../public/cell_textures/blast.png';
+import flag_texture from '../../public/cell_textures/cellflag.png'
+import blank_texture from '../../public/cell_textures/cellup.png'
 import { useState } from "react";
 
 const images = {
-    0: cell0,
-    1: cell1,
-    2: cell2,
-    3: cell3,
-    4: cell4,
-    5: cell5,
-    6: cell6,
-    7: cell7,
-    8: cell8,
-    9: mine
+    0: cell0_texture,
+    1: cell1_texture,
+    2: cell2_texture,
+    3: cell3_texture,
+    4: cell4_texture,
+    5: cell5_texture,
+    6: cell6_texture,
+    7: cell7_texture,
+    8: cell8_texture,
+    9: mine_expl_texture
 };
 
 export const MinesweeperPlay = () => {
@@ -71,10 +71,17 @@ export const MinesweeperPlay = () => {
         )
     }
 
+    function flagOrNot(bool: boolean) {
+        return bool ? flag_texture : blank_texture
+    }
+
     function Square({x, y}) {
         const vic = vicinity[y][x];
+        const flag = flagged[y][x];
+        const rev = revealed[y][x];
         const cellImg = getImage(vic);
-        let [clicked, setClicked] = useState<true | false>(false)
+        let [clicked, setClicked] = useState<true | false>(rev);
+
         return clicked ? (
             <div className="object-cover">
                 <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
@@ -82,9 +89,10 @@ export const MinesweeperPlay = () => {
         ) : (
             <button 
                 type = "button"
+                disabled={flag}
                 onClick = {() => setClicked(true)}
             >
-                <Image src={button} alt="Cell Texture" width={32} height={32} />
+                <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
             </button>
         )
     }
