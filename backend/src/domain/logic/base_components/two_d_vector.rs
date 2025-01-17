@@ -24,21 +24,16 @@ impl<T: Clone> TwoDVector<T> {
     }
 
     pub fn get_element(&self, x: usize, y: usize) -> T {
-        return self.get_vec()[x][y].clone();
+        return self.matrix[y][x].clone();
     }
 
     pub fn change_element(&self, x: usize, y: usize, new_element: T) -> TwoDVector<T> {
-        let mut changed_vector: Vec<T> = vec![];
-        for (Y, row) in self.get_vec().iter().enumerate() {
-            for (X, elem) in row.iter().enumerate() {
-                if x == X && y == Y {
-                    changed_vector.push(new_element.clone());
-                } else {
-                    changed_vector.push(elem.clone());
-                }
-            }
+        let mut changed_vector: Vec<Vec<T>> = self.get_vec();
+        changed_vector[y][x] = new_element;
+        TwoDVector {
+            matrix: changed_vector,
+            size: self.get_size(),
         }
-        return TwoDVector::new(changed_vector, self.size);
     }
 }
 
@@ -71,7 +66,7 @@ mod tests {
     fn get_specific_element_from_2d_vector() -> () {
         let vector_numeric: Vec<u8> = vec![1,2,3,4];
         let vector: TwoDVector<u8> = TwoDVector::new(vector_numeric, 2);
-        assert_eq!(vector.get_element(1, 0), 3);
+        assert_eq!(vector.get_element(0, 1), 3);
     }
 
     #[test]
@@ -81,5 +76,25 @@ mod tests {
         let two_d_vector_in: TwoDVector<u8> = TwoDVector::new(vector_input, 3);
         let two_d_vector_out: TwoDVector<u8> = TwoDVector::new(vector_output, 3);
         assert_eq!(two_d_vector_in.change_element(2, 0, 5).get_vec(), two_d_vector_out.get_vec());
+    }
+
+    #[test]
+    fn test_if_boolean_flipping_from_false_to_true_is_possible() -> () {
+        let vector_input: Vec<bool> = vec![false, false, false, false, false, false, false, false, false];
+        let vector_output: Vec<bool> = vec![false, false, false, true, false, false, false, false, false];
+        let two_d_vector_in: TwoDVector<bool> = TwoDVector::new(vector_input, 3);
+        let two_d_vector_out: TwoDVector<bool> = TwoDVector::new(vector_output, 3);
+        let two_d_vector_flipped: TwoDVector<bool> = two_d_vector_in.change_element(0, 1, !two_d_vector_in.get_element(0, 1));
+        assert_eq!(two_d_vector_flipped.get_vec(), two_d_vector_out.get_vec());
+    }
+
+    #[test]
+    fn test_if_boolean_flipping_from_true_to_false_is_possible() -> () {
+        let vector_input: Vec<bool> = vec![false, false, false, true, false, false, false, false, false];
+        let vector_output: Vec<bool> = vec![false, false, false, false, false, false, false, false, false];
+        let two_d_vector_in: TwoDVector<bool> = TwoDVector::new(vector_input, 3);
+        let two_d_vector_out: TwoDVector<bool> = TwoDVector::new(vector_output, 3);
+        let two_d_vector_flipped: TwoDVector<bool> = two_d_vector_in.change_element(0, 1, !two_d_vector_in.get_element(0, 1));
+        assert_eq!(two_d_vector_flipped.get_vec(), two_d_vector_out.get_vec());
     }
 }

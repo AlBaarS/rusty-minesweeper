@@ -1,9 +1,11 @@
+use std::cmp::Reverse;
+
 use itertools::*;
 use serde::Serialize;
 
 use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Board {
     mines: TwoDVector<bool>,
     vicinity: TwoDVector<u8>,
@@ -56,8 +58,8 @@ impl Board {
     fn calculate_vicinity(board: TwoDVector<bool>, x: i32, y: i32) -> u8 {
         // get elements neighbouring coordinate, count trues, return
         let mut nearby_squares: Vec<bool> = Vec::new();
-        for xs in (x - 1..x + 2) {
-            for ys in (y - 1..y + 2) {
+        for ys in (y - 1..y + 2) {
+            for xs in (x - 1..x + 2) {
                 if (ys < board.get_size().into() && ys >= 0) && (xs < board.get_size().into() && xs >= 0) {
                     nearby_squares.push(board.get_element(xs.try_into().unwrap(), ys.try_into().unwrap()));
                 }
@@ -70,8 +72,8 @@ impl Board {
         let board_vec: Vec<Vec<bool>> = board.clone().get_vec();
         let size: usize = board_vec.len();
         let mut vicinity: Vec<u8> = Vec::new();
-        for (x, row) in board_vec.iter().enumerate() {
-            for (y, elem) in row.iter().enumerate() {
+        for (y, row) in board_vec.iter().enumerate() {
+            for (x, elem) in row.iter().enumerate() {
                 if *elem {
                     vicinity.push(9);
                 } else {
@@ -96,8 +98,16 @@ impl Board {
     pub fn reveal_square(&self, x: usize, y: usize) -> Board {
         let mines: TwoDVector<bool> = self.get_mines().clone();
         let vicinity: TwoDVector<u8> = self.get_vicinity().clone();
-        let revealed: TwoDVector<bool> = self.get_revealed().change_element(x, y, true).clone();
+        let revealed: TwoDVector<bool> = self.get_revealed().change_element(x, y, true);
         let flagged: TwoDVector<bool> = self.get_flagged().clone();
+        return Board::new(mines, vicinity, revealed, flagged);
+    }
+
+    pub fn flag_unflag_square(&self, x: usize, y: usize) -> Board {
+        let mines: TwoDVector<bool> = self.get_mines().clone();
+        let vicinity: TwoDVector<u8> = self.get_vicinity().clone();
+        let revealed: TwoDVector<bool> = self.get_revealed().clone();
+        let flagged: TwoDVector<bool> = self.get_flagged().change_element(x, y, !self.get_flagged().get_element(x, y));
         return Board::new(mines, vicinity, revealed, flagged);
     }
 }
@@ -112,7 +122,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn assert_board_generation_is_consistent_with_seed() -> () {
+    fn assert_mine_generation_is_consistent_with_seed() -> () {
         let test_seed: u64 = 1234567890;
         let test_size: u8 = 5;
         let reference_field: Vec<Vec<bool>> = vec![
@@ -153,5 +163,35 @@ mod tests {
         ];
         let board: Board = Board::generate_starting_state(test_size, test_seed);
         assert_eq!(board.reveal_square(3, 2).get_revealed().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_flag_is_placed() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false],
+            vec![true, false, false, false, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.flag_unflag_square(0, 2).get_flagged().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_flag_is_removed() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.flag_unflag_square(0, 2).flag_unflag_square(0, 2).get_flagged().get_vec(), reference_field);
     }
 }
