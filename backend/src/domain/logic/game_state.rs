@@ -22,6 +22,7 @@ impl Board {
         }
     }
 
+
     // Getters
     pub fn get_mines(&self) -> &TwoDVector<bool> {
         return &self.mines;
@@ -39,7 +40,8 @@ impl Board {
         return &self.flagged;
     }
 
-    // Functions
+
+    // Functions for board initialization
     fn generate_mines(size: u8, seed: u64) -> TwoDVector<bool> {
         let size_u32: u32 = size.into();
         let number_of_squares: u32 = size_u32 * size_u32;
@@ -82,11 +84,21 @@ impl Board {
 
     pub fn generate_starting_state(size: u8, seed: u64) -> Board {
         let size_usize: usize = size.into();
-        let board: TwoDVector<bool> = Board::generate_mines(size, seed);
-        let vicinity: TwoDVector<u8> = Self::make_vicinity_table(board.clone());
+        let mines: TwoDVector<bool> = Board::generate_mines(size, seed);
+        let vicinity: TwoDVector<u8> = Self::make_vicinity_table(mines.clone());
         let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
         let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
-        return Board::new(board, vicinity, revealed, flagged);
+        return Board::new(mines, vicinity, revealed, flagged);
+    }
+
+
+    // Functions for performing an action (clicking a square or placing/removing a flag)
+    pub fn reveal_square(&self, x: usize, y: usize) -> Board {
+        let mines: TwoDVector<bool> = self.get_mines().clone();
+        let vicinity: TwoDVector<u8> = self.get_vicinity().clone();
+        let revealed: TwoDVector<bool> = self.get_revealed().change_element(x, y, true).clone();
+        let flagged: TwoDVector<bool> = self.get_flagged().clone();
+        return Board::new(mines, vicinity, revealed, flagged);
     }
 }
 
@@ -102,6 +114,7 @@ mod tests {
     #[test]
     fn assert_board_generation_is_consistent_with_seed() -> () {
         let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
         let reference_field: Vec<Vec<bool>> = vec![
             vec![false, false, false, false, true], 
             vec![false, false, false, false, false], 
@@ -109,12 +122,13 @@ mod tests {
             vec![true, true, false, true, false], 
             vec![false, false, false, false, false]
         ];
-        assert_eq!(Board::generate_mines(5, test_seed).get_vec(), reference_field);
+        assert_eq!(Board::generate_mines(test_size, test_seed).get_vec(), reference_field);
     }
 
     #[test]
     fn test_if_mine_vicinity_function_works_correctly() -> () {
         let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
         let reference_field: Vec<Vec<u8>> = vec![
             vec![0,0,0,1,9],
             vec![0,1,1,2,1],
@@ -122,7 +136,22 @@ mod tests {
             vec![9,9,3,9,1],
             vec![2,2,2,1,1]
         ];
-        let board: TwoDVector<bool> = Board::generate_mines(5, test_seed);
+        let board: TwoDVector<bool> = Board::generate_mines(test_size, test_seed);
         assert_eq!(Board::make_vicinity_table(board).get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_square_is_revealed() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, true, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.reveal_square(3, 2).get_revealed().get_vec(), reference_field);
     }
 }
