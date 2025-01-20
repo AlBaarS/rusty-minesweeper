@@ -73,3 +73,13 @@ BEGIN
 END//
 
 DELIMITER ;
+
+
+-- Create a user to connect to when performing queries
+CREATE USER IF NOT EXISTS Ýsiltýr@localhost IDENTIFIED WITH mysql_native_password BY 'qwidwh&b_hUB7&_iyubI7BGi_&_BknIU_Y8h';
+
+GRANT USAGE ON RustyMinesweeperDB TO Ýsiltýr@localhost;
+
+GRANT EXECUTE ON PROCEDURE CreateUser TO TO Ýsiltýr@localhost;
+GRANT EXECUTE ON PROCEDURE StoreGame TO TO Ýsiltýr@localhost;
+GRANT EXECUTE ON PROCEDURE FetchGame TO TO Ýsiltýr@localhost;
