@@ -1,5 +1,6 @@
 mod api;
 mod domain;
+mod db_connection;
 
 use axum::{
     body::Body,
@@ -22,7 +23,8 @@ async fn main() {
     // Define API routes
     let api_router = Router::new()
         .route("/test", get(api::test_import))
-        .route("/create", post(api::start_game));
+        .route("/create", post(api::start_game))
+        .route("/play", post(api::play));
 
     // Create the application and add routes
     let app = Router::new()
