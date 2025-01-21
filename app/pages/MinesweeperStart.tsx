@@ -35,8 +35,8 @@ export const MinesweeperStart = () => {
             <button
                 type="button"
                 className={classNames(
-                    "rounded border-2",
-                    "border-neutral-50",
+                    "border-2",
+                    "border-neutral-500",
                     "px-7",
                     "pb-[8px]",
                     "pt-[10px]",
@@ -54,6 +54,10 @@ export const MinesweeperStart = () => {
                     "focus:ring-0",
                     "active:border-neutral-200",
                     "active:text-neutral-200",
+                    "active:bg-neutral-500",
+                    "disabled:border-neutral-100",
+                    "disabled:text-neutral-100",
+                    "disabled:bg-neutral-200",
                     "hover:bg-neutral-100",
                     "hover:bg-opacity-10",
                 )}
