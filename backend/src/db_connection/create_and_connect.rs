@@ -13,7 +13,7 @@ use crate::domain::play::Play;
 const db_uri: &str = "mongodb+srv://game_user:pVYaMpYSnNjGU4UH@rustyminesweeperdb.sx5ma.mongodb.net/?retryWrites=true&w=majority&appName=RustyMinesweeperDB";
 
 
-async fn get_connection() -> mongodb::Collection<_>  {
+async fn get_connection() -> mongodb::Collection<Document>  {
     // Establish connection to MongoDB
     let mut client_options: ClientOptions =
         match ClientOptions::parse(db_uri).await {
@@ -66,14 +66,37 @@ pub async fn store_gamestate(game: Play, user: String) -> () {
 pub async fn fetch_gamestate(user: String) -> Play {
     // Establish connection to the database
     let gamestates: mongodb::Collection<Document> = get_connection().await;
-    let game: Play = match gamestates.get("gamestate") {
-        Some(Bson::Document(gamestate_doc)) => {
-            bson::from_document::<Play>(gamestate_doc.clone())
-                .map_err(|e| format!("Failed to deserialize Play: {}", e))
-        }.unwrap(),
-        Some(_) => panic!("Wrong data type found, cannot convert to Play object"),
-        None => panic!("Key 'gamestate' not found in the document"),
+
+    // Find the correct document for a specific user
+    let filter_doc: Document = doc! {
+        "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
     };
+    println!("${:?}", filter_doc);
+    let game_opt: Option<Document> = match gamestates.find_one(
+        filter_doc,  
+        None,  
+    ).await {
+        Ok(game_opt) => game_opt,
+        Err(e) => panic!("Error: Cannot find document for ${}: ${}", &user, e)
+    };
+    println!("${:?}", &game_opt);
+    let game_doc: Document = match game_opt {
+        Some(game_doc) => game_doc,
+        _ => panic!("Error: Empty Doc found for ${}", &user)
+    };
+    println!("${:?}", &game_doc);
+
+    // Convert the document into a Play object
+    let game_element: &Bson = match game_doc.get("gamestate") {
+        Some(game_element) => game_element,
+        _ => panic!("Error: Cannot find gamestate in document")
+    };
+    println!("${:?}", &game_element);
+    let game: Play = match bson::from_bson(game_element.clone()) {
+        Ok(game) => game,
+        Err(e) => panic!("Error: Cannot convert document to Play object: ${}", e)
+    };
+    println!("${:?}", &game);
     return game;
 }
 

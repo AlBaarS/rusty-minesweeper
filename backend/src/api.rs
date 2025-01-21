@@ -42,7 +42,7 @@ pub async fn start_game(Json(payload): Json<serde_json::Value>) -> Json<serde_js
     return Json(json!({ "playboard": game}));
 }
 
-// Fetch game from database
+// Perform a move
 pub async fn play(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Value> {
     println!("API call received for play() with body ${}", payload);
 
