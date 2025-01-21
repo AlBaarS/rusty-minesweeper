@@ -18,7 +18,7 @@ async fn get_connection() -> mongodb::Collection<Document>  {
     let mut client_options: ClientOptions =
         match ClientOptions::parse(db_uri).await {
             Ok(client_options) => client_options,
-            Err(e) => panic!("Unable to obtain client options: ${}", e)
+            Err(e) => panic!("Unable to obtain client options: {}", e)
         };
 
     // Set the server_api field of the client_options object to set the version of the Stable API on the client
@@ -28,7 +28,7 @@ async fn get_connection() -> mongodb::Collection<Document>  {
     // Get a handle to the cluster
     let client: Client = match Client::with_options(client_options) {
         Ok(client) => client,
-        Err(e) => panic!("Unable to create client with options: ${}", e)
+        Err(e) => panic!("Unable to create client with options: {}", e)
     };
 
     // Get the 'gamestates' collection from the 'rusty_minesweeper' database
@@ -42,10 +42,10 @@ pub async fn store_gamestate(game: Play, user: String) -> () {
 
     println!("Call to store gamestate...");
 
-    // Set up correct data type to send along
+    // Set up the document to send along
     let game_bson: Bson = match bson::to_bson(&game) {
         Ok(game_bson) => game_bson,
-        Err(e) => panic!("Conversion of gamestate to BSON failed: ${}", e)
+        Err(e) => panic!("Conversion of gamestate to BSON failed: {}", e)
     };
     let outgoing_doc: bson::Document = doc! {
         "user": user,
@@ -58,10 +58,12 @@ pub async fn store_gamestate(game: Play, user: String) -> () {
     // Insert our gamestate into the database
     let insert_result: mongodb::results::InsertOneResult = match gamestates.insert_one(outgoing_doc.clone(), None).await {
         Ok(insert_result) => insert_result,
-        Err(e) => panic!("Failed to insert data into MongoDB: ${}", e)
+        Err(e) => panic!("Failed to insert data into MongoDB: {}", e)
     };
     println!("Database insertion successful. New document ID: {}", insert_result.inserted_id);
 }
+
+
 
 pub async fn fetch_gamestate(user: String) -> Play {
 
@@ -70,20 +72,22 @@ pub async fn fetch_gamestate(user: String) -> Play {
     // Establish connection to the database
     let gamestates: mongodb::Collection<Document> = get_connection().await;
 
-    // Find the correct document for a specific user
+    // Set up the document to filter
     let filter_doc: Document = doc! {
         "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
     };
+
+    // Find the correct document for a specific user
     let game_opt: Option<Document> = match gamestates.find_one(
         filter_doc,  
         None,  
     ).await {
         Ok(game_opt) => game_opt,
-        Err(e) => panic!("Error: Cannot find document for ${}: ${}", &user, e)
+        Err(e) => panic!("Error: Cannot find document for {}: {}", &user, e)
     };
     let game_doc: Document = match game_opt {
         Some(game_doc) => game_doc,
-        _ => panic!("Error: Empty Doc found for ${}", &user)
+        _ => panic!("Error: Empty Doc found for {}", &user)
     };
 
     // Convert the document into a Play object
@@ -93,14 +97,44 @@ pub async fn fetch_gamestate(user: String) -> Play {
     };
     let game: Play = match bson::from_bson(game_element.clone()) {
         Ok(game) => game,
-        Err(e) => panic!("Error: Cannot convert document to Play object: ${}", e)
+        Err(e) => panic!("Error: Cannot convert document to Play object: {}", e)
     };
 
-    println!("Game of ${} fetched successfully!", &user);
+    println!("Game of {} fetched successfully!", &user);
 
     return game;
 }
 
 
 
+pub async fn update_gamestate(user: String, game: Play) -> () {
 
+    println!("Call to update gamestate...");
+
+    // Establish connection to the database
+    let gamestates: mongodb::Collection<Document> = get_connection().await;
+
+    // Set up the documents to filter and send along
+    let filter_doc: Document = doc! {
+        "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
+    };
+    let game_bson: Bson = match bson::to_bson(&game) {
+        Ok(game_bson) => game_bson,
+        Err(e) => panic!("Conversion of gamestate to BSON failed: {}", e)
+    };
+    let update_doc: Document = doc! {
+        "$set" : { "gamestate": game_bson }
+    };
+
+    // Update the correct document for a specific user
+    let update_result: mongodb::results::UpdateResult = match gamestates.update_one(
+        filter_doc,
+        update_doc,
+        None,  
+    ).await {
+        Ok(update_result) => update_result,
+        Err(e) => panic!("Error: Cannot find document for {}: {}", &user, e)
+    };
+
+    println!("Database update successfully. Updated elements: {}", update_result.modified_count);
+}

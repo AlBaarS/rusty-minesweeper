@@ -40,7 +40,7 @@ impl Play {
 
 fn main() {
     let game: Play = Play::new(1234567890);
-    println!("Game: ${:?}", game);
+    println!("Game: {:?}", game);
 }
 
 #[cfg(test)]
