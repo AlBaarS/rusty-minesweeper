@@ -44,7 +44,6 @@ export const MinesweeperStart = () => {
                     "font-medium",
                     "uppercase",
                     "leading-normal",
-                    "text-neutral-50",
                     "transition duration-150",
                     "ease-in-out",
                     "hover:border-neutral-100",
@@ -70,25 +69,33 @@ export const MinesweeperStart = () => {
 
     return(
         <div className={classNames(
-            "relative",
-            "h-full", 
-            "w-screen", 
-            "bg-cover", 
-            "bg-center", 
-            "bg-no-repeat", 
-            "p-12", 
-            "text-centerbg-white"
+            "w-full",
+            "text-black",
+            "flex",
+            "items-center",
+            "justify-center",
+            "content-stretch"
         )}>
             <div className={classNames(
-                "absolute2", 
+                "relative",
+                "content-center",
+                "h-max", 
+                "w-fit", 
+                "px-4", 
+                "pb-4", 
+                "pt-4", 
+                "bg-fixed", 
+                "bg-cover", 
+                "bg-center", 
+                "bg-no-repeat", 
+                "bg-slate-300",
+                "text-centerbg-white",
                 "bottom-0", 
                 "left-8", 
                 "right-8", 
                 "top-8", 
                 "border-4",
-                "overflow-hidden", 
-                "bg-fixed", 
-                "text-white"
+                "overflow-hidden"
             )}>
                 <div className="flex h-full items-center justify-center">
                     <div>
@@ -97,8 +104,7 @@ export const MinesweeperStart = () => {
                             "px-4", 
                             "pb-4", 
                             "pt-4", 
-                            "w-full", 
-                            "text-black", 
+                            "w-full",  
                             "border-4", 
                             "border-double", 
                             "bg-slate-200", 
