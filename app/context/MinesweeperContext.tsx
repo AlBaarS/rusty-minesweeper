@@ -6,11 +6,15 @@ import { GameState } from "../types/game";
 type ContextType = {
     gameState: GameState | undefined,
     setGameState: (gameState: GameState) => void;
+    email: string | undefined,
+    setEmail: (email: string | undefined) => void;
 }
 
 const MinesweeperContext = createContext<ContextType>({
     gameState: undefined,
     setGameState() { },
+    email: undefined,
+    setEmail() { },
 });
 
 type Props = React.PropsWithChildren;
@@ -19,10 +23,13 @@ export const MinesweeperProvider = (props: Props) => {
     const { children } = props;
 
     const [gameState, setGameState] = useState<GameState | undefined>(undefined);
+    const [email, setEmail] = useState<string | undefined>(undefined);
 
     return <MinesweeperContext.Provider value={{
         gameState: gameState,
-        setGameState: setGameState
+        setGameState: setGameState,
+        email: email,
+        setEmail: setEmail
     }}>{children}</MinesweeperContext.Provider>
 }
 

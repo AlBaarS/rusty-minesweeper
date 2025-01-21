@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { isGameState } from "../types/game";
-import { useMinesweeper } from "../context/MinesweeperContext";
+import { email, setEmail, useMinesweeper } from "../context/MinesweeperContext";
 import classNames from "classnames";
 import getGameAPI from "../api/getGameAPI";
 import getSeed from "../functions/getSeed";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
-    const [alert, setAlert] = useState<string | null>(null);
-    const [email, setEmail] = useState("");
+    const { email, setEmail } = useMinesweeper();
 
     const onSubmit = async (seed?: number) => {
 
@@ -26,7 +25,6 @@ export const MinesweeperStart = () => {
             console.log("Obtained gamestate:", result);
         } else {
             console.log("Failed to obtain gameState:", result.statusText);
-            setAlert(`${result.statusCode} ${result.statusText}`);
         }
     }
 
@@ -63,7 +61,7 @@ export const MinesweeperStart = () => {
                 )}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                disabled={email == "" || !(email.includes("@"))}
+                disabled={email == undefined || !(email.includes("@"))}
                 onClick={() => onSubmit()}
             >
                 Play Minesweeper
