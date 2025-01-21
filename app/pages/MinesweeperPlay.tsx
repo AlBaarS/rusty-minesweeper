@@ -1,4 +1,4 @@
-import { useMinesweeper } from "../context/MinesweeperContext";
+import { email, useMinesweeper } from "../context/MinesweeperContext";
 import Image from 'next/image';
 
 import cell0_texture from '../../public/cell_textures/celldown.png';
@@ -14,6 +14,8 @@ import mine_expl_texture from '../../public/cell_textures/blast.png';
 import flag_texture from '../../public/cell_textures/cellflag.png'
 import blank_texture from '../../public/cell_textures/cellup.png'
 import { useState } from "react";
+import doPlayAPI from "../api/doPlayAPI";
+import { isGameState } from "../types/game";
 
 const images = {
     0: cell0_texture,
@@ -31,12 +33,26 @@ const images = {
 export const MinesweeperPlay = () => {
 
     const { gameState, setGameState } = useMinesweeper();
+    const { email } = useMinesweeper();
     const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
 
-    function getImage(type: number, flag?: boolean, revealed?: boolean) {
+    const playSquare = async (x: number, y: number) => {
+
+        console.log("Clicking square at x =", x, "and y =", y);
+        const result = await doPlayAPI(email, x, y);
+
+        if (isGameState(result)) {
+            setGameState(result);
+            console.log("Obtained gamestate:", result);
+        } else {
+            console.log("Failed to obtain gameState:", result.statusText);
+        }
+    }
+
+    function getImage(type: number) {
         return images[type] || null;
     }
 
@@ -51,22 +67,7 @@ export const MinesweeperPlay = () => {
     function Column({x}) {
         return(
             <div className="grid grid-flow-row">
-                <Square x={x} y={0} />
-                <Square x={x} y={1} />
-                <Square x={x} y={2} />
-                <Square x={x} y={3} />
-                <Square x={x} y={4} />
-                <Square x={x} y={5} />
-                <Square x={x} y={6} />
-                <Square x={x} y={7} />
-                <Square x={x} y={8} />
-                <Square x={x} y={9} />
-                <Square x={x} y={10} />
-                <Square x={x} y={11} />
-                <Square x={x} y={12} />
-                <Square x={x} y={13} />
-                <Square x={x} y={14} />
-                <Square x={x} y={15} />
+                {[...Array(16).keys()].map(y => <Square key={`(${x} * 16) + ${y}`} x={x} y={y} />)}
             </div>
         )
     }
@@ -90,7 +91,9 @@ export const MinesweeperPlay = () => {
             <button 
                 type = "button"
                 disabled={flag}
-                onClick = {() => setClicked(true)}
+                onClick = {
+                    function(){ playSquare(x, y) ;setClicked(true) }
+                }
             >
                 <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
             </button>
@@ -105,22 +108,7 @@ export const MinesweeperPlay = () => {
                 <FlagsLeft /> <Timer />
                 <div><br /></div>
                 <div className="grid grid-flow-col justify-start">
-                    <Column x={0}/>
-                    <Column x={1}/>
-                    <Column x={2}/>
-                    <Column x={3}/>
-                    <Column x={4}/>
-                    <Column x={5}/>
-                    <Column x={6}/>
-                    <Column x={7}/>
-                    <Column x={8}/>
-                    <Column x={9}/>
-                    <Column x={10}/>
-                    <Column x={11}/>
-                    <Column x={12}/>
-                    <Column x={13}/>
-                    <Column x={14}/>
-                    <Column x={15}/>
+                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
                 </div>
             </div>
         </div>

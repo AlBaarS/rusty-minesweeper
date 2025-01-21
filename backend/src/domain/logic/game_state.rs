@@ -1,11 +1,11 @@
 use std::cmp::Reverse;
 
 use itertools::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoDVector};
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Board {
     mines: TwoDVector<bool>,
     vicinity: TwoDVector<u8>,

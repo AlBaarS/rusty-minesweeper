@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { isGameState } from "../types/game";
-import { useMinesweeper } from "../context/MinesweeperContext";
+import { email, setEmail, useMinesweeper } from "../context/MinesweeperContext";
 import classNames from "classnames";
 import getGameAPI from "../api/getGameAPI";
 import getSeed from "../functions/getSeed";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
-    const [alert, setAlert] = useState<string | null>(null);
+    const { email, setEmail } = useMinesweeper();
 
     const onSubmit = async (seed?: number) => {
 
@@ -18,14 +18,13 @@ export const MinesweeperStart = () => {
         }
 
         console.log("Starting game using API getGameAPI");
-        const result = await getGameAPI(seed);
+        const result = await getGameAPI(seed, email);
 
         if (isGameState(result)) {
             setGameState(result);
             console.log("Obtained gamestate:", result);
         } else {
             console.log("Failed to obtain gameState:", result.statusText);
-            setAlert(`${result.statusCode} ${result.statusText}`);
         }
     }
 
@@ -34,8 +33,8 @@ export const MinesweeperStart = () => {
             <button
                 type="button"
                 className={classNames(
-                    "rounded border-2",
-                    "border-neutral-50",
+                    "border-2",
+                    "border-neutral-500",
                     "px-7",
                     "pb-[8px]",
                     "pt-[10px]",
@@ -43,7 +42,6 @@ export const MinesweeperStart = () => {
                     "font-medium",
                     "uppercase",
                     "leading-normal",
-                    "text-neutral-50",
                     "transition duration-150",
                     "ease-in-out",
                     "hover:border-neutral-100",
@@ -54,12 +52,16 @@ export const MinesweeperStart = () => {
                     "focus:ring-0",
                     "active:border-neutral-200",
                     "active:text-neutral-200",
+                    "active:bg-neutral-500",
+                    "disabled:border-neutral-100",
+                    "disabled:text-neutral-100",
+                    "disabled:bg-neutral-200",
                     "hover:bg-neutral-100",
                     "hover:bg-opacity-10",
                 )}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                disabled={false}
+                disabled={email == undefined || !(email.includes("@"))}
                 onClick={() => onSubmit()}
             >
                 Play Minesweeper
@@ -68,12 +70,52 @@ export const MinesweeperStart = () => {
     }
 
     return(
-        <div className="`relative h-full w-screen bg-cover bg-center bg-no-repeat p-12 text-centerbg-white">
-            <div className="absolute2 bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed bg-black/60">
+        <div className={classNames(
+            "w-full",
+            "text-black",
+            "flex",
+            "items-center",
+            "justify-center",
+            "content-stretch"
+        )}>
+            <div className={classNames(
+                "relative",
+                "content-center",
+                "h-max", 
+                "w-fit", 
+                "px-4", 
+                "pb-4", 
+                "pt-4", 
+                "bg-fixed", 
+                "bg-cover", 
+                "bg-center", 
+                "bg-no-repeat", 
+                "bg-slate-300",
+                "text-centerbg-white",
+                "bottom-0", 
+                "left-8", 
+                "right-8", 
+                "top-8", 
+                "border-4",
+                "overflow-hidden"
+            )}>
                 <div className="flex h-full items-center justify-center">
-                    <div className="text-white">
+                    <div>
                         <h2 className="mb-4 text-4xl font-semibold">Welcome to Minesweeper</h2>
-
+                        <div className={classNames(
+                            "px-4", 
+                            "pb-4", 
+                            "pt-4", 
+                            "w-full",  
+                            "border-4", 
+                            "border-double", 
+                            "bg-slate-200", 
+                            "border-neutral-400"
+                        )}>
+                            e-mail: <input onChange={e => setEmail(e.target.value)}/>
+                        </div>
+                        <br />
+                        <br />
                         <PlayButton />
                     </div>
                 </div>
