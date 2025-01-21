@@ -1,17 +1,17 @@
 use super::logic::game_state::Board;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Progress {
     Win,
     Lose,
     InProgress,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Play {
-    game: Board,
-    progress: Progress,
+    pub(crate) game: Board,
+    pub(crate) progress: Progress,
 }
 
 impl Play {
@@ -40,7 +40,7 @@ impl Play {
 
 fn main() {
     let game: Play = Play::new(1234567890);
-    println!("Game: ${:?}", game);
+    println!("Game: {:?}", game);
 }
 
 #[cfg(test)]
