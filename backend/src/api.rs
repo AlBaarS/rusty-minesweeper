@@ -36,9 +36,14 @@ pub async fn start_game(Json(payload): Json<serde_json::Value>) -> Json<serde_js
         None => return Json(json!({"playboard" : "invalid input"})),
     };
 
+    let user: String = match payload["user"].as_str() {
+        Some(user) => user,
+        None => return Json(json!({"playboard" : "invalid input"})),
+    }.try_into().unwrap();
+
     println!("Seed registered: {}. Returning a new board to front-end.", seed);
     let game: Play = Play::new(seed);
-    store_gamestate(game.clone(), String::from("SirArchibaldDovingtonIII@pigeon.mail")).await;
+    store_gamestate(game.clone(), user).await;
     return Json(json!({ "playboard": game}));
 }
 

@@ -19,7 +19,7 @@ export const MinesweeperStart = () => {
         }
 
         console.log("Starting game using API getGameAPI");
-        const result = await getGameAPI(seed);
+        const result = await getGameAPI(seed, email);
 
         if (isGameState(result)) {
             setGameState(result);
