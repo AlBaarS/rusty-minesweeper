@@ -51,22 +51,7 @@ export const MinesweeperPlay = () => {
     function Column({x}) {
         return(
             <div className="grid grid-flow-row">
-                <Square x={x} y={0} />
-                <Square x={x} y={1} />
-                <Square x={x} y={2} />
-                <Square x={x} y={3} />
-                <Square x={x} y={4} />
-                <Square x={x} y={5} />
-                <Square x={x} y={6} />
-                <Square x={x} y={7} />
-                <Square x={x} y={8} />
-                <Square x={x} y={9} />
-                <Square x={x} y={10} />
-                <Square x={x} y={11} />
-                <Square x={x} y={12} />
-                <Square x={x} y={13} />
-                <Square x={x} y={14} />
-                <Square x={x} y={15} />
+                {[...Array(16).keys()].map(y => <Square key={`(${x} * 16) + ${y}`} x={x} y={y} />)}
             </div>
         )
     }
@@ -105,22 +90,7 @@ export const MinesweeperPlay = () => {
                 <FlagsLeft /> <Timer />
                 <div><br /></div>
                 <div className="grid grid-flow-col justify-start">
-                    <Column x={0}/>
-                    <Column x={1}/>
-                    <Column x={2}/>
-                    <Column x={3}/>
-                    <Column x={4}/>
-                    <Column x={5}/>
-                    <Column x={6}/>
-                    <Column x={7}/>
-                    <Column x={8}/>
-                    <Column x={9}/>
-                    <Column x={10}/>
-                    <Column x={11}/>
-                    <Column x={12}/>
-                    <Column x={13}/>
-                    <Column x={14}/>
-                    <Column x={15}/>
+                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
                 </div>
             </div>
         </div>

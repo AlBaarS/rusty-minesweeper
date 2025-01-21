@@ -1,6 +1,6 @@
 import { GameState } from "../types/game";
 
-const getGameAPI = async (seed: number): Promise<object> => {
+const getGameAPI = async (seed: number, user: string): Promise<object> => {
     console.log("Calling getGameAPI with seed", seed)
     const url = process.env.NEXT_PUBLIC_API_URL;
     const response = await fetch(`${url}/api/create`, {
@@ -11,6 +11,7 @@ const getGameAPI = async (seed: number): Promise<object> => {
         },
         body: JSON.stringify({
             seed: seed,
+            user: user,
         }),
     });
     
