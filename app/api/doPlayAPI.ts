@@ -1,6 +1,6 @@
 import { GameState } from "../types/game";
 
-const doPlayAPI = async (user: string, x: number, y: number): Promise<object> => {
+const doPlayAPI = async (user: any, x: number, y: number): Promise<object> => {
     console.log("Calling doPlayAPI with user", user, " and coordinates x =", x, "y =", y);
     const url = process.env.NEXT_PUBLIC_API_URL;
     const response = await fetch(`${url}/api/play`, {

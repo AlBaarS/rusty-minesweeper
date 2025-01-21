@@ -1,4 +1,4 @@
-import { useMinesweeper } from "../context/MinesweeperContext";
+import { email, useMinesweeper } from "../context/MinesweeperContext";
 import Image from 'next/image';
 
 import cell0_texture from '../../public/cell_textures/celldown.png';
@@ -14,6 +14,8 @@ import mine_expl_texture from '../../public/cell_textures/blast.png';
 import flag_texture from '../../public/cell_textures/cellflag.png'
 import blank_texture from '../../public/cell_textures/cellup.png'
 import { useState } from "react";
+import doPlayAPI from "../api/doPlayAPI";
+import { isGameState } from "../types/game";
 
 const images = {
     0: cell0_texture,
@@ -31,12 +33,26 @@ const images = {
 export const MinesweeperPlay = () => {
 
     const { gameState, setGameState } = useMinesweeper();
+    const { email } = useMinesweeper();
     const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
 
-    function getImage(type: number, flag?: boolean, revealed?: boolean) {
+    const playSquare = async (x: number, y: number) => {
+
+        console.log("Clicking square at x =", x, "and y =", y);
+        const result = await doPlayAPI(email, x, y);
+
+        if (isGameState(result)) {
+            setGameState(result);
+            console.log("Obtained gamestate:", result);
+        } else {
+            console.log("Failed to obtain gameState:", result.statusText);
+        }
+    }
+
+    function getImage(type: number) {
         return images[type] || null;
     }
 
@@ -75,7 +91,9 @@ export const MinesweeperPlay = () => {
             <button 
                 type = "button"
                 disabled={flag}
-                onClick = {() => setClicked(true)}
+                onClick = {
+                    function(){ playSquare(x, y) ;setClicked(true) }
+                }
             >
                 <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
             </button>
