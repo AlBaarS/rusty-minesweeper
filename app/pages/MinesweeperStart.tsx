@@ -10,6 +10,7 @@ import getSeed from "../functions/getSeed";
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const [alert, setAlert] = useState<string | null>(null);
+    const [email, setEmail] = useState("");
 
     const onSubmit = async (seed?: number) => {
 
@@ -59,7 +60,7 @@ export const MinesweeperStart = () => {
                 )}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                disabled={false}
+                disabled={email == "" || !(email.includes("@"))}
                 onClick={() => onSubmit()}
             >
                 Play Minesweeper
@@ -68,12 +69,45 @@ export const MinesweeperStart = () => {
     }
 
     return(
-        <div className="`relative h-full w-screen bg-cover bg-center bg-no-repeat p-12 text-centerbg-white">
-            <div className="absolute2 bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed bg-black/60">
+        <div className={classNames(
+            "relative",
+            "h-full", 
+            "w-screen", 
+            "bg-cover", 
+            "bg-center", 
+            "bg-no-repeat", 
+            "p-12", 
+            "text-centerbg-white"
+        )}>
+            <div className={classNames(
+                "absolute2", 
+                "bottom-0", 
+                "left-8", 
+                "right-8", 
+                "top-8", 
+                "border-4",
+                "overflow-hidden", 
+                "bg-fixed", 
+                "text-white"
+            )}>
                 <div className="flex h-full items-center justify-center">
-                    <div className="text-white">
+                    <div>
                         <h2 className="mb-4 text-4xl font-semibold">Welcome to Minesweeper</h2>
-
+                        <div className={classNames(
+                            "px-4", 
+                            "pb-4", 
+                            "pt-4", 
+                            "w-full", 
+                            "text-black", 
+                            "border-4", 
+                            "border-double", 
+                            "bg-slate-200", 
+                            "border-neutral-400"
+                        )}>
+                            e-mail: <input onChange={e => setEmail(e.target.value)}/>
+                        </div>
+                        <br />
+                        <br />
                         <PlayButton />
                     </div>
                 </div>
