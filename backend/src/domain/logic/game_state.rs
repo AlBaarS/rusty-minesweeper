@@ -1,5 +1,4 @@
-use std::cmp::Reverse;
-
+use std::iter;
 use itertools::*;
 use serde::{Deserialize, Serialize};
 
@@ -7,10 +6,10 @@ use super::base_components::{game_generation::GameGeneration, two_d_vector::TwoD
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Board {
-    mines: TwoDVector<bool>,
-    vicinity: TwoDVector<u8>,
-    revealed: TwoDVector<bool>,
-    flagged: TwoDVector<bool>,
+    pub(crate) mines: TwoDVector<bool>,
+    pub(crate) vicinity: TwoDVector<u8>,
+    pub(crate) revealed: TwoDVector<bool>,
+    pub(crate) flagged: TwoDVector<bool>,
 }
 
 impl Board {
@@ -26,20 +25,20 @@ impl Board {
 
 
     // Getters
-    pub fn get_mines(&self) -> &TwoDVector<bool> {
-        return &self.mines;
+    pub fn get_mines(&self) -> TwoDVector<bool> {
+        return self.mines.clone();
     }
 
-    pub fn get_vicinity(&self) -> &TwoDVector<u8> {
-        return &self.vicinity;
+    pub fn get_vicinity(&self) -> TwoDVector<u8> {
+        return self.vicinity.clone();
     }
 
-    pub fn get_revealed(&self) -> &TwoDVector<bool> {
-        return &self.revealed;
+    pub fn get_revealed(&self) -> TwoDVector<bool> {
+        return self.revealed.clone();
     }
 
-    pub fn get_flagged(&self) -> &TwoDVector<bool> {
-        return &self.flagged;
+    pub fn get_flagged(&self) -> TwoDVector<bool> {
+        return self.flagged.clone();
     }
 
 
@@ -96,19 +95,49 @@ impl Board {
 
     // Functions for performing an action (clicking a square or placing/removing a flag)
     pub fn reveal_square(&self, x: usize, y: usize) -> Board {
-        let mines: TwoDVector<bool> = self.get_mines().clone();
-        let vicinity: TwoDVector<u8> = self.get_vicinity().clone();
+        let mines: TwoDVector<bool> = self.get_mines();
+        let vicinity: TwoDVector<u8> = self.get_vicinity();
         let revealed: TwoDVector<bool> = self.get_revealed().change_element(x, y, true);
-        let flagged: TwoDVector<bool> = self.get_flagged().clone();
+        let flagged: TwoDVector<bool> = self.get_flagged();
         return Board::new(mines, vicinity, revealed, flagged);
     }
 
     pub fn flag_unflag_square(&self, x: usize, y: usize) -> Board {
-        let mines: TwoDVector<bool> = self.get_mines().clone();
-        let vicinity: TwoDVector<u8> = self.get_vicinity().clone();
-        let revealed: TwoDVector<bool> = self.get_revealed().clone();
+        let mines: TwoDVector<bool> = self.get_mines();
+        let vicinity: TwoDVector<u8> = self.get_vicinity();
+        let revealed: TwoDVector<bool> = self.get_revealed();
         let flagged: TwoDVector<bool> = self.get_flagged().change_element(x, y, !self.get_flagged().get_element(x, y));
         return Board::new(mines, vicinity, revealed, flagged);
+    }
+
+    pub fn reveal_all(&self) -> Board {
+        let mines: TwoDVector<bool> = self.get_mines();
+        let vicinity: TwoDVector<u8> = self.get_vicinity();
+        let size: u16 = self.get_mines().get_size().into();
+        let revealed: TwoDVector<bool> = TwoDVector::new(iter::repeat(true).take((size * size).into()).collect_vec(), size.try_into().unwrap());
+        let flagged: TwoDVector<bool> = self.get_flagged();
+        return Board::new(mines, vicinity, revealed, flagged);
+    }
+
+    // Helper functions
+    pub fn invert_mines(&self) -> TwoDVector<bool> {
+        let invert_vec: Vec<Vec<bool>> = self
+            .get_mines()
+            .get_vec()
+            .into_iter()
+            .map(
+                |y| 
+                y.into_iter()
+                .map(
+                    |x| 
+                    !x
+                ).collect_vec()
+            ).collect_vec();
+        let invert: TwoDVector<bool> = TwoDVector {
+            matrix: invert_vec,
+            size: self.get_revealed().get_size(),
+        };
+        return invert;
     }
 }
 
@@ -193,5 +222,35 @@ mod tests {
         ];
         let board: Board = Board::generate_starting_state(test_size, test_seed);
         assert_eq!(board.flag_unflag_square(0, 2).flag_unflag_square(0, 2).get_flagged().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_mines_are_reversed_properly() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![true, true, true, true, false], 
+            vec![true, true, true, true, true], 
+            vec![true, true, false, true, true], 
+            vec![false, false, true, false, true], 
+            vec![true, true, true, true, true]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.invert_mines().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_all_squares_are_revealed() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.reveal_all().get_revealed().get_vec(), reference_field);
     }
 }

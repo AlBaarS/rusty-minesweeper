@@ -1,4 +1,4 @@
-import { email, useMinesweeper } from "../context/MinesweeperContext";
+import { useMinesweeper } from "../context/MinesweeperContext";
 import Image from 'next/image';
 
 import cell0_texture from '../../public/cell_textures/celldown.png';
@@ -16,6 +16,7 @@ import blank_texture from '../../public/cell_textures/cellup.png'
 import { useState } from "react";
 import doPlayAPI from "../api/doPlayAPI";
 import { isGameState } from "../types/game";
+import classNames from "classnames";
 
 const images = {
     0: cell0_texture,
@@ -38,6 +39,7 @@ export const MinesweeperPlay = () => {
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
+    const progress = gameState?.progress;
 
     const playSquare = async (x: number, y: number) => {
 
@@ -81,9 +83,8 @@ export const MinesweeperPlay = () => {
         const flag = flagged[y][x];
         const rev = revealed[y][x];
         const cellImg = getImage(vic);
-        let [clicked, setClicked] = useState<true | false>(rev);
 
-        return clicked ? (
+        return rev ? (
             <div className="object-cover">
                 <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
             </div>
@@ -92,7 +93,7 @@ export const MinesweeperPlay = () => {
                 type = "button"
                 disabled={flag}
                 onClick = {
-                    function(){ playSquare(x, y) ;setClicked(true) }
+                    function(){ playSquare(x, y) }
                 }
             >
                 <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
@@ -100,15 +101,86 @@ export const MinesweeperPlay = () => {
         )
     }
 
+    function DisplayEndgameState() {
+        if (progress == "InProgress") {
+            return(<div></div>);
+        } else {
+            return(<div className={classNames(
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1",
+                "h-full"
+            )}>
+                Game over. You {progress}!
+            </div>);
+        }
+        
+    }
+
+    function GameProgress() {
+        return(<div className={classNames(
+            "text-black",
+            "grid",
+            "grid-cols-2"
+        )}>
+            <div className="p-2">
+                <div className={classNames(
+                    "border-4",
+                    "border-double",
+                    "border-gray-400",
+                    "p-1",
+                    "h-full"
+                )}>
+                    Currently playing with e-mail: <br /> {email}
+                </div>
+            </div>
+            <div className="p-2">
+                <DisplayEndgameState />
+            </div>
+        </div>)
+    }
+
 
     return(
-        <div className="grid">
-            <div><br /></div>
-            <div className="place-self-center">
-                <FlagsLeft /> <Timer />
-                <div><br /></div>
-                <div className="grid grid-flow-col justify-start">
-                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
+        <div className={classNames(
+            "flex",
+            "place-content-center"
+        )}>
+            <div className={classNames(
+                "box-border",
+                "w-2/5"
+            )}>
+                <div className={classNames(
+                    "px-4", 
+                    "pb-4", 
+                    "pt-4",  
+                    "border-4", 
+                    "border-double", 
+                    "bg-slate-200", 
+                    "border-neutral-400"
+                    )}>
+                    <div>
+                        <div className="grid grid-flow-row">
+                            <GameProgress />
+                            <div><br /></div>
+                            <div className="place-self-center">
+                                <FlagsLeft /> <Timer />
+                                <div><br /></div>
+                                <div className={classNames(
+                                    "grid", 
+                                    "grid-flow-col", 
+                                    "justify-start",
+                                    "border-4", 
+                                    "border-double", 
+                                    "bg-slate-200", 
+                                    "border-neutral-400"
+                                )}>
+                                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
