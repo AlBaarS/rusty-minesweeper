@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from "react";
 import { isGameState } from "../types/game";
-import { email, setEmail, useMinesweeper } from "../context/MinesweeperContext";
+import { useMinesweeper } from "../context/MinesweeperContext";
 import classNames from "classnames";
 import getGameAPI from "../api/getGameAPI";
 import getSeed from "../functions/getSeed";

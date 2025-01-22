@@ -1,4 +1,4 @@
-import { email, useMinesweeper } from "../context/MinesweeperContext";
+import { useMinesweeper } from "../context/MinesweeperContext";
 import Image from 'next/image';
 
 import cell0_texture from '../../public/cell_textures/celldown.png';
@@ -38,6 +38,7 @@ export const MinesweeperPlay = () => {
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
+    const progress = gameState?.progress;
 
     const playSquare = async (x: number, y: number) => {
 
@@ -81,9 +82,8 @@ export const MinesweeperPlay = () => {
         const flag = flagged[y][x];
         const rev = revealed[y][x];
         const cellImg = getImage(vic);
-        let [clicked, setClicked] = useState<true | false>(rev);
 
-        return clicked ? (
+        return rev ? (
             <div className="object-cover">
                 <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
             </div>
@@ -92,7 +92,7 @@ export const MinesweeperPlay = () => {
                 type = "button"
                 disabled={flag}
                 onClick = {
-                    function(){ playSquare(x, y) ;setClicked(true) }
+                    function(){ playSquare(x, y) }
                 }
             >
                 <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
