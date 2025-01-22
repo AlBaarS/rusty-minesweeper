@@ -16,6 +16,7 @@ import blank_texture from '../../public/cell_textures/cellup.png'
 import { useState } from "react";
 import doPlayAPI from "../api/doPlayAPI";
 import { isGameState } from "../types/game";
+import classNames from "classnames";
 
 const images = {
     0: cell0_texture,
@@ -102,13 +103,43 @@ export const MinesweeperPlay = () => {
 
 
     return(
-        <div className="grid">
-            <div><br /></div>
-            <div className="place-self-center">
-                <FlagsLeft /> <Timer />
-                <div><br /></div>
-                <div className="grid grid-flow-col justify-start">
-                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
+        <div className={classNames(
+            "flex",
+            "place-content-center"
+        )}>
+            <div className={classNames(
+                "box-border",
+                "w-2/5"
+            )}>
+                <div className={classNames(
+                    "px-4", 
+                    "pb-4", 
+                    "pt-4",  
+                    "border-4", 
+                    "border-double", 
+                    "bg-slate-200", 
+                    "border-neutral-400"
+                    )}>
+                    <div>
+                        <div className="grid">
+                            <div><br /></div>
+                            <div className="place-self-center">
+                                <FlagsLeft /> <Timer />
+                                <div><br /></div>
+                                <div className={classNames(
+                                    "grid", 
+                                    "grid-flow-col", 
+                                    "justify-start",
+                                    "border-4", 
+                                    "border-double", 
+                                    "bg-slate-200", 
+                                    "border-neutral-400"
+                                )}>
+                                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
