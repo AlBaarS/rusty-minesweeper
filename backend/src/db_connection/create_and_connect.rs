@@ -138,3 +138,26 @@ pub async fn update_gamestate(user: String, game: Play) -> () {
 
     println!("Database update successfully. Updated elements: {}", update_result.modified_count);
 }
+
+pub async fn delete_gamestate(user: String) -> () {
+    println!("Call to delete gamestate...");
+
+    // Establish connection to the database
+    let gamestates: mongodb::Collection<Document> = get_connection().await;
+
+    // Set up the document to filter
+    let filter_doc: Document = doc! {
+        "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
+    };
+
+    // Delete the correct document for a specific user
+    let game_delete_results: mongodb::results::DeleteResult = match gamestates.delete_many(
+        filter_doc,  
+        None,  
+    ).await {
+        Ok(game_opt) => game_opt,
+        Err(e) => panic!("Error: Cannot find document for {}: {}", &user, e)
+    };
+
+    println!("Successfully deleted {} games of {}!", game_delete_results.deleted_count, &user);
+}
