@@ -63,18 +63,18 @@ impl Play {
         let new_board: Board = self.get_game().reveal_square(x, y);
         if self.is_lost(x, y) {
             return Play {
-                game: new_board.reveal_all(),       //to implement
+                game: new_board.reveal_all(),
                 progress: Progress::Lost,
             };
         } else {       
-            if self.is_won() {                      //to implement
+            if self.is_won() {
                 return Play {
-                    game: new_board.reveal_all(),       //to implement
+                    game: new_board,
                     progress: Progress::Win,
                 };
             } else {
                 return Play {
-                    game: new_board.reveal_all(),       //to implement
+                    game: new_board,
                     progress: Progress::InProgress,
                 };
             };
@@ -90,7 +90,9 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain::{logic::game_state::Board, play::Progress};
+    use std::iter;
+    use itertools::*;
+    use crate::domain::{logic::{base_components::two_d_vector::TwoDVector, game_state::Board}, play::Progress};
     use super::Play;
 
     #[test]
@@ -117,6 +119,13 @@ mod tests {
     fn test_if_square_without_mine_will_not_return_Lost_when_clicked() {
         let play: Play = Play::new(1234567890).play_square(1, 0);
         assert_eq!(play.get_progress().to_owned(), Progress::InProgress);
+    }
+
+    #[test]
+    fn test_if_all_squares_are_revealed_when_the_game_is_lost() {
+        let play: Play = Play::new(1234567890).play_square(2, 0);
+        let revealed_board: TwoDVector<bool> = TwoDVector::new(iter::repeat(true).take(256).collect_vec(), 16);
+        assert_eq!(play.get_game().get_revealed().get_vec(), revealed_board.get_vec());
     }
 
     #[test]

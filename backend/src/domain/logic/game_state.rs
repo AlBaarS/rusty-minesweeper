@@ -1,5 +1,4 @@
-use std::cmp::Reverse;
-
+use std::iter;
 use itertools::*;
 use serde::{Deserialize, Serialize};
 
@@ -112,14 +111,15 @@ impl Board {
     }
 
     pub fn reveal_all(&self) -> Board {
-        return self.clone(); //TMP
+        let mines: TwoDVector<bool> = self.get_mines();
+        let vicinity: TwoDVector<u8> = self.get_vicinity();
+        let size: u16 = self.get_mines().get_size().into();
+        let revealed: TwoDVector<bool> = TwoDVector::new(iter::repeat(true).take((size * size).into()).collect_vec(), size.try_into().unwrap());
+        let flagged: TwoDVector<bool> = self.get_flagged();
+        return Board::new(mines, vicinity, revealed, flagged);
     }
 
     // Helper functions
-    // fn flip_bool(b: bool) -> bool {
-    //     return !b;
-    // }
-
     pub fn invert_mines(&self) -> TwoDVector<bool> {
         let invert_vec: Vec<Vec<bool>> = self
             .get_mines()
@@ -237,5 +237,20 @@ mod tests {
         ];
         let board: Board = Board::generate_starting_state(test_size, test_seed);
         assert_eq!(board.invert_mines().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_all_squares_are_revealed() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true], 
+            vec![true, true, true, true, true]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.reveal_all().get_revealed().get_vec(), reference_field);
     }
 }
