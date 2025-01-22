@@ -5,7 +5,7 @@ export type GameState = {
 
 export enum Progress {
     Win,
-    Lose,
+    Lost,
     InProgress,
 }
 
