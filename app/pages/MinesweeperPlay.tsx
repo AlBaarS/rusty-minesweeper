@@ -101,6 +101,46 @@ export const MinesweeperPlay = () => {
         )
     }
 
+    function DisplayEndgameState() {
+        if (progress == "InProgress") {
+            return(<div></div>);
+        } else {
+            return(<div className={classNames(
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1",
+                "h-full"
+            )}>
+                Game over. You {progress}!
+            </div>);
+        }
+        
+    }
+
+    function GameProgress() {
+        return(<div className={classNames(
+            "text-black",
+            "grid",
+            "grid-cols-2"
+        )}>
+            <div className="p-2">
+                <div className={classNames(
+                    "border-4",
+                    "border-double",
+                    "border-gray-400",
+                    "p-1",
+                    "h-full"
+                )}>
+                    Currently playing with e-mail: <br /> {email}
+                </div>
+            </div>
+            <div className="p-2">
+                <DisplayEndgameState />
+            </div>
+        </div>)
+    }
+
 
     return(
         <div className={classNames(
@@ -121,7 +161,8 @@ export const MinesweeperPlay = () => {
                     "border-neutral-400"
                     )}>
                     <div>
-                        <div className="grid">
+                        <div className="grid grid-flow-row">
+                            <GameProgress />
                             <div><br /></div>
                             <div className="place-self-center">
                                 <FlagsLeft /> <Timer />
