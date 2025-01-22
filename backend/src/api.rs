@@ -62,11 +62,7 @@ pub async fn play(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Va
     };
     
     let game_old: Play = fetch_gamestate(user.clone()).await;
-    let board_new: Board = game_old.get_game().reveal_square(x, y);
-    let game_new: Play = Play {
-        game: board_new,
-        progress: Progress::InProgress,
-    };
+    let game_new: Play = game_old.play_square(x, y);
 
     update_gamestate(user, game_new.clone()).await;
     return Json(json!({ "playboard": game_new}));

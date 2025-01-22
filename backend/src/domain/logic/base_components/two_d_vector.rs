@@ -2,8 +2,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct TwoDVector<T: Clone> {
-    matrix: Vec<Vec<T>>,
-    size: u8,
+    pub(crate) matrix: Vec<Vec<T>>,
+    pub(crate) size: u8,
 }
 
 impl<T: Clone> TwoDVector<T> {
