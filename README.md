@@ -30,17 +30,21 @@ npm install
 npm update
 ```
 
+## Starting and terminating the programme
+
 To start the programme, run the `.init.sh` file in the project root (you will need sudo rights to activate the database):
 
-```bash .init.sh```
+```
+bash .init.sh
 
-Or, alternatively:
+# Or, alternatively:
+chmod +x .init.sh       # execute this only once
+./.init.sh
+```
 
-```chmod +x .init.sh``` <-- execute this only once
+Open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play.
 
-```./.init.sh```
-
-Open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play!
+To terminate, simply do `Ctrl + C` __twice__ while in your terminal window that is running the programme.
 
 # MoSCoW
 ## Must
