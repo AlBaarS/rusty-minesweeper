@@ -72,3 +72,29 @@ pub async fn play(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Va
 
     return Json(json!({ "playboard": game_new}));
 }
+
+// Flag a square
+pub async fn flag(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Value> {
+    println!("API call received for flag() with body {}", payload);
+
+    let user: String = payload["user"].to_string();
+    let x: usize = match usize::try_from(payload["x"].as_u64().unwrap()) {
+        Ok(x) => x,
+        Err(e) => panic!("Unable to convert x to usize: {}", e)
+    };
+    let y: usize = match usize::try_from(payload["y"].as_u64().unwrap()) {
+        Ok(y) => y,
+        Err(e) => panic!("Unable to convert y to usize: {}", e)
+    };
+    
+    let game_old: Play = fetch_gamestate(user.clone()).await;
+    let game_new: Play = game_old.flag_square(x, y);
+
+    if game_new.get_progress().to_owned() == Progress::InProgress {
+        update_gamestate(user, game_new.clone()).await;
+    } else {
+        delete_gamestate(user).await;
+    }
+
+    return Json(json!({ "playboard": game_new}));
+}

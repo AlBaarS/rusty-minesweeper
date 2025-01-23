@@ -47,7 +47,7 @@ impl Play {
         return self.get_game().get_revealed().get_vec() == self.get_game().invert_mines().get_vec();
     }
 
-    pub fn autowin(&self) -> Play {
+    pub fn autowin(&self) -> Play {     // For testing purposes only
         return Play {
             game: Board {
                 mines: self.get_game().get_mines(),
@@ -78,6 +78,14 @@ impl Play {
                     progress: Progress::InProgress,
                 };
             };
+        };
+    }
+
+    pub fn flag_square(&self, x: usize, y: usize) -> Play {
+        let new_board: Board = self.get_game().flag_unflag_square(x, y);
+        return Play {
+            game: new_board,
+            progress: Progress::InProgress,
         };
     }
 }
@@ -132,5 +140,11 @@ mod tests {
     fn test_if_win_is_detected_when_all_non_mined_squares_are_revealed() {
         let play: Play = Play::new(1234567890).autowin().play_square(1, 0);
         assert_eq!(play.get_progress().to_owned(), Progress::Win);
+    }
+
+    #[test]
+    fn test_if_flag_is_placed() {
+        let play: Play = Play::new(1234567890).flag_square(1, 3);
+        assert!(play.get_game().get_flagged().get_element(1, 3));
     }
 }

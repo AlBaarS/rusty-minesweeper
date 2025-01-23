@@ -8,6 +8,8 @@ type ContextType = {
     setGameState: (gameState: GameState) => void;
     email: string | undefined,
     setEmail: (email: string | undefined) => void;
+    flagging: boolean,
+    setFlagging: (flagging: boolean) => void;
 }
 
 const MinesweeperContext = createContext<ContextType>({
@@ -15,6 +17,8 @@ const MinesweeperContext = createContext<ContextType>({
     setGameState() { },
     email: undefined,
     setEmail() { },
+    flagging: false,
+    setFlagging() { },
 });
 
 type Props = React.PropsWithChildren;
@@ -24,12 +28,15 @@ export const MinesweeperProvider = (props: Props) => {
 
     const [gameState, setGameState] = useState<GameState | undefined>(undefined);
     const [email, setEmail] = useState<string | undefined>(undefined);
+    const [flagging, setFlagging] = useState<boolean>(false);
 
     return <MinesweeperContext.Provider value={{
         gameState: gameState,
         setGameState: setGameState,
         email: email,
-        setEmail: setEmail
+        setEmail: setEmail,
+        flagging: flagging,
+        setFlagging: setFlagging
     }}>{children}</MinesweeperContext.Provider>
 }
 

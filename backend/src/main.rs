@@ -24,7 +24,8 @@ async fn main() {
     let api_router = Router::new()
         .route("/test", get(api::test_import))
         .route("/create", post(api::start_game))
-        .route("/play", post(api::play));
+        .route("/play", post(api::play))
+        .route("/flag", post(api::flag));
 
     // Create the application and add routes
     let app = Router::new()
