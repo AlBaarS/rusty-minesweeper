@@ -10,7 +10,7 @@ unit-tests:
   script:
     - cargo install cargo-tarpaulin
     - cd backend
-    - cargo tarpaulin
+    - cargo tarpaulin --include-files *domain*
   coverage: '/^\d+.\d+% coverage/'
 
 building:

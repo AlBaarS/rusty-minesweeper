@@ -10,8 +10,7 @@ use mongodb::{
 
 use crate::domain::play::Play;
 
-const DB_URI: &str = "mongodb+srv://game_user:pVYaMpYSnNjGU4UH@rustyminesweeperdb.sx5ma.mongodb.net/?retryWrites=true&w=majority&appName=RustyMinesweeperDB";
-
+const DB_URI: &str = "mongodb://127.0.0.1:27017/";
 
 async fn get_connection() -> mongodb::Collection<Document>  {
     // Establish connection to MongoDB

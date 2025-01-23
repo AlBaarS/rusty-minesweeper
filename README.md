@@ -20,9 +20,9 @@ Alternatively, you can download the source code using wget:
 
 ## Install dependencies 
 
-First and foremost, make sure that [Rust](https://www.rust-lang.org/tools/install) is installed on your system. You can check using `rustup --help` on your CLI. Next, install [nvm and Node.js](https://nodejs.org/en/download).
+First, make sure that [Rust](https://www.rust-lang.org/tools/install) is installed on your system. You can check using `rustup --help` on your CLI. Next, install [nvm and Node.js](https://nodejs.org/en/download). Finally, install [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/) locally on your system.
 
-With Rust, nvm, and Node.js installed, you can install the project dependencies with the following commands:
+With Rust, nvm, Node.js, and MongoDB installed, you can install the project dependencies with the following commands:
 
 ```
 cd rusty-minesweeper/
@@ -30,13 +30,21 @@ npm install
 npm update
 ```
 
-Finally, open two CLI windows or `screen`s. Navigate to the project root `rusty-minesweeper/` in one and to `rusty-minesweeper/backend/` in the other.
+## Starting and terminating the programme
 
-In `rusty-minesweeper/backend/`, execute the command `cargo run`.
+To start the programme, run the `.init.sh` file in the project root (you will need sudo rights to activate the database):
 
-In `rusty-minesweeper/`, execute the command `npm run dev`.
+```
+bash .init.sh
 
-Open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play!
+# Or, alternatively:
+chmod +x .init.sh       # execute this only once
+./.init.sh
+```
+
+Open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play.
+
+To terminate, simply do `Ctrl + C` __twice__ while in your terminal window that is running the programme.
 
 # MoSCoW
 ## Must
