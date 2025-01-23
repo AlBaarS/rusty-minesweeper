@@ -10,13 +10,13 @@ use mongodb::{
 
 use crate::domain::play::Play;
 
-const db_uri: &str = "mongodb+srv://game_user:pVYaMpYSnNjGU4UH@rustyminesweeperdb.sx5ma.mongodb.net/?retryWrites=true&w=majority&appName=RustyMinesweeperDB";
+const DB_URI: &str = "mongodb+srv://game_user:pVYaMpYSnNjGU4UH@rustyminesweeperdb.sx5ma.mongodb.net/?retryWrites=true&w=majority&appName=RustyMinesweeperDB";
 
 
 async fn get_connection() -> mongodb::Collection<Document>  {
     // Establish connection to MongoDB
     let mut client_options: ClientOptions =
-        match ClientOptions::parse(db_uri).await {
+        match ClientOptions::parse(DB_URI).await {
             Ok(client_options) => client_options,
             Err(e) => panic!("Unable to obtain client options: {}", e)
         };
@@ -73,8 +73,16 @@ pub async fn fetch_gamestate(user: String) -> Play {
     let gamestates: mongodb::Collection<Document> = get_connection().await;
 
     // Set up the document to filter
+    let user_prefix_rm = match user.strip_prefix("\"") {
+        Some(user_prefix_rm) => user_prefix_rm,
+        None => &user
+    };
+    let user_formatted = match user_prefix_rm.strip_suffix("\"") {
+        Some(user_formatted) => user_formatted,
+        None => &user_prefix_rm
+    };
     let filter_doc: Document = doc! {
-        "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
+        "user": user_formatted
     };
 
     // Find the correct document for a specific user
