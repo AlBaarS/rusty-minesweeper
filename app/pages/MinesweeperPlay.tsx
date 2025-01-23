@@ -72,17 +72,7 @@ export const MinesweeperPlay = () => {
 
     function FlagsLeft() {
         return(
-            <div className={classNames(
-                "grid",
-                "place-content-center",
-                "justify-center",
-                "border-4",
-                "border-double",
-                "border-gray-400",
-                "p-1"
-            )}>
-                Flags left
-            </div>
+            <div></div>
         )
     }
 
@@ -118,17 +108,7 @@ export const MinesweeperPlay = () => {
 
     function Timer() {
         return(
-            <div className={classNames(
-                "grid",
-                "place-content-center",
-                "justify-center",
-                "border-4",
-                "border-double",
-                "border-gray-400",
-                "p-1"
-            )}>
-                Timer
-            </div>
+            <div></div>
         )
     }
 
