@@ -1,16 +1,20 @@
 'use client'
 
+import classNames from "classnames";
+import { useState } from "react";
 import { isGameState } from "../types/game";
 import { useMinesweeper } from "../context/MinesweeperContext";
-import classNames from "classnames";
-import getGameAPI from "../api/getGameAPI";
 import getSeed from "../functions/getSeed";
+import getGameAPI from "../api/getGameAPI";
+import findGameAPI from "../api/findGameAPI";
+import continueGameAPI from "../api/continueGameAPI";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
+    const [ continue_game, setContinue_game] = useState<boolean>(undefined!);
 
-    const onSubmit = async (seed?: number) => {
+    const onSubmitNew = async (seed?: number) => {
 
         if (seed == undefined) {
             seed = getSeed();
@@ -27,47 +31,116 @@ export const MinesweeperStart = () => {
         }
     }
 
+    const onSubmitContinue = async () => {
+
+        console.log("Continuing game using continueGameAPI");
+        const result = await continueGameAPI(email);
+
+        if (isGameState(result)) {
+            setGameState(result);
+            console.log("Obtained gamestate:", result);
+        } else {
+            console.log("Failed to obtain gameState:", result.statusText);
+        }
+    }
+
+    const checkDB = async () => {
+        console.log("Checking the database for user", email, "with findGameAPI");
+        const result = await findGameAPI(email);
+        setContinue_game(result);
+    }
+
+
+
+    // Aesthetics
+    const button_markup = classNames(
+        "border-2",
+        "border-neutral-500",
+        "px-7",
+        "pb-[8px]",
+        "pt-[10px]",
+        "text-sm",
+        "font-medium",
+        "uppercase",
+        "leading-normal",
+        "transition duration-150",
+        "ease-in-out",
+        "hover:border-neutral-100",
+        "hover:text-neutral-100",
+        "focus:border-neutral-100",
+        "focus:text-neutral-100",
+        "focus:outline-none",
+        "focus:ring-0",
+        "active:border-neutral-200",
+        "active:text-neutral-200",
+        "active:bg-neutral-500",
+        "disabled:border-neutral-100",
+        "disabled:text-neutral-100",
+        "disabled:bg-neutral-300",
+        "hover:bg-neutral-500",
+        "hover:bg-opacity-10",
+        "w-full",
+    )
+
+
+
+    // Functions
+    // Buttons
     function PlayButton() {
         return(
             <button
                 type="button"
-                className={classNames(
-                    "border-2",
-                    "border-neutral-500",
-                    "px-7",
-                    "pb-[8px]",
-                    "pt-[10px]",
-                    "text-sm",
-                    "font-medium",
-                    "uppercase",
-                    "leading-normal",
-                    "transition duration-150",
-                    "ease-in-out",
-                    "hover:border-neutral-100",
-                    "hover:text-neutral-100",
-                    "focus:border-neutral-100",
-                    "focus:text-neutral-100",
-                    "focus:outline-none",
-                    "focus:ring-0",
-                    "active:border-neutral-200",
-                    "active:text-neutral-200",
-                    "active:bg-neutral-500",
-                    "disabled:border-neutral-100",
-                    "disabled:text-neutral-100",
-                    "disabled:bg-neutral-200",
-                    "hover:bg-neutral-100",
-                    "hover:bg-opacity-10",
-                )}
+                className={button_markup}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 disabled={email == undefined || !(email.includes("@"))}
-                onClick={() => onSubmit()}
+                onClick={() => onSubmitNew()}
             >
-                Play Minesweeper
+                Play new
             </button>
         )
     }
 
+    function CheckButton() {
+        let button_text: string = "";
+        if (continue_game === undefined) {
+            button_text = "Check DB";
+        } else if (continue_game === false) {
+            button_text = "Game not found"
+        } else {
+            button_text = "Game found"
+        };
+
+        return(
+            <button
+                type="button"
+                className={button_markup}
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                disabled={email == undefined || !(email.includes("@"))}
+                onClick={() => checkDB()}
+            >
+                {button_text}
+            </button>
+        )
+    }
+
+    function ContinueButton() {
+        return(
+            <button
+                type="button"
+                className={button_markup}
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                disabled={!continue_game}
+                onClick={() => onSubmitContinue()}
+            >
+                Continue
+            </button>
+        )
+    }
+
+    // Page
     return(
         <div className={classNames(
             "w-full",
@@ -101,6 +174,7 @@ export const MinesweeperStart = () => {
                 <div className="flex h-full items-center justify-center">
                     <div>
                         <h2 className="mb-4 text-4xl font-semibold">Welcome to Minesweeper</h2>
+                        <h4 className="mb-4 text-xl font-semibold">Please enter your e-mail address so you can save your progress</h4>
                         <div className={classNames(
                             "px-4", 
                             "pb-4", 
@@ -114,8 +188,14 @@ export const MinesweeperStart = () => {
                             e-mail: <input onChange={e => setEmail(e.target.value)}/>
                         </div>
                         <br />
-                        <br />
-                        <PlayButton />
+                        <div className={classNames(
+                            "grid",
+                            "grid-cols-3"
+                        )}>
+                            <div className="pr-2"><PlayButton /></div>
+                            <div className="px-2"><CheckButton /></div>
+                            <div className="pl-2"><ContinueButton /></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -57,8 +57,8 @@ impl Board {
     fn calculate_vicinity(board: TwoDVector<bool>, x: i32, y: i32) -> u8 {
         // get elements neighbouring coordinate, count trues, return
         let mut nearby_squares: Vec<bool> = Vec::new();
-        for ys in (y - 1..y + 2) {
-            for xs in (x - 1..x + 2) {
+        for ys in y - 1..y + 2 {
+            for xs in x - 1..x + 2 {
                 if (ys < board.get_size().into() && ys >= 0) && (xs < board.get_size().into() && xs >= 0) {
                     nearby_squares.push(board.get_element(xs.try_into().unwrap(), ys.try_into().unwrap()));
                 }
