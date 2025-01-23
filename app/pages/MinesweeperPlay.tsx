@@ -36,15 +36,15 @@ const images = {
 
 export const MinesweeperPlay = () => {
 
-    const { gameState, setGameState } = useMinesweeper();
-    const { email } = useMinesweeper();
+    const { gameState, setGameState, email, flagging, setFlagging } = useMinesweeper();
+    // const { email } = useMinesweeper();
     const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
     const progress = gameState?.progress;
     const boardsize = gameState?.game.mines.size;
-    const [flagging, setFlagging] = useState<boolean>(false);
+    
 
     const doClick = async (x: number, y: number) => {
 
@@ -103,6 +103,7 @@ export const MinesweeperPlay = () => {
                 </div>
                 <div className="grid place-content-center">
                     <Switch 
+                        checked={flagging}
                         size="medium" 
                         color="default"
                         onChange={(event) => flagging_switcher(event.target.checked)}
@@ -156,7 +157,7 @@ export const MinesweeperPlay = () => {
         ) : (
             <button 
                 type = "button"
-                disabled={flag}
+                disabled={flag && !flagging}
                 onClick = {
                     function(){ doClick(x, y) }
                 }
