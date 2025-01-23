@@ -105,7 +105,39 @@ pub async fn fetch_gamestate(user: String) -> Play {
     return game;
 }
 
+pub async fn find_game(user: String) -> bool {
 
+    println!("Call to find game for user {}", &user);
+
+    // Establish connection to the database
+    let gamestates: mongodb::Collection<Document> = get_connection().await;
+
+    // Set up the document to filter
+    let user_prefix_rm = match user.strip_prefix("\"") {
+        Some(user_prefix_rm) => user_prefix_rm,
+        None => &user
+    };
+    let user_formatted = match user_prefix_rm.strip_suffix("\"") {
+        Some(user_formatted) => user_formatted,
+        None => &user_prefix_rm
+    };
+    let filter_doc: Document = doc! {
+        "user": user_formatted
+    };
+
+    // Find the correct document for a specific user
+    let game_opt: Option<Document> = match gamestates.find_one(
+        filter_doc,  
+        None,  
+    ).await {
+        Ok(game_opt) => game_opt,
+        Err(_e) => return false
+    };
+    let _game_doc: Document = match game_opt {
+        Some(_game_doc) => return true,
+        _ => return false
+    };
+}
 
 pub async fn update_gamestate(user: String, game: Play) -> () {
 
@@ -115,8 +147,16 @@ pub async fn update_gamestate(user: String, game: Play) -> () {
     let gamestates: mongodb::Collection<Document> = get_connection().await;
 
     // Set up the documents to filter and send along
+    let user_prefix_rm = match user.strip_prefix("\"") {
+        Some(user_prefix_rm) => user_prefix_rm,
+        None => &user
+    };
+    let user_formatted = match user_prefix_rm.strip_suffix("\"") {
+        Some(user_formatted) => user_formatted,
+        None => &user_prefix_rm
+    };
     let filter_doc: Document = doc! {
-        "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
+        "user": user_formatted
     };
     let game_bson: Bson = match bson::to_bson(&game) {
         Ok(game_bson) => game_bson,
@@ -146,8 +186,16 @@ pub async fn delete_gamestate(user: String) -> () {
     let gamestates: mongodb::Collection<Document> = get_connection().await;
 
     // Set up the document to filter
+    let user_prefix_rm = match user.strip_prefix("\"") {
+        Some(user_prefix_rm) => user_prefix_rm,
+        None => &user
+    };
+    let user_formatted = match user_prefix_rm.strip_suffix("\"") {
+        Some(user_formatted) => user_formatted,
+        None => &user_prefix_rm
+    };
     let filter_doc: Document = doc! {
-        "user": &user.strip_prefix("\"").unwrap().strip_suffix("\"").unwrap()
+        "user": user_formatted
     };
 
     // Delete the correct document for a specific user

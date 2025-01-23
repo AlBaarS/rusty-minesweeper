@@ -33,13 +33,19 @@ pub async fn start_game(Json(payload): Json<serde_json::Value>) -> Json<serde_js
 
     let seed: u64 = match payload["seed"].as_u64() {
         Some(s) => s,
-        None => return Json(json!({"playboard" : "invalid input"})),
+        None => return Json(json!({"playboard" : "invalid seed"})),
     };
 
     let user: String = match payload["user"].as_str() {
         Some(user) => user,
-        None => return Json(json!({"playboard" : "invalid input"})),
+        None => return Json(json!({"playboard" : "invalid user"})),
     }.try_into().unwrap();
+
+    println!("User registered: {}. Searching for existing game in database.", user);
+    let saved_game: bool = find_game(user.clone()).await;
+    if saved_game {
+        delete_gamestate(user.clone()).await;
+    }
 
     println!("Seed registered: {}. Returning a new board to front-end.", seed);
     let game: Play = Play::new(seed);
@@ -51,7 +57,10 @@ pub async fn start_game(Json(payload): Json<serde_json::Value>) -> Json<serde_js
 pub async fn play(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Value> {
     println!("API call received for play() with body {}", payload);
 
-    let user: String = payload["user"].to_string();
+    let user: String = match payload["user"].as_str() {
+        Some(user) => user,
+        None => return Json(json!({"playboard" : "invalid user"})),
+    }.try_into().unwrap();
     let x: usize = match usize::try_from(payload["x"].as_u64().unwrap()) {
         Ok(x) => x,
         Err(e) => panic!("Unable to convert x to usize: {}", e)
@@ -77,7 +86,10 @@ pub async fn play(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Va
 pub async fn flag(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Value> {
     println!("API call received for flag() with body {}", payload);
 
-    let user: String = payload["user"].to_string();
+    let user: String = match payload["user"].as_str() {
+        Some(user) => user,
+        None => return Json(json!({"playboard" : "invalid user"})),
+    }.try_into().unwrap();
     let x: usize = match usize::try_from(payload["x"].as_u64().unwrap()) {
         Ok(x) => x,
         Err(e) => panic!("Unable to convert x to usize: {}", e)
