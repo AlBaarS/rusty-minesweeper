@@ -1,5 +1,7 @@
 import { useMinesweeper } from "../context/MinesweeperContext";
 import Image from 'next/image';
+import classNames from "classnames";
+import { Switch } from "@mui/material";
 
 import cell0_texture from '../../public/cell_textures/celldown.png';
 import cell1_texture from '../../public/cell_textures/cell1.png';
@@ -11,12 +13,13 @@ import cell6_texture from '../../public/cell_textures/cell6.png';
 import cell7_texture from '../../public/cell_textures/cell7.png';
 import cell8_texture from '../../public/cell_textures/cell8.png';
 import mine_expl_texture from '../../public/cell_textures/blast.png';
-import flag_texture from '../../public/cell_textures/cellflag.png'
-import blank_texture from '../../public/cell_textures/cellup.png'
+import flag_texture from '../../public/cell_textures/cellflag.png';
+import blank_texture from '../../public/cell_textures/cellup.png';
+import mine_unex_texture from '../../public/cell_textures/cellmine.png';
 import { useState } from "react";
 import doPlayAPI from "../api/doPlayAPI";
 import { isGameState } from "../types/game";
-import classNames from "classnames";
+import doFlagAPI from "../api/doFlagAPI";
 
 const images = {
     0: cell0_texture,
@@ -40,11 +43,15 @@ export const MinesweeperPlay = () => {
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
     const progress = gameState?.progress;
+    const boardsize = gameState?.game.mines.size;
+    const [flagging, setFlagging] = useState<boolean>(false);
 
-    const playSquare = async (x: number, y: number) => {
+    const doClick = async (x: number, y: number) => {
 
-        console.log("Clicking square at x =", x, "and y =", y);
-        const result = await doPlayAPI(email, x, y);
+        console.log("Clicking square at x =", x, "and y =", y, "with flagging =", flagging);
+        const result = flagging ? 
+            await doFlagAPI(email, x, y) :
+            await doPlayAPI(email, x, y);
 
         if (isGameState(result)) {
             setGameState(result);
@@ -58,18 +65,76 @@ export const MinesweeperPlay = () => {
         return images[type] || null;
     }
 
+    function flagging_switcher(check: bool) {
+        console.log("Setting flag switch to", check);
+        setFlagging(check);
+    }
+
     function FlagsLeft() {
-        return(<div></div>)
+        return(
+            <div className={classNames(
+                "grid",
+                "place-content-center",
+                "justify-center",
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1"
+            )}>
+                Flags left
+            </div>
+        )
+    }
+
+    function FlagButton() {
+        return(
+            <div className={classNames(
+                "grid",
+                "grid-cols-3",
+                "place-content-center",
+                "justify-center",
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1"
+            )}>
+                <div className="grid place-content-center">
+                    <Image src={mine_unex_texture} alt="Cell Texture" width={32} height={32} />
+                </div>
+                <div className="grid place-content-center">
+                    <Switch 
+                        size="medium" 
+                        color="default"
+                        onChange={(event) => flagging_switcher(event.target.checked)}
+                    />
+                </div>
+                <div className="grid place-content-center">
+                    <Image src={flag_texture} alt="Cell Texture" width={32} height={32} />
+                </div>
+            </div>
+        )
     }
 
     function Timer() {
-        return(<div></div>)
+        return(
+            <div className={classNames(
+                "grid",
+                "place-content-center",
+                "justify-center",
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1"
+            )}>
+                Timer
+            </div>
+        )
     }
 
     function Column({x}) {
         return(
             <div className="grid grid-flow-row">
-                {[...Array(16).keys()].map(y => <Square key={`(${x} * 16) + ${y}`} x={x} y={y} />)}
+                {[...Array(boardsize).keys()].map(y => <Square key={`(${x} * ${boardsize}) + ${y}`} x={x} y={y} />)}
             </div>
         )
     }
@@ -93,7 +158,7 @@ export const MinesweeperPlay = () => {
                 type = "button"
                 disabled={flag}
                 onClick = {
-                    function(){ playSquare(x, y) }
+                    function(){ doClick(x, y) }
                 }
             >
                 <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
@@ -165,18 +230,32 @@ export const MinesweeperPlay = () => {
                             <GameProgress />
                             <div><br /></div>
                             <div className="place-self-center">
-                                <FlagsLeft /> <Timer />
-                                <div><br /></div>
                                 <div className={classNames(
-                                    "grid", 
-                                    "grid-flow-col", 
-                                    "justify-start",
-                                    "border-4", 
-                                    "border-double", 
-                                    "bg-slate-200", 
-                                    "border-neutral-400"
+                                    "text-black",
+                                    "grid",
+                                    "grid-cols-3"
                                 )}>
-                                    {[...Array(16).keys()].map(x => <Column key={x} x={x} />)}
+                                    <div className="p-2"><FlagsLeft /> </div>
+                                    <div className="p-2"><FlagButton /> </div>
+                                    <div className="p-2"><Timer /></div>
+                                </div>
+                                <div className="grid place-content-center">
+                                    <div className={classNames(
+                                        "flex",
+                                        "w-fit",
+                                        "border-4", 
+                                        "border-double", 
+                                        "bg-slate-200", 
+                                        "border-neutral-400"
+                                    )}>
+                                        <div className={classNames(
+                                            "grid", 
+                                            "grid-flow-col", 
+                                            "justify-start"
+                                        )}>
+                                            {[...Array(boardsize).keys()].map(x => <Column key={x} x={x} />)}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
