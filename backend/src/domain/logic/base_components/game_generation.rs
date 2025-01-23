@@ -1,14 +1,9 @@
 use rand::prelude::*;
-use rand::{distributions::Uniform, Rng};
+use rand::distributions::Uniform;
 use itertools::*;
 
 pub struct GameGeneration;
 impl GameGeneration {
-    pub fn generate_seed() -> u64 {
-        let mut rng: ThreadRng = rand::thread_rng();
-        rng.gen()
-    }
-
     pub fn generate_mine_indices(size: u32, seed: u64) -> Vec<u32> {
         let number_of_squares: u32 = size * size;
         let mut rng_seeded: StdRng = StdRng::seed_from_u64(seed);
