@@ -12,6 +12,26 @@ pub struct Board {
     pub(crate) flagged: TwoDVector<bool>,
 }
 
+fn reveal_recursively(revealed: TwoDVector<bool>, vicinity: TwoDVector<u8>, x: i32, y: i32) -> TwoDVector<bool> {
+    if vicinity.get_element(x.try_into().unwrap(), y.try_into().unwrap()) > 0 {
+        return revealed.change_element(x.try_into().unwrap(), y.try_into().unwrap(), true);
+    } else {
+        let mut revealed_new: TwoDVector<bool> = revealed;
+        revealed_new = revealed_new.change_element(x.try_into().unwrap(), y.try_into().unwrap(), true);
+        
+        for ys in y - 1..y + 2 {
+            for xs in x - 1..x + 2 {
+                if (ys < revealed_new.get_size().into() && ys >= 0) && (xs < revealed_new.get_size().into() && xs >= 0) {
+                    if revealed_new.get_element(xs.try_into().unwrap(), ys.try_into().unwrap()) == false {
+                        revealed_new = reveal_recursively(revealed_new, vicinity.clone(), xs, ys);
+                    }
+                }
+            }
+        }
+        return revealed_new;
+    }
+}
+
 impl Board {
     // Constructor
     fn new(mines: TwoDVector<bool>, vicinity: TwoDVector<u8>, revealed: TwoDVector<bool>, flagged: TwoDVector<bool>) -> Self {
@@ -95,9 +115,12 @@ impl Board {
 
     // Functions for performing an action (clicking a square or placing/removing a flag)
     pub fn reveal_square(&self, x: usize, y: usize) -> Board {
+        let xi: i32 = x.try_into().unwrap();
+        let yi: i32 = y.try_into().unwrap();
         let mines: TwoDVector<bool> = self.get_mines();
         let vicinity: TwoDVector<u8> = self.get_vicinity();
-        let revealed: TwoDVector<bool> = self.get_revealed().change_element(x, y, true);
+        // let revealed: TwoDVector<bool> = self.get_revealed().change_element(x, y, true);
+        let revealed: TwoDVector<bool> = reveal_recursively(self.get_revealed(), vicinity.clone(), xi, yi);
         let flagged: TwoDVector<bool> = self.get_flagged();
         return Board::new(mines, vicinity, revealed, flagged);
     }
@@ -252,5 +275,20 @@ mod tests {
         ];
         let board: Board = Board::generate_starting_state(test_size, test_seed);
         assert_eq!(board.reveal_all().get_revealed().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_squares_with_0_vicinity_reveal_their_neighbours() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![true, true, true, true, false],
+            vec![true, true, true, true, false],
+            vec![true, true, false, false, false],
+            vec![false, false, false, false, false],
+            vec![false, false, false, false, false]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        assert_eq!(board.reveal_square(0, 0).get_revealed().get_vec(), reference_field);
     }
 }
