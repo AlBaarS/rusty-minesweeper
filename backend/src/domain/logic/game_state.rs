@@ -63,10 +63,10 @@ impl Board {
 
 
     // Functions for board initialization
-    fn generate_mines(size: u8, seed: u64) -> TwoDVector<bool> {
+    fn generate_mines(size: u8, seed: u64, difficulty: u32) -> TwoDVector<bool> {
         let size_u32: u32 = size.into();
         let number_of_squares: u32 = size_u32 * size_u32;
-        let mine_indices: Vec<u32> = GameGeneration::generate_mine_indices(size.into(), seed);
+        let mine_indices: Vec<u32> = GameGeneration::generate_mine_indices(size.into(), seed, difficulty);
         let mine_vector: Vec<bool> = (0..number_of_squares)
             .map(|x: u32| mine_indices.contains(&x))
             .collect();
@@ -103,9 +103,9 @@ impl Board {
         TwoDVector::new(vicinity, size.try_into().unwrap())
     }
 
-    pub fn generate_starting_state(size: u8, seed: u64) -> Board {
+    pub fn generate_starting_state(size: u8, seed: u64, difficulty: u32) -> Board {
         let size_usize: usize = size.into();
-        let mines: TwoDVector<bool> = Board::generate_mines(size, seed);
+        let mines: TwoDVector<bool> = Board::generate_mines(size, seed, difficulty);
         let vicinity: TwoDVector<u8> = Self::make_vicinity_table(mines.clone());
         let revealed: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
         let flagged: TwoDVector<bool> = TwoDVector::new(repeat_n(false, size_usize * size_usize).collect(), size);
@@ -184,7 +184,7 @@ mod tests {
             vec![true, true, false, true, false], 
             vec![false, false, false, false, false]
         ];
-        assert_eq!(Board::generate_mines(test_size, test_seed).get_vec(), reference_field);
+        assert_eq!(Board::generate_mines(test_size, test_seed, 5).get_vec(), reference_field);
     }
 
     #[test]
@@ -198,7 +198,7 @@ mod tests {
             vec![9,9,3,9,1],
             vec![2,2,2,1,1]
         ];
-        let board: TwoDVector<bool> = Board::generate_mines(test_size, test_seed);
+        let board: TwoDVector<bool> = Board::generate_mines(test_size, test_seed, 5);
         assert_eq!(Board::make_vicinity_table(board).get_vec(), reference_field);
     }
 
@@ -213,7 +213,7 @@ mod tests {
             vec![false, false, false, false, false],
             vec![false, false, false, false, false]
         ];
-        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.reveal_square(3, 2).get_revealed().get_vec(), reference_field);
     }
 
@@ -228,7 +228,7 @@ mod tests {
             vec![false, false, false, false, false],
             vec![false, false, false, false, false]
         ];
-        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.flag_unflag_square(0, 2).get_flagged().get_vec(), reference_field);
     }
 
@@ -243,7 +243,7 @@ mod tests {
             vec![false, false, false, false, false],
             vec![false, false, false, false, false]
         ];
-        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.flag_unflag_square(0, 2).flag_unflag_square(0, 2).get_flagged().get_vec(), reference_field);
     }
 
@@ -258,7 +258,7 @@ mod tests {
             vec![false, false, true, false, true], 
             vec![true, true, true, true, true]
         ];
-        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.invert_mines().get_vec(), reference_field);
     }
 
@@ -273,7 +273,7 @@ mod tests {
             vec![true, true, true, true, true], 
             vec![true, true, true, true, true]
         ];
-        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.reveal_all().get_revealed().get_vec(), reference_field);
     }
 
@@ -288,7 +288,7 @@ mod tests {
             vec![false, false, false, false, false],
             vec![false, false, false, false, false]
         ];
-        let board: Board = Board::generate_starting_state(test_size, test_seed);
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.reveal_square(0, 0).get_revealed().get_vec(), reference_field);
     }
 }
