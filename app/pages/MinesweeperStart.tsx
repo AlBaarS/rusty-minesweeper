@@ -8,11 +8,13 @@ import getSeed from "../functions/getSeed";
 import getGameAPI from "../api/getGameAPI";
 import findGameAPI from "../api/findGameAPI";
 import continueGameAPI from "../api/continueGameAPI";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
     const [ continue_game, setContinue_game] = useState<boolean>(undefined!);
+    const [ difficulty, setDifficulty] = useState<number>(5);
 
     const onSubmitNew = async (seed?: number) => {
 
@@ -21,7 +23,7 @@ export const MinesweeperStart = () => {
         }
 
         console.log("Starting game using API getGameAPI");
-        const result = await getGameAPI(seed, email);
+        const result = await getGameAPI(seed, email, difficulty);
 
         if (isGameState(result)) {
             setGameState(result);
@@ -140,6 +142,8 @@ export const MinesweeperStart = () => {
         )
     }
 
+    
+
     // Page
     return(
         <div className={classNames(
@@ -185,7 +189,35 @@ export const MinesweeperStart = () => {
                             "bg-slate-200", 
                             "border-neutral-400"
                         )}>
-                            e-mail: <input onChange={e => setEmail(e.target.value)}/>
+                            <div className={classNames(
+                                "grid",
+                                "grid-cols-2",
+                            )}>
+                                <div>
+                                    e-mail: <input 
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                    />
+                                </div>
+                                <div className="content-center justify-center">
+                                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                                        <InputLabel>Difficulty</InputLabel>
+                                        <Select
+                                            value={difficulty}
+                                            onChange={e => setDifficulty(e.target.value as number)}
+                                            label="Difficulty"
+                                        >
+                                            <MenuItem value="">
+                                                <em>None</em>
+                                            </MenuItem>
+                                            <MenuItem value={8}>Easy</MenuItem>
+                                            <MenuItem value={6}>Medium</MenuItem>
+                                            <MenuItem value={5}>Hard</MenuItem>
+                                            <MenuItem value={4}>Very hard</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </div>
                         </div>
                         <br />
                         <div className={classNames(

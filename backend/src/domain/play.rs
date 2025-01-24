@@ -16,8 +16,8 @@ pub struct Play {
 
 impl Play {
     // Constructor
-    pub fn new(seed: u64) -> Self {
-        let game: Board = Board::generate_starting_state(16, seed);
+    pub fn new(seed: u64, difficulty: u32) -> Self {
+        let game: Board = Board::generate_starting_state(16, seed, difficulty);
         let progress: Progress = Progress::InProgress;
         return Self {
             game,
@@ -106,41 +106,41 @@ mod tests {
 
     #[test]
     fn test_game_generation() -> () {
-        let play: Play = Play::new(1234567890);
+        let play: Play = Play::new(1234567890, 5);
         let test_board: &Board = play.get_game();
-        let ref_board: Board = Board::generate_starting_state(16, 1234567890);
+        let ref_board: Board = Board::generate_starting_state(16, 1234567890, 5);
         println!("{:?}", test_board);
         assert_eq!(test_board.get_mines().get_vec(), ref_board.get_mines().get_vec());
     }
 
     #[test]
     fn test_if_square_with_mine_will_return_Lost_when_clicked() {
-        let play: Play = Play::new(1234567890).play_square(2, 0);
+        let play: Play = Play::new(1234567890, 5).play_square(2, 0);
         assert_eq!(play.get_progress().to_owned(), Progress::Lost);
     }
 
     #[test]
     fn test_if_square_without_mine_will_not_return_Lost_when_clicked() {
-        let play: Play = Play::new(1234567890).play_square(1, 0);
+        let play: Play = Play::new(1234567890, 5).play_square(1, 0);
         assert_eq!(play.get_progress().to_owned(), Progress::InProgress);
     }
 
     #[test]
     fn test_if_all_squares_are_revealed_when_the_game_is_lost() {
-        let play: Play = Play::new(1234567890).play_square(2, 0);
+        let play: Play = Play::new(1234567890, 5).play_square(2, 0);
         let revealed_board: TwoDVector<bool> = TwoDVector::new(iter::repeat(true).take(256).collect_vec(), 16);
         assert_eq!(play.get_game().get_revealed().get_vec(), revealed_board.get_vec());
     }
 
     #[test]
     fn test_if_win_is_detected_when_all_non_mined_squares_are_revealed() {
-        let play: Play = Play::new(1234567890)._autowin().play_square(1, 0);
+        let play: Play = Play::new(1234567890, 5)._autowin().play_square(1, 0);
         assert_eq!(play.get_progress().to_owned(), Progress::Win);
     }
 
     #[test]
     fn test_if_flag_is_placed() {
-        let play: Play = Play::new(1234567890).flag_square(1, 3);
+        let play: Play = Play::new(1234567890, 5).flag_square(1, 3);
         assert!(play.get_game().get_flagged().get_element(1, 3));
     }
 }
