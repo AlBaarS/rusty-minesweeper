@@ -21,6 +21,7 @@ import { isGameState, Progress } from "../types/game";
 import doFlagAPI from "../api/doFlagAPI";
 import getSeed from "../functions/getSeed";
 import getGameAPI from "../api/getGameAPI";
+import getButtonMarkup from "../functions/getButtonMarkup";
 
 const images = {
     0: cell0_texture,
@@ -46,28 +47,7 @@ export const MinesweeperPlay = () => {
     const boardsize = gameState?.game.mines.size;
     const difficulty = gameState?.difficulty;
 
-    const button_markup = classNames(
-        "text-black",
-        "border-4",
-        "[border-style:outset]",
-        "border-gray-400",
-        "px-7",
-        "pb-[8px]",
-        "pt-[10px]",
-        "text-sm",
-        "font-medium",
-        "uppercase",
-        "leading-normal",
-        "transition duration-150",
-        "ease-in-out",
-        "hover:border-blue-400",
-        "hover:bg-blue-400",
-        "hover:text-neutral-100",
-        "disabled:border-neutral-100",
-        "disabled:text-neutral-100",
-        "disabled:bg-neutral-300",
-        "w-full",
-    );
+
     
     // Functions
     const doClick = async (x: number, y: number) => {
@@ -236,7 +216,7 @@ export const MinesweeperPlay = () => {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("blue")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 onClick={() => window.location.reload(true)}
@@ -250,7 +230,7 @@ export const MinesweeperPlay = () => {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("red")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 onClick={() => replay()}

@@ -2,13 +2,15 @@
 
 import classNames from "classnames";
 import { useState } from "react";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
 import { isGameState } from "../types/game";
 import { useMinesweeper } from "../context/MinesweeperContext";
 import getSeed from "../functions/getSeed";
 import getGameAPI from "../api/getGameAPI";
 import findGameAPI from "../api/findGameAPI";
 import continueGameAPI from "../api/continueGameAPI";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import getButtonMarkup from "../functions/getButtonMarkup";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
@@ -54,39 +56,13 @@ export const MinesweeperStart = () => {
 
 
 
-    // Aesthetics
-    const button_markup = classNames(
-        "text-black",
-        "border-4",
-        "[border-style:outset]",
-        "border-gray-400",
-        "px-7",
-        "pb-[8px]",
-        "pt-[10px]",
-        "text-sm",
-        "font-medium",
-        "uppercase",
-        "leading-normal",
-        "transition duration-150",
-        "ease-in-out",
-        "hover:border-blue-400",
-        "hover:bg-blue-400",
-        "hover:text-neutral-100",
-        "disabled:border-neutral-100",
-        "disabled:text-neutral-100",
-        "disabled:bg-neutral-300",
-        "w-full",
-    );
-
-
-
     // Functions
     // Buttons
     function PlayButton() {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("green")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 disabled={email == undefined || !(email.includes("@"))}
@@ -110,10 +86,10 @@ export const MinesweeperStart = () => {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("yellow")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                disabled={email == undefined || !(email.includes("@"))}
+                disabled={(email == undefined || !(email.includes("@"))) || continue_game !== undefined}
                 onClick={() => checkDB()}
             >
                 {button_text}
@@ -125,7 +101,7 @@ export const MinesweeperStart = () => {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("blue")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 disabled={!continue_game}
@@ -190,7 +166,7 @@ export const MinesweeperStart = () => {
                                 <div>
                                     e-mail: <input 
                                         value={email ?? ""}
-                                        onChange={e => setEmail(e.target.value)}
+                                        onChange={e => {setEmail(e.target.value); setContinue_game(undefined)}}
                                     />
                                 </div>
                                 <div className="content-center justify-center">
