@@ -1,6 +1,7 @@
 export type GameState = {
     game: Board,
     progress: Progress,
+    difficulty: number,
 }
 
 export enum Progress {
