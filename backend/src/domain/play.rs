@@ -36,10 +36,6 @@ impl Play {
         return &self.progress;
     }
 
-    pub fn get_difficulty(&self) -> &u32 {
-        return &self.difficulty;
-    }
-
     pub fn test_import() -> String {
         return String::from("It works!");
     }
