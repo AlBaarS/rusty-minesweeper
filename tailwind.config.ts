@@ -14,5 +14,15 @@ export default {
       },
     },
   },
+  safelist: [
+    "hover:border-red-400",
+    "hover:bg-red-400",
+    "hover:border-green-400",
+    "hover:bg-green-400",
+    "hover:border-blue-400",
+    "hover:bg-blue-400",
+    "hover:border-yellow-400",
+    "hover:bg-yellow-400",
+  ],
   plugins: [],
 } satisfies Config;

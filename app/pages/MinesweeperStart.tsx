@@ -2,19 +2,21 @@
 
 import classNames from "classnames";
 import { useState } from "react";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
 import { isGameState } from "../types/game";
 import { useMinesweeper } from "../context/MinesweeperContext";
 import getSeed from "../functions/getSeed";
 import getGameAPI from "../api/getGameAPI";
 import findGameAPI from "../api/findGameAPI";
 import continueGameAPI from "../api/continueGameAPI";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import getButtonMarkup from "../functions/getButtonMarkup";
 
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
-    const [ continue_game, setContinue_game] = useState<boolean>(undefined!);
-    const [ difficulty, setDifficulty] = useState<number>(5);
+    const [ continue_game, setContinue_game ] = useState<boolean>(undefined!);
+    const [ difficulty, setDifficulty ] = useState<number | undefined>(undefined);
 
     const onSubmitNew = async (seed?: number) => {
 
@@ -54,45 +56,13 @@ export const MinesweeperStart = () => {
 
 
 
-    // Aesthetics
-    const button_markup = classNames(
-        "border-2",
-        "border-neutral-500",
-        "px-7",
-        "pb-[8px]",
-        "pt-[10px]",
-        "text-sm",
-        "font-medium",
-        "uppercase",
-        "leading-normal",
-        "transition duration-150",
-        "ease-in-out",
-        "hover:border-neutral-100",
-        "hover:text-neutral-100",
-        "focus:border-neutral-100",
-        "focus:text-neutral-100",
-        "focus:outline-none",
-        "focus:ring-0",
-        "active:border-neutral-200",
-        "active:text-neutral-200",
-        "active:bg-neutral-500",
-        "disabled:border-neutral-100",
-        "disabled:text-neutral-100",
-        "disabled:bg-neutral-300",
-        "hover:bg-neutral-500",
-        "hover:bg-opacity-10",
-        "w-full",
-    )
-
-
-
     // Functions
     // Buttons
     function PlayButton() {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("green")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 disabled={email == undefined || !(email.includes("@"))}
@@ -116,10 +86,10 @@ export const MinesweeperStart = () => {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("yellow")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                disabled={email == undefined || !(email.includes("@"))}
+                disabled={(email == undefined || !(email.includes("@"))) || continue_game !== undefined}
                 onClick={() => checkDB()}
             >
                 {button_text}
@@ -131,7 +101,7 @@ export const MinesweeperStart = () => {
         return(
             <button
                 type="button"
-                className={button_markup}
+                className={getButtonMarkup("blue")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
                 disabled={!continue_game}
@@ -196,14 +166,14 @@ export const MinesweeperStart = () => {
                                 <div>
                                     e-mail: <input 
                                         value={email ?? ""}
-                                        onChange={e => setEmail(e.target.value)}
+                                        onChange={e => {setEmail(e.target.value); setContinue_game(undefined)}}
                                     />
                                 </div>
                                 <div className="content-center justify-center">
                                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                                         <InputLabel>Difficulty</InputLabel>
                                         <Select
-                                            value={difficulty}
+                                            value={difficulty ?? 5}
                                             onChange={e => setDifficulty(e.target.value as number)}
                                             label="Difficulty"
                                         >

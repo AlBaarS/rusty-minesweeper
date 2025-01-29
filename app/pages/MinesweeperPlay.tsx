@@ -16,10 +16,12 @@ import mine_expl_texture from '../../public/cell_textures/blast.png';
 import flag_texture from '../../public/cell_textures/cellflag.png';
 import blank_texture from '../../public/cell_textures/cellup.png';
 import mine_unex_texture from '../../public/cell_textures/cellmine.png';
-import { useState } from "react";
 import doPlayAPI from "../api/doPlayAPI";
 import { isGameState, Progress } from "../types/game";
 import doFlagAPI from "../api/doFlagAPI";
+import getSeed from "../functions/getSeed";
+import getGameAPI from "../api/getGameAPI";
+import getButtonMarkup from "../functions/getButtonMarkup";
 
 const images = {
     0: cell0_texture,
@@ -37,21 +39,36 @@ const images = {
 export const MinesweeperPlay = () => {
 
     const { gameState, setGameState, email, flagging, setFlagging } = useMinesweeper();
-    // const { email } = useMinesweeper();
     const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
     const progress = gameState?.progress as Progress;
     const boardsize = gameState?.game.mines.size;
-    
+    const difficulty = gameState?.difficulty;
 
+
+    
+    // Functions
     const doClick = async (x: number, y: number) => {
 
         console.log("Clicking square at x =", x, "and y =", y, "with flagging =", flagging);
         const result = flagging ? 
             await doFlagAPI(email, x, y) :
             await doPlayAPI(email, x, y);
+
+        if (isGameState(result)) {
+            setGameState(result);
+            console.log("Obtained gamestate:", result);
+        } else {
+            console.log("Failed to obtain gameState:", result.statusText);
+        }
+    }
+
+    const replay = async () =>  {
+        let seed = getSeed();
+        console.log("Re-starting game using API getGameAPI");
+        const result = await getGameAPI(seed, email, difficulty);
 
         if (isGameState(result)) {
             setGameState(result);
@@ -70,84 +87,13 @@ export const MinesweeperPlay = () => {
         setFlagging(check);
     }
 
-    function FlagsLeft() {
-        return(
-            <div></div>
-        )
-    }
-
-    function FlagButton() {
-        return(
-            <div className={classNames(
-                "grid",
-                "grid-cols-3",
-                "place-content-center",
-                "justify-center",
-                "border-4",
-                "border-double",
-                "border-gray-400",
-                "p-1"
-            )}>
-                <div className="grid place-content-center">
-                    <Image src={mine_unex_texture} alt="Cell Texture" width={32} height={32} />
-                </div>
-                <div className="grid place-content-center">
-                    <Switch 
-                        checked={flagging}
-                        size="medium" 
-                        color="default"
-                        onChange={(event) => flagging_switcher(event.target.checked)}
-                        disabled={progress != Progress.InProgress}
-                    />
-                </div>
-                <div className="grid place-content-center">
-                    <Image src={flag_texture} alt="Cell Texture" width={32} height={32} />
-                </div>
-            </div>
-        )
-    }
-
-    function Timer() {
-        return(
-            <div></div>
-        )
-    }
-
-    function Column({x}) {
-        return(
-            <div className="grid grid-flow-row">
-                {[...Array(boardsize).keys()].map(y => <Square key={`(${x} * ${boardsize}) + ${y}`} x={x} y={y} />)}
-            </div>
-        )
-    }
-
     function flagOrNot(bool: boolean) {
         return bool ? flag_texture : blank_texture
     }
 
-    function Square({x, y}) {
-        const vic = vicinity[y][x];
-        const flag = flagged[y][x];
-        const rev = revealed[y][x];
-        const cellImg = getImage(vic);
 
-        return rev ? (
-            <div className="object-cover">
-                <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
-            </div>
-        ) : (
-            <button 
-                type = "button"
-                disabled={(flag && !flagging) || progress != Progress.InProgress}
-                onClick = {
-                    function(){ doClick(x, y) }
-                }
-            >
-                <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
-            </button>
-        )
-    }
 
+    // Game progress
     function DisplayEndgameState() {
         if (progress == Progress.InProgress) {
             return(<div></div>);
@@ -188,7 +134,114 @@ export const MinesweeperPlay = () => {
         </div>)
     }
 
+    // Game utilities
+    function FlagButton() {
+        return(
+            <div className={classNames(
+                "grid",
+                "grid-cols-3",
+                "place-content-center",
+                "justify-center",
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1"
+            )}>
+                <div className="grid place-content-center">
+                    <Image src={mine_unex_texture} alt="Cell Texture" width={32} height={32} />
+                </div>
+                <div className="grid place-content-center">
+                    <Switch 
+                        checked={flagging}
+                        size="medium" 
+                        color="default"
+                        onChange={(event) => flagging_switcher(event.target.checked)}
+                        disabled={progress != Progress.InProgress}
+                    />
+                </div>
+                <div className="grid place-content-center">
+                    <Image src={flag_texture} alt="Cell Texture" width={32} height={32} />
+                </div>
+            </div>
+        )
+    }
 
+    // * Unused:
+    function Timer() {  // Not used within the scope of the individual project
+        return(
+            <div></div>
+        )
+    }
+
+    function FlagsLeft() {  // Not used within the scope of the individual project
+        return(
+            <div></div>
+        )
+    }
+
+    // Playing board
+    function Column({x}) {
+        return(
+            <div className="grid grid-flow-row">
+                {[...Array(boardsize).keys()].map(y => <Square key={`(${x} * ${boardsize}) + ${y}`} x={x} y={y} />)}
+            </div>
+        )
+    }
+
+    function Square({x, y}) {
+        const vic = vicinity[y][x];
+        const flag = flagged[y][x];
+        const rev = revealed[y][x];
+        const cellImg = getImage(vic);
+
+        return rev ? (
+            <div className="object-cover">
+                <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
+            </div>
+        ) : (
+            <button 
+                type = "button"
+                disabled={(flag && !flagging) || progress != Progress.InProgress}
+                onClick = {
+                    function(){ doClick(x, y) }
+                }
+            >
+                <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
+            </button>
+        )
+    }
+
+    // Return/Replay
+    function BackToHomeButton() {
+        return(
+            <button
+                type="button"
+                className={getButtonMarkup("blue")}
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                onClick={() => window.location.reload(true)}
+            >
+                Back to menu
+            </button>
+        )
+    }
+
+    function ReplayGameButton() {
+        return(
+            <button
+                type="button"
+                className={getButtonMarkup("red")}
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                onClick={() => replay()}
+            >
+                Replay
+            </button>
+        )
+    }
+
+
+    // Return page
     return(
         <div className={classNames(
             "flex",
@@ -241,6 +294,14 @@ export const MinesweeperPlay = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <br />
+                    <div className={classNames(
+                        "grid",
+                        "grid-cols-2"
+                    )}>
+                        <div className="px-4"><BackToHomeButton /></div>
+                        <div className="px-4"><ReplayGameButton /></div>
                     </div>
                 </div>
             </div>

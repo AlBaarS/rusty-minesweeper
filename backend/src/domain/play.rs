@@ -12,6 +12,7 @@ pub enum Progress {
 pub struct Play {
     pub(crate) game: Board,
     pub(crate) progress: Progress,
+    pub(crate) difficulty: u32,
 }
 
 impl Play {
@@ -22,6 +23,7 @@ impl Play {
         return Self {
             game,
             progress,
+            difficulty
         };
     }
 
@@ -48,6 +50,7 @@ impl Play {
                 flagged: self.get_game().get_flagged(),
             },
             progress: Progress::InProgress,
+            difficulty: self.difficulty,
         };
     }
 
@@ -60,6 +63,7 @@ impl Play {
                 flagged: self.get_game().get_mines(),
             },
             progress: Progress::InProgress,
+            difficulty: self.difficulty,
         };
     }
 
@@ -69,17 +73,20 @@ impl Play {
             return Play {
                 game: new_board.reveal_all(),
                 progress: Progress::Lost,
+                difficulty: self.difficulty,
             };
         } else {       
             if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
                 return Play {
-                    game: new_board,
+                    game: new_board.reveal_safe(),
                     progress: Progress::Win,
+                    difficulty: self.difficulty,
                 };
             } else {
                 return Play {
                     game: new_board,
                     progress: Progress::InProgress,
+                    difficulty: self.difficulty,
                 };
             };
         };
@@ -89,13 +96,15 @@ impl Play {
         let new_board: Board = self.get_game().flag_unflag_square(x, y);
         if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
             return Play {
-                game: new_board,
+                game: new_board.reveal_safe(),
                 progress: Progress::Win,
+                difficulty: self.difficulty,
             };
         } else {
             return Play {
                 game: new_board,
                 progress: Progress::InProgress,
+                difficulty: self.difficulty,
             };
         };
     }

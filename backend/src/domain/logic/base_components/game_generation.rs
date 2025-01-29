@@ -16,9 +16,6 @@ impl GameGeneration {
 }
 
 
-#[allow(dead_code)]
-fn main() {}
-
 
 #[cfg(test)]
 mod tests {
