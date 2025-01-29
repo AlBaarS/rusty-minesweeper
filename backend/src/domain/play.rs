@@ -39,15 +39,7 @@ impl Play {
     }
 
     // Game logic
-    fn is_lost(&self, x: usize, y: usize) -> bool {
-        return self.get_game().get_mines().get_element(x, y);
-    }
-
-    fn is_won(&self) -> bool {
-        return self.get_game().get_revealed().get_vec() == self.get_game().invert_mines().get_vec();
-    }
-
-    pub fn _autowin(&self) -> Play {     // For testing purposes only
+    pub fn _autowin_reveal(&self) -> Play {     // For testing purposes only
         return Play {
             game: Board {
                 mines: self.get_game().get_mines(),
@@ -59,15 +51,27 @@ impl Play {
         };
     }
 
+    pub fn _autowin_flags(&self) -> Play {     // For testing purposes only
+        return Play {
+            game: Board {
+                mines: self.get_game().get_mines(),
+                vicinity: self.get_game().get_vicinity(),
+                revealed: self.get_game().get_revealed(),
+                flagged: self.get_game().get_mines(),
+            },
+            progress: Progress::InProgress,
+        };
+    }
+
     pub fn play_square(&self, x: usize, y: usize) -> Play {
         let new_board: Board = self.get_game().reveal_square(x, y);
-        if self.is_lost(x, y) {
+        if new_board.get_mines().get_element(x, y) {
             return Play {
                 game: new_board.reveal_all(),
                 progress: Progress::Lost,
             };
         } else {       
-            if self.is_won() {
+            if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
                 return Play {
                     game: new_board,
                     progress: Progress::Win,
@@ -83,9 +87,16 @@ impl Play {
 
     pub fn flag_square(&self, x: usize, y: usize) -> Play {
         let new_board: Board = self.get_game().flag_unflag_square(x, y);
-        return Play {
-            game: new_board,
-            progress: Progress::InProgress,
+        if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
+            return Play {
+                game: new_board,
+                progress: Progress::Win,
+            };
+        } else {
+            return Play {
+                game: new_board,
+                progress: Progress::InProgress,
+            };
         };
     }
 }
@@ -134,7 +145,7 @@ mod tests {
 
     #[test]
     fn test_if_win_is_detected_when_all_non_mined_squares_are_revealed() {
-        let play: Play = Play::new(1234567890, 5)._autowin().play_square(1, 0);
+        let play: Play = Play::new(1234567890, 5)._autowin_reveal().play_square(1, 0);
         assert_eq!(play.get_progress().to_owned(), Progress::Win);
     }
 
@@ -142,5 +153,11 @@ mod tests {
     fn test_if_flag_is_placed() {
         let play: Play = Play::new(1234567890, 5).flag_square(1, 3);
         assert!(play.get_game().get_flagged().get_element(1, 3));
+    }
+
+    #[test]
+    fn test_if_win_is_detected_when_all_mines_are_flagged() {
+        let play: Play = Play::new(1234567890, 5)._autowin_flags().play_square(1, 0);
+        assert_eq!(play.get_progress().to_owned(), Progress::Win);
     }
 }

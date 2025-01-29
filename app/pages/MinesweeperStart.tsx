@@ -195,7 +195,7 @@ export const MinesweeperStart = () => {
                             )}>
                                 <div>
                                     e-mail: <input 
-                                        value={email}
+                                        value={email ?? ""}
                                         onChange={e => setEmail(e.target.value)}
                                     />
                                 </div>

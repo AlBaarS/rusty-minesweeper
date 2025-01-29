@@ -142,7 +142,7 @@ impl Board {
         return Board::new(mines, vicinity, revealed, flagged);
     }
 
-    // Helper functions
+    // Functions for determining winning conditions
     pub fn invert_mines(&self) -> TwoDVector<bool> {
         let invert_vec: Vec<Vec<bool>> = self
             .get_mines()
@@ -161,6 +161,14 @@ impl Board {
             size: self.get_revealed().get_size(),
         };
         return invert;
+    }
+
+    pub fn all_non_mines_are_revealed(&self) -> bool {
+        return self.get_revealed().get_vec() == self.invert_mines().get_vec();
+    }
+
+    pub fn all_mines_are_flagged(&self) -> bool {
+        return self.get_mines().get_vec() == self.get_flagged().get_vec();
     }
 }
 
@@ -290,5 +298,51 @@ mod tests {
         ];
         let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.reveal_square(0, 0).get_revealed().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_revealed_squares_are_opposite_to_mines_in_revealed_game() -> () {
+        let board: Board = Board::new(
+            TwoDVector::new(vec![
+                false, false, false, false, false, 
+                false, true, false, false, false, 
+                false, false, false, false, false, 
+                false, false, false, true, false, 
+                true, false, false, false, false
+            ], 5),
+            TwoDVector::new(repeat_n(0, 25).collect(), 5),
+            TwoDVector::new(vec![
+                true, true, true, true, true,
+                true, false, true, true, true,
+                true, true, true, true, true,
+                true, true, true, false, true,
+                false, true, true, true, true
+            ], 5),
+            TwoDVector::new(repeat_n(false, 25).collect(), 5)
+        );
+        assert!(board.all_non_mines_are_revealed());
+    }
+
+    #[test]
+    fn test_if_mines_and_flags_can_be_compared() -> () {
+        let board: Board = Board::new(
+            TwoDVector::new(vec![
+                false, false, false, false, false, 
+                false, true, false, false, false, 
+                false, false, false, false, false, 
+                false, false, false, true, false, 
+                true, false, false, false, false
+            ], 5),
+            TwoDVector::new(repeat_n(0, 25).collect(), 5),
+            TwoDVector::new(repeat_n(false, 25).collect(), 5),
+            TwoDVector::new(vec![
+                false, false, false, false, false, 
+                false, true, false, false, false, 
+                false, false, false, false, false, 
+                false, false, false, true, false, 
+                true, false, false, false, false
+            ], 5)
+        );
+        assert!(board.all_mines_are_flagged());
     }
 }

@@ -97,6 +97,7 @@ export const MinesweeperPlay = () => {
                         size="medium" 
                         color="default"
                         onChange={(event) => flagging_switcher(event.target.checked)}
+                        disabled={progress != Progress.InProgress}
                     />
                 </div>
                 <div className="grid place-content-center">
@@ -137,7 +138,7 @@ export const MinesweeperPlay = () => {
         ) : (
             <button 
                 type = "button"
-                disabled={flag && !flagging}
+                disabled={(flag && !flagging) || progress != Progress.InProgress}
                 onClick = {
                     function(){ doClick(x, y) }
                 }
