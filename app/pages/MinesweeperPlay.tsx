@@ -48,7 +48,7 @@ export const MinesweeperPlay = () => {
     const button_markup = classNames(
         "text-black",
         "border-4",
-        "border-double",
+        "[border-style:outset]",
         "border-gray-400",
         "px-7",
         "pb-[8px]",
@@ -59,19 +59,13 @@ export const MinesweeperPlay = () => {
         "leading-normal",
         "transition duration-150",
         "ease-in-out",
-        "hover:bg-neutral-800",
-        "focus:border-neutral-100",
-        "focus:text-neutral-100",
-        "focus:outline-none",
-        "focus:ring-0",
-        "active:border-neutral-200",
-        "active:text-neutral-200",
-        "active:bg-neutral-500",
+        "hover:border-blue-400",
+        "hover:bg-blue-400",
+        "hover:text-neutral-100",
         "disabled:border-neutral-100",
         "disabled:text-neutral-100",
         "disabled:bg-neutral-300",
-        "hover:bg-neutral-500",
-        "hover:bg-opacity-10",
+        "hover:bg-neutral-300",
         "w-full",
     );
     
@@ -93,7 +87,7 @@ export const MinesweeperPlay = () => {
 
     const replay = async () =>  {
         let seed = getSeed();
-        console.log("Starting game using API getGameAPI");
+        console.log("Re-starting game using API getGameAPI");
         const result = await getGameAPI(seed, email, difficulty);
 
         if (isGameState(result)) {
@@ -321,8 +315,13 @@ export const MinesweeperPlay = () => {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <BackToHomeButton /> <ReplayGameButton />
+                    <br />
+                    <div className={classNames(
+                        "grid",
+                        "grid-cols-2"
+                    )}>
+                        <div className="px-4"><BackToHomeButton /></div>
+                        <div className="px-4"><ReplayGameButton /></div>
                     </div>
                 </div>
             </div>

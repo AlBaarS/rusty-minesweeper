@@ -56,8 +56,10 @@ export const MinesweeperStart = () => {
 
     // Aesthetics
     const button_markup = classNames(
-        "border-2",
-        "border-neutral-500",
+        "text-black",
+        "border-4",
+        "[border-style:outset]",
+        "border-gray-400",
         "px-7",
         "pb-[8px]",
         "pt-[10px]",
@@ -67,20 +69,13 @@ export const MinesweeperStart = () => {
         "leading-normal",
         "transition duration-150",
         "ease-in-out",
-        "hover:border-neutral-100",
+        "hover:border-blue-400",
+        "hover:bg-blue-400",
         "hover:text-neutral-100",
-        "focus:border-neutral-100",
-        "focus:text-neutral-100",
-        "focus:outline-none",
-        "focus:ring-0",
-        "active:border-neutral-200",
-        "active:text-neutral-200",
-        "active:bg-neutral-500",
         "disabled:border-neutral-100",
         "disabled:text-neutral-100",
         "disabled:bg-neutral-300",
-        "hover:bg-neutral-500",
-        "hover:bg-opacity-10",
+        "hover:bg-neutral-300",
         "w-full",
     );
 
