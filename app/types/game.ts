@@ -4,9 +4,9 @@ export type GameState = {
 }
 
 export enum Progress {
-    Win,
-    Lost,
-    InProgress,
+    Win = "Win",
+    Lost = "Lost",
+    InProgress = "InProgress",
 }
 
 export type Board = {

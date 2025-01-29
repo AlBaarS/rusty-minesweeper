@@ -18,7 +18,7 @@ import blank_texture from '../../public/cell_textures/cellup.png';
 import mine_unex_texture from '../../public/cell_textures/cellmine.png';
 import { useState } from "react";
 import doPlayAPI from "../api/doPlayAPI";
-import { isGameState } from "../types/game";
+import { isGameState, Progress } from "../types/game";
 import doFlagAPI from "../api/doFlagAPI";
 
 const images = {
@@ -42,7 +42,7 @@ export const MinesweeperPlay = () => {
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
-    const progress = gameState?.progress;
+    const progress = gameState?.progress as Progress;
     const boardsize = gameState?.game.mines.size;
     
 
@@ -97,6 +97,7 @@ export const MinesweeperPlay = () => {
                         size="medium" 
                         color="default"
                         onChange={(event) => flagging_switcher(event.target.checked)}
+                        disabled={progress != Progress.InProgress}
                     />
                 </div>
                 <div className="grid place-content-center">
@@ -137,7 +138,7 @@ export const MinesweeperPlay = () => {
         ) : (
             <button 
                 type = "button"
-                disabled={flag && !flagging}
+                disabled={(flag && !flagging) || progress != Progress.InProgress}
                 onClick = {
                     function(){ doClick(x, y) }
                 }
@@ -148,7 +149,7 @@ export const MinesweeperPlay = () => {
     }
 
     function DisplayEndgameState() {
-        if (progress == "InProgress") {
+        if (progress == Progress.InProgress) {
             return(<div></div>);
         } else {
             return(<div className={classNames(

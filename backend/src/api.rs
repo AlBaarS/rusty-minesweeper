@@ -29,14 +29,20 @@ pub async fn start_game(Json(payload): Json<serde_json::Value>) -> Json<serde_js
         None => return Json(json!({"playboard" : "invalid user"})),
     }.try_into().unwrap();
 
+    let difficulty: u32 = match payload["difficulty"].as_u64() {
+        Some(s) => s,
+        None => return Json(json!({"playboard" : "invalid difficulty"})),
+    }.try_into().unwrap();
+
+
     println!("User registered: {}. Searching for existing game in database.", user);
     let saved_game: bool = find_game(user.clone()).await;
     if saved_game {
         delete_gamestate(user.clone()).await;
     }
 
-    println!("Seed registered: {}. Returning a new board to front-end.", seed);
-    let game: Play = Play::new(seed);
+    println!("Returning a new board to front-end with seed {} and difficulty {}", seed, difficulty);
+    let game: Play = Play::new(seed, difficulty);
     store_gamestate(game.clone(), user).await;
     return Json(json!({ "playboard": game}));
 }
@@ -93,8 +99,13 @@ pub async fn flag(Json(payload): Json<serde_json::Value>) -> Json<serde_json::Va
     let game_old: Play = fetch_gamestate(user.clone()).await;
     let game_new: Play = game_old.flag_square(x, y);
 
-    update_gamestate(user.clone(), game_new.clone()).await;
-    println!("Gamestate for {} updated after flag", user);
+    if game_new.get_progress().to_owned() == Progress::InProgress {
+        update_gamestate(user.clone(), game_new.clone()).await;
+        println!("Gamestate for {} updated after flag", user);
+    } else {
+        delete_gamestate(user.clone()).await;
+        println!("Game over for {}, end state: {:?}", user, game_new.get_progress());
+    }
 
     return Json(json!({ "playboard": game_new}));
 }
