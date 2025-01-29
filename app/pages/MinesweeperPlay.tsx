@@ -61,6 +61,7 @@ export const MinesweeperPlay = () => {
         }
     }
 
+    // Functions
     function getImage(type: number) {
         return images[type] || null;
     }
@@ -70,84 +71,13 @@ export const MinesweeperPlay = () => {
         setFlagging(check);
     }
 
-    function FlagsLeft() {
-        return(
-            <div></div>
-        )
-    }
-
-    function FlagButton() {
-        return(
-            <div className={classNames(
-                "grid",
-                "grid-cols-3",
-                "place-content-center",
-                "justify-center",
-                "border-4",
-                "border-double",
-                "border-gray-400",
-                "p-1"
-            )}>
-                <div className="grid place-content-center">
-                    <Image src={mine_unex_texture} alt="Cell Texture" width={32} height={32} />
-                </div>
-                <div className="grid place-content-center">
-                    <Switch 
-                        checked={flagging}
-                        size="medium" 
-                        color="default"
-                        onChange={(event) => flagging_switcher(event.target.checked)}
-                        disabled={progress != Progress.InProgress}
-                    />
-                </div>
-                <div className="grid place-content-center">
-                    <Image src={flag_texture} alt="Cell Texture" width={32} height={32} />
-                </div>
-            </div>
-        )
-    }
-
-    function Timer() {
-        return(
-            <div></div>
-        )
-    }
-
-    function Column({x}) {
-        return(
-            <div className="grid grid-flow-row">
-                {[...Array(boardsize).keys()].map(y => <Square key={`(${x} * ${boardsize}) + ${y}`} x={x} y={y} />)}
-            </div>
-        )
-    }
-
     function flagOrNot(bool: boolean) {
         return bool ? flag_texture : blank_texture
     }
 
-    function Square({x, y}) {
-        const vic = vicinity[y][x];
-        const flag = flagged[y][x];
-        const rev = revealed[y][x];
-        const cellImg = getImage(vic);
 
-        return rev ? (
-            <div className="object-cover">
-                <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
-            </div>
-        ) : (
-            <button 
-                type = "button"
-                disabled={(flag && !flagging) || progress != Progress.InProgress}
-                onClick = {
-                    function(){ doClick(x, y) }
-                }
-            >
-                <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
-            </button>
-        )
-    }
 
+    // Game progress
     function DisplayEndgameState() {
         if (progress == Progress.InProgress) {
             return(<div></div>);
@@ -188,7 +118,87 @@ export const MinesweeperPlay = () => {
         </div>)
     }
 
+    // Game utilities
+    function FlagButton() {
+        return(
+            <div className={classNames(
+                "grid",
+                "grid-cols-3",
+                "place-content-center",
+                "justify-center",
+                "border-4",
+                "border-double",
+                "border-gray-400",
+                "p-1"
+            )}>
+                <div className="grid place-content-center">
+                    <Image src={mine_unex_texture} alt="Cell Texture" width={32} height={32} />
+                </div>
+                <div className="grid place-content-center">
+                    <Switch 
+                        checked={flagging}
+                        size="medium" 
+                        color="default"
+                        onChange={(event) => flagging_switcher(event.target.checked)}
+                        disabled={progress != Progress.InProgress}
+                    />
+                </div>
+                <div className="grid place-content-center">
+                    <Image src={flag_texture} alt="Cell Texture" width={32} height={32} />
+                </div>
+            </div>
+        )
+    }
 
+    // * Unused:
+    function Timer() {  // Not used within the scope of the individual project
+        return(
+            <div></div>
+        )
+    }
+
+    function FlagsLeft() {  // Not used within the scope of the individual project
+        return(
+            <div></div>
+        )
+    }
+
+    // Playing board
+    function Column({x}) {
+        return(
+            <div className="grid grid-flow-row">
+                {[...Array(boardsize).keys()].map(y => <Square key={`(${x} * ${boardsize}) + ${y}`} x={x} y={y} />)}
+            </div>
+        )
+    }
+
+    function Square({x, y}) {
+        const vic = vicinity[y][x];
+        const flag = flagged[y][x];
+        const rev = revealed[y][x];
+        const cellImg = getImage(vic);
+
+        return rev ? (
+            <div className="object-cover">
+                <Image src={cellImg} alt="Cell Texture" width={32} height={32} />
+            </div>
+        ) : (
+            <button 
+                type = "button"
+                disabled={(flag && !flagging) || progress != Progress.InProgress}
+                onClick = {
+                    function(){ doClick(x, y) }
+                }
+            >
+                <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
+            </button>
+        )
+    }
+
+    // Return/Replay
+
+
+    // Return page
     return(
         <div className={classNames(
             "flex",
