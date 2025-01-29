@@ -16,10 +16,11 @@ import mine_expl_texture from '../../public/cell_textures/blast.png';
 import flag_texture from '../../public/cell_textures/cellflag.png';
 import blank_texture from '../../public/cell_textures/cellup.png';
 import mine_unex_texture from '../../public/cell_textures/cellmine.png';
-import { useState } from "react";
 import doPlayAPI from "../api/doPlayAPI";
 import { isGameState, Progress } from "../types/game";
 import doFlagAPI from "../api/doFlagAPI";
+import getSeed from "../functions/getSeed";
+import getGameAPI from "../api/getGameAPI";
 
 const images = {
     0: cell0_texture,
@@ -36,16 +37,45 @@ const images = {
 
 export const MinesweeperPlay = () => {
 
-    const { gameState, setGameState, email, flagging, setFlagging } = useMinesweeper();
-    // const { email } = useMinesweeper();
+    const { gameState, setGameState, email, flagging, setFlagging, difficulty } = useMinesweeper();
     const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
     const progress = gameState?.progress as Progress;
     const boardsize = gameState?.game.mines.size;
-    
 
+    const button_markup = classNames(
+        "text-black",
+        "border-4",
+        "border-double",
+        "border-gray-400",
+        "px-7",
+        "pb-[8px]",
+        "pt-[10px]",
+        "text-sm",
+        "font-medium",
+        "uppercase",
+        "leading-normal",
+        "transition duration-150",
+        "ease-in-out",
+        "hover:bg-neutral-800",
+        "focus:border-neutral-100",
+        "focus:text-neutral-100",
+        "focus:outline-none",
+        "focus:ring-0",
+        "active:border-neutral-200",
+        "active:text-neutral-200",
+        "active:bg-neutral-500",
+        "disabled:border-neutral-100",
+        "disabled:text-neutral-100",
+        "disabled:bg-neutral-300",
+        "hover:bg-neutral-500",
+        "hover:bg-opacity-10",
+        "w-full",
+    );
+    
+    // Functions
     const doClick = async (x: number, y: number) => {
 
         console.log("Clicking square at x =", x, "and y =", y, "with flagging =", flagging);
@@ -61,7 +91,19 @@ export const MinesweeperPlay = () => {
         }
     }
 
-    // Functions
+    const replay = async () =>  {
+        let seed = getSeed();
+        console.log("Starting game using API getGameAPI");
+        const result = await getGameAPI(seed, email, difficulty);
+
+        if (isGameState(result)) {
+            setGameState(result);
+            console.log("Obtained gamestate:", result);
+        } else {
+            console.log("Failed to obtain gameState:", result.statusText);
+        }
+    }
+
     function getImage(type: number) {
         return images[type] || null;
     }
@@ -196,6 +238,33 @@ export const MinesweeperPlay = () => {
     }
 
     // Return/Replay
+    function BackToHomeButton() {
+        return(
+            <button
+                type="button"
+                className={button_markup}
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                onClick={() => window.location.reload(true)}
+            >
+                Back to menu
+            </button>
+        )
+    }
+
+    function ReplayGameButton() {
+        return(
+            <button
+                type="button"
+                className={button_markup}
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                onClick={() => replay()}
+            >
+                Replay
+            </button>
+        )
+    }
 
 
     // Return page
@@ -251,6 +320,9 @@ export const MinesweeperPlay = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div>
+                        <BackToHomeButton /> <ReplayGameButton />
                     </div>
                 </div>
             </div>

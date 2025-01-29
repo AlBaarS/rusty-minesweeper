@@ -14,7 +14,7 @@ export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
     const [ continue_game, setContinue_game] = useState<boolean>(undefined!);
-    const [ difficulty, setDifficulty] = useState<number>(5);
+    const { difficulty, setDifficulty } = useMinesweeper();
 
     const onSubmitNew = async (seed?: number) => {
 
@@ -82,7 +82,7 @@ export const MinesweeperStart = () => {
         "hover:bg-neutral-500",
         "hover:bg-opacity-10",
         "w-full",
-    )
+    );
 
 
 
@@ -203,7 +203,7 @@ export const MinesweeperStart = () => {
                                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                                         <InputLabel>Difficulty</InputLabel>
                                         <Select
-                                            value={difficulty}
+                                            value={difficulty ?? 5}
                                             onChange={e => setDifficulty(e.target.value as number)}
                                             label="Difficulty"
                                         >
