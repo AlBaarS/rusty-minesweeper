@@ -133,15 +133,6 @@ impl Board {
         return Board::new(mines, vicinity, revealed, flagged);
     }
 
-    pub fn reveal_all(&self) -> Board {
-        let mines: TwoDVector<bool> = self.get_mines();
-        let vicinity: TwoDVector<u8> = self.get_vicinity();
-        let size: u16 = self.get_mines().get_size().into();
-        let revealed: TwoDVector<bool> = TwoDVector::new(iter::repeat(true).take((size * size).into()).collect_vec(), size.try_into().unwrap());
-        let flagged: TwoDVector<bool> = self.get_flagged();
-        return Board::new(mines, vicinity, revealed, flagged);
-    }
-
     // Functions for determining winning conditions
     pub fn invert_mines(&self) -> TwoDVector<bool> {
         let invert_vec: Vec<Vec<bool>> = self
@@ -161,6 +152,23 @@ impl Board {
             size: self.get_revealed().get_size(),
         };
         return invert;
+    }
+
+    pub fn reveal_all(&self) -> Board {
+        let mines: TwoDVector<bool> = self.get_mines();
+        let vicinity: TwoDVector<u8> = self.get_vicinity();
+        let size: u16 = self.get_mines().get_size().into();
+        let revealed: TwoDVector<bool> = TwoDVector::new(iter::repeat(true).take((size * size).into()).collect_vec(), size.try_into().unwrap());
+        let flagged: TwoDVector<bool> = self.get_flagged();
+        return Board::new(mines, vicinity, revealed, flagged);
+    }
+
+    pub fn reveal_safe(&self) -> Board {
+        let mines: TwoDVector<bool> = self.get_mines();
+        let vicinity: TwoDVector<u8> = self.get_vicinity();
+        let revealed: TwoDVector<bool> = self.invert_mines();
+        let flagged: TwoDVector<bool> = self.get_flagged();
+        return Board::new(mines, vicinity, revealed, flagged);
     }
 
     pub fn all_non_mines_are_revealed(&self) -> bool {
@@ -256,7 +264,7 @@ mod tests {
     }
 
     #[test]
-    fn test_if_mines_are_reversed_properly() -> () {
+    fn test_if_mines_are_inverted_properly() -> () {
         let test_seed: u64 = 1234567890;
         let test_size: u8 = 5;
         let reference_field: Vec<Vec<bool>> = vec![
@@ -283,6 +291,21 @@ mod tests {
         ];
         let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
         assert_eq!(board.reveal_all().get_revealed().get_vec(), reference_field);
+    }
+
+    #[test]
+    fn test_if_safe_squares_are_revealed() -> () {
+        let test_seed: u64 = 1234567890;
+        let test_size: u8 = 5;
+        let reference_field: Vec<Vec<bool>> = vec![
+            vec![true, true, true, true, false], 
+            vec![true, true, true, true, true], 
+            vec![true, true, false, true, true], 
+            vec![false, false, true, false, true], 
+            vec![true, true, true, true, true]
+        ];
+        let board: Board = Board::generate_starting_state(test_size, test_seed, 5);
+        assert_eq!(board.reveal_safe().get_revealed().get_vec(), reference_field);
     }
 
     #[test]

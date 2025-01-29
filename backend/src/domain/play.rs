@@ -73,7 +73,7 @@ impl Play {
         } else {       
             if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
                 return Play {
-                    game: new_board,
+                    game: new_board.reveal_safe(),
                     progress: Progress::Win,
                 };
             } else {
@@ -89,7 +89,7 @@ impl Play {
         let new_board: Board = self.get_game().flag_unflag_square(x, y);
         if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
             return Play {
-                game: new_board,
+                game: new_board.reveal_safe(),
                 progress: Progress::Win,
             };
         } else {
