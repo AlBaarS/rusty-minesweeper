@@ -13,8 +13,8 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
-    const [ continue_game, setContinue_game] = useState<boolean>(undefined!);
-    const { difficulty, setDifficulty } = useMinesweeper();
+    const [ continue_game, setContinue_game ] = useState<boolean>(undefined!);
+    const [ difficulty, setDifficulty ] = useState<number | undefined>(undefined);
 
     const onSubmitNew = async (seed?: number) => {
 
@@ -75,7 +75,6 @@ export const MinesweeperStart = () => {
         "disabled:border-neutral-100",
         "disabled:text-neutral-100",
         "disabled:bg-neutral-300",
-        "hover:bg-neutral-300",
         "w-full",
     );
 

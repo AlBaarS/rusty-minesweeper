@@ -37,13 +37,14 @@ const images = {
 
 export const MinesweeperPlay = () => {
 
-    const { gameState, setGameState, email, flagging, setFlagging, difficulty } = useMinesweeper();
+    const { gameState, setGameState, email, flagging, setFlagging } = useMinesweeper();
     const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
     const progress = gameState?.progress as Progress;
     const boardsize = gameState?.game.mines.size;
+    const difficulty = gameState?.difficulty;
 
     const button_markup = classNames(
         "text-black",
@@ -65,7 +66,6 @@ export const MinesweeperPlay = () => {
         "disabled:border-neutral-100",
         "disabled:text-neutral-100",
         "disabled:bg-neutral-300",
-        "hover:bg-neutral-300",
         "w-full",
     );
     

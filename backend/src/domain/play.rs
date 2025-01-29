@@ -12,6 +12,7 @@ pub enum Progress {
 pub struct Play {
     pub(crate) game: Board,
     pub(crate) progress: Progress,
+    pub(crate) difficulty: u32,
 }
 
 impl Play {
@@ -22,6 +23,7 @@ impl Play {
         return Self {
             game,
             progress,
+            difficulty
         };
     }
 
@@ -32,6 +34,10 @@ impl Play {
 
     pub fn get_progress(&self) -> &Progress {
         return &self.progress;
+    }
+
+    pub fn get_difficulty(&self) -> &u32 {
+        return &self.difficulty;
     }
 
     pub fn test_import() -> String {
@@ -48,6 +54,7 @@ impl Play {
                 flagged: self.get_game().get_flagged(),
             },
             progress: Progress::InProgress,
+            difficulty: self.difficulty,
         };
     }
 
@@ -60,6 +67,7 @@ impl Play {
                 flagged: self.get_game().get_mines(),
             },
             progress: Progress::InProgress,
+            difficulty: self.difficulty,
         };
     }
 
@@ -69,17 +77,20 @@ impl Play {
             return Play {
                 game: new_board.reveal_all(),
                 progress: Progress::Lost,
+                difficulty: self.difficulty,
             };
         } else {       
             if new_board.all_non_mines_are_revealed() || new_board.all_mines_are_flagged() {
                 return Play {
                     game: new_board.reveal_safe(),
                     progress: Progress::Win,
+                    difficulty: self.difficulty,
                 };
             } else {
                 return Play {
                     game: new_board,
                     progress: Progress::InProgress,
+                    difficulty: self.difficulty,
                 };
             };
         };
@@ -91,11 +102,13 @@ impl Play {
             return Play {
                 game: new_board.reveal_safe(),
                 progress: Progress::Win,
+                difficulty: self.difficulty,
             };
         } else {
             return Play {
                 game: new_board,
                 progress: Progress::InProgress,
+                difficulty: self.difficulty,
             };
         };
     }
