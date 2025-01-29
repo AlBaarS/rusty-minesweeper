@@ -44,7 +44,13 @@ impl Play {
     }
 
     fn is_won(&self) -> bool {
-        return self.get_game().get_revealed().get_vec() == self.get_game().invert_mines().get_vec();
+        if self.get_game().all_non_mines_are_revealed() {
+            return true;
+        } else if self.get_game().all_mines_are_flagged() {
+            return true;
+        } else {
+            return false;
+        };
     }
 
     pub fn _autowin(&self) -> Play {     // For testing purposes only
@@ -83,9 +89,16 @@ impl Play {
 
     pub fn flag_square(&self, x: usize, y: usize) -> Play {
         let new_board: Board = self.get_game().flag_unflag_square(x, y);
-        return Play {
-            game: new_board,
-            progress: Progress::InProgress,
+        if self.is_won() {
+            return Play {
+                game: new_board,
+                progress: Progress::Win,
+            };
+        } else {
+            return Play {
+                game: new_board,
+                progress: Progress::InProgress,
+            };
         };
     }
 }
