@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import { useState } from "react";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 import { isGameState } from "../types/game";
 import { useMinesweeper } from "../context/MinesweeperContext";
@@ -16,7 +16,7 @@ export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
     const [ continue_game, setContinue_game ] = useState<boolean>(undefined!);
-    const [ difficulty, setDifficulty ] = useState<number | undefined>(undefined);
+    const [ difficulty, setDifficulty ] = useState<number>(8);
 
     const onSubmitNew = async (seed?: number) => {
 
@@ -122,7 +122,9 @@ export const MinesweeperStart = () => {
             "flex",
             "items-center",
             "justify-center",
-            "content-stretch"
+            "content-stretch",
+            "bg-mines-1",
+            "h-screen",
         )}>
             <div className={classNames(
                 "relative",
@@ -163,29 +165,28 @@ export const MinesweeperStart = () => {
                                 "grid",
                                 "grid-cols-2",
                             )}>
-                                <div>
+                                <div className="content-center">
                                     e-mail: <input 
                                         value={email ?? ""}
                                         onChange={e => {setEmail(e.target.value); setContinue_game(undefined)}}
                                     />
                                 </div>
                                 <div className="content-center justify-center">
-                                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                                        <InputLabel>Difficulty</InputLabel>
-                                        <Select
-                                            value={difficulty ?? 5}
-                                            onChange={e => setDifficulty(e.target.value as number)}
-                                            label="Difficulty"
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            <MenuItem value={8}>Easy</MenuItem>
-                                            <MenuItem value={6}>Medium</MenuItem>
-                                            <MenuItem value={5}>Hard</MenuItem>
-                                            <MenuItem value={4}>Very hard</MenuItem>
-                                        </Select>
-                                    </FormControl>
+                                    <ToggleButtonGroup
+                                        color="primary"
+                                        value={difficulty ?? 8}
+                                        exclusive
+                                        onChange={
+                                            (event: React.MouseEvent<HTMLElement>,
+                                            newAlignment: number,) => 
+                                                setDifficulty(newAlignment)}
+                                        aria-label="Difficulty"
+                                    >
+                                        <ToggleButton value={8}>Easy</ToggleButton>
+                                        <ToggleButton value={6}>Medium</ToggleButton>
+                                        <ToggleButton value={5}>Hard</ToggleButton>
+                                        <ToggleButton value={4}>Very hard</ToggleButton>
+                                    </ToggleButtonGroup>
                                 </div>
                             </div>
                         </div>
