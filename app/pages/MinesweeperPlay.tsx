@@ -125,7 +125,7 @@ export const MinesweeperPlay = () => {
                     "p-1",
                     "h-full"
                 )}>
-                    Currently playing with e-mail: <br /> {email}
+                    Currently playing as user: <br /> {email}
                 </div>
             </div>
             <div className="p-2">
@@ -245,11 +245,13 @@ export const MinesweeperPlay = () => {
     return(
         <div className={classNames(
             "flex",
-            "place-content-center"
+            "place-content-center",
+            "bg-mines-1",
+            "h-screen",
         )}>
             <div className={classNames(
                 "box-border",
-                "w-2/5"
+                "w-2/5",
             )}>
                 <div className={classNames(
                     "px-4", 
@@ -258,7 +260,8 @@ export const MinesweeperPlay = () => {
                     "border-4", 
                     "border-double", 
                     "bg-slate-200", 
-                    "border-neutral-400"
+                    "border-neutral-400",
+                    "h-screen",
                     )}>
                     <div>
                         <div className="grid grid-flow-row">
