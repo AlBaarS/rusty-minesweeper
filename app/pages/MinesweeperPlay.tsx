@@ -125,7 +125,7 @@ export const MinesweeperPlay = () => {
                     "p-1",
                     "h-full"
                 )}>
-                    Currently playing with e-mail: <br /> {email}
+                    Currently playing as user: <br /> {email}
                 </div>
             </div>
             <div className="p-2">
