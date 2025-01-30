@@ -12,6 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      backgroundImage: {
+        'mines-1': "url('/backgrounds/seamines1.png')",
+      }
     },
   },
   safelist: [

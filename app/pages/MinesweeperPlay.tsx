@@ -249,7 +249,7 @@ export const MinesweeperPlay = () => {
         )}>
             <div className={classNames(
                 "box-border",
-                "w-2/5"
+                "w-2/5",
             )}>
                 <div className={classNames(
                     "px-4", 

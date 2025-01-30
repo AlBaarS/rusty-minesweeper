@@ -122,7 +122,9 @@ export const MinesweeperStart = () => {
             "flex",
             "items-center",
             "justify-center",
-            "content-stretch"
+            "content-stretch",
+            "bg-mines-1",
+            "h-screen",
         )}>
             <div className={classNames(
                 "relative",
