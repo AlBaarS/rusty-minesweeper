@@ -245,7 +245,9 @@ export const MinesweeperPlay = () => {
     return(
         <div className={classNames(
             "flex",
-            "place-content-center"
+            "place-content-center",
+            "bg-mines-1",
+            "h-screen",
         )}>
             <div className={classNames(
                 "box-border",
@@ -258,7 +260,8 @@ export const MinesweeperPlay = () => {
                     "border-4", 
                     "border-double", 
                     "bg-slate-200", 
-                    "border-neutral-400"
+                    "border-neutral-400",
+                    "h-screen",
                     )}>
                     <div>
                         <div className="grid grid-flow-row">
