@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import { useState } from "react";
-import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 import { isGameState } from "../types/game";
 import { useMinesweeper } from "../context/MinesweeperContext";
@@ -31,7 +31,7 @@ export const MinesweeperStart = () => {
             setGameState(result);
             console.log("Obtained gamestate:", result);
         } else {
-            console.log("Failed to obtain gameState:", result.statusText);
+            console.log("Failed to obtain gameState:", result);
         }
     }
 
@@ -44,7 +44,7 @@ export const MinesweeperStart = () => {
             setGameState(result);
             console.log("Obtained gamestate:", result);
         } else {
-            console.log("Failed to obtain gameState:", result.statusText);
+            console.log("Failed to obtain gameState:", result);
         }
     }
 

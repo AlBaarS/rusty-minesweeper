@@ -1,3 +1,5 @@
+use std::env;
+
 use mongodb::{
     bson::{self, Bson, Document, doc}, 
     options::{
@@ -10,9 +12,16 @@ use mongodb::{
 
 use crate::domain::play::Play;
 
-const DB_URI: &str = "mongodb://127.0.0.1:27017/";
+// const DB_URI: &str = "mongodb://127.0.0.1:27017/";
+// static variable defined in get_connection() function now
 
 async fn get_connection() -> mongodb::Collection<Document>  {
+    // Define the link to the database
+    let DB_URI: String = match env::var("DATABASE_URL") {
+        Ok(val) => val,
+        Err(e) => panic!("Could not find DATABASE_URL environment variable, {}", e),
+    };
+
     // Establish connection to MongoDB
     let mut client_options: ClientOptions =
         match ClientOptions::parse(DB_URI).await {

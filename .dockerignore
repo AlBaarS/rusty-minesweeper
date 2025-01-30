@@ -1,5 +1,5 @@
-/backend/target
-/target
+# /backend/target
+# /target
 /node_modules
 /.next
 /.idea

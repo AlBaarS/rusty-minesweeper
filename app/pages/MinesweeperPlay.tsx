@@ -39,7 +39,6 @@ const images = {
 export const MinesweeperPlay = () => {
 
     const { gameState, setGameState, email, flagging, setFlagging } = useMinesweeper();
-    const mines = gameState?.game.mines.matrix;
     const vicinity = gameState?.game.vicinity.matrix;
     const flagged = gameState?.game.flagged.matrix;
     const revealed = gameState?.game.revealed.matrix;
@@ -61,12 +60,12 @@ export const MinesweeperPlay = () => {
             setGameState(result);
             console.log("Obtained gamestate:", result);
         } else {
-            console.log("Failed to obtain gameState:", result.statusText);
+            console.log("Failed to obtain gameState:", result);
         }
     }
 
     const replay = async () =>  {
-        let seed = getSeed();
+        const seed = getSeed();
         console.log("Re-starting game using API getGameAPI");
         const result = await getGameAPI(seed, email, difficulty);
 
@@ -74,7 +73,7 @@ export const MinesweeperPlay = () => {
             setGameState(result);
             console.log("Obtained gamestate:", result);
         } else {
-            console.log("Failed to obtain gameState:", result.statusText);
+            console.log("Failed to obtain gameState:", result);
         }
     }
 
