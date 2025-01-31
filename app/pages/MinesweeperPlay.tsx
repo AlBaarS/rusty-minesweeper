@@ -58,7 +58,7 @@ export const MinesweeperPlay = () => {
 
         if (isGameState(result)) {
             setGameState(result);
-            console.log("Obtained gamestate:", result);
+            console.log("Obtained gamestate");
         } else {
             console.log("Failed to obtain gameState:", result);
         }
@@ -71,7 +71,7 @@ export const MinesweeperPlay = () => {
 
         if (isGameState(result)) {
             setGameState(result);
-            console.log("Obtained gamestate:", result);
+            console.log("Obtained gamestate");
         } else {
             console.log("Failed to obtain gameState:", result);
         }

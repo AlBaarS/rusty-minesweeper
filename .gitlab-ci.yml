@@ -42,7 +42,7 @@ release_job:
   script:
     - echo "running release_job for $CI_PIPELINE_IID"
     - release-cli create --name "Release $CI_PIPELINE_IID" --tag-name $CI_PIPELINE_IID \
-        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://git.sogyo.nl/abaars/rusty-minesweeper/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/rusty-minesweeper_v0.*.tar\"}"
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://git.sogyo.nl/abaars/rusty-minesweeper/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/rusty-minesweeper_*.tar\"}"
   needs: ["building"]
   release:                                         # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
     tag_name: 'v0.$CI_PIPELINE_IID'                # The version is incremented per pipeline.
