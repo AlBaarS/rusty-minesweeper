@@ -15,6 +15,12 @@ unit-tests:
 building:
   stage: build
   image: docker:27.5.1
+  services:
+    - name: docker:27.5.1-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""              #Disables TLS
   script:
     - docker compose build --no-cache
     - docker compose save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
