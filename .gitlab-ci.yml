@@ -14,7 +14,7 @@ unit-tests:
 
 building:
   stage: build
-  image: docker/docker:27.5.1-cli-alpine3.21⁠
+  image: docker:27.5.1
   script:
     - docker compose build --no-cache
 
