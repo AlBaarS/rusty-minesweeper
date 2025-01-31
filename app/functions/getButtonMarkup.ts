@@ -1,6 +1,6 @@
 import classNames from "classnames";
 
-export function getButtonMarkup(colour: String) {
+export function getButtonMarkup(colour: string) {
     return(
         classNames(
             "text-black",

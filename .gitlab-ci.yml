@@ -1,5 +1,3 @@
-image: rust:latest
-
 stages:
   - test
   - build
@@ -7,6 +5,7 @@ stages:
 
 unit-tests:
   stage: test
+  image: rust:latest
   script:
     - cargo install cargo-tarpaulin
     - cd backend
@@ -15,9 +14,23 @@ unit-tests:
 
 building:
   stage: build
+  image: docker:27.5.1
+  services:
+    - name: docker:27.5.1-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""              #Disables TLS
   script:
-    - cd backend
-    - cargo build
+    - docker pull mongo:8 
+    - docker compose build --no-cache
+    - docker save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
+  needs: ["unit-tests"]
+  artifacts:
+    name: rusty-minesweeper
+    paths:
+      - $CI_PROJECT_DIR/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar
+
 
 release_job:
   stage: release
@@ -27,7 +40,10 @@ release_job:
       when: never                                  # Do not run this job when a tag is created manually
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Run this job when commits are pushed or merged to the default branch
   script:
-    - echo "running release_job for $TAG"
+    - echo "running release_job for $CI_PIPELINE_IID"
+    - release-cli create --name "Release $CI_PIPELINE_IID" --tag-name $CI_PIPELINE_IID \
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://git.sogyo.nl/abaars/rusty-minesweeper/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/rusty-minesweeper_*.tar\"}"
+  needs: ["building"]
   release:                                         # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
     tag_name: 'v0.$CI_PIPELINE_IID'                # The version is incremented per pipeline.
     description: 'v0.$CI_PIPELINE_IID'
