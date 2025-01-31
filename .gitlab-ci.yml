@@ -30,6 +30,7 @@ building:
     name: rusty-minesweeper
     paths:
       - $CI_PROJECT_DIR/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar
+      - CI_JOB_ID.txt
 
 
 release_job:
