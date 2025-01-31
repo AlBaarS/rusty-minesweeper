@@ -40,7 +40,7 @@ release_job:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Run this job when commits are pushed or merged to the default branch
   script:
     - echo "running release_job for $CI_PIPELINE_IID"
-    release-cli create --name "Release $CI_PIPELINE_IID" --tag-name $CI_PIPELINE_IID \
+    - release-cli create --name "Release $CI_PIPELINE_IID" --tag-name $CI_PIPELINE_IID \
         --assets-link "{\"name\":\"Executable file\",\"url\":\"https://git.sogyo.nl/abaars/rusty-minesweeper/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/rusty-minesweeper_v0.*.tar\"}"
   needs: ["building"]
   release:                                         # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
