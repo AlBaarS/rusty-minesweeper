@@ -15,7 +15,7 @@ import getButtonMarkup from "../functions/getButtonMarkup";
 export const MinesweeperStart = () => {
     const { setGameState } = useMinesweeper();
     const { email, setEmail } = useMinesweeper();
-    const [ continue_game, setContinue_game ] = useState<boolean>(undefined!);
+    const [ continue_game, setContinue_game ] = useState<boolean | undefined>(undefined);
     const [ difficulty, setDifficulty ] = useState<number>(8);
 
     const onSubmitNew = async (seed?: number) => {

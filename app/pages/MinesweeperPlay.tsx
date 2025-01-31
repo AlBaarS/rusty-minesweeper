@@ -1,5 +1,5 @@
 import { useMinesweeper } from "../context/MinesweeperContext";
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import classNames from "classnames";
 import { Switch } from "@mui/material";
 
@@ -23,7 +23,7 @@ import getSeed from "../functions/getSeed";
 import getGameAPI from "../api/getGameAPI";
 import getButtonMarkup from "../functions/getButtonMarkup";
 
-const images = {
+const images: { [key: number]: StaticImageData } = {
     0: cell0_texture,
     1: cell1_texture,
     2: cell2_texture,
@@ -39,12 +39,12 @@ const images = {
 export const MinesweeperPlay = () => {
 
     const { gameState, setGameState, email, flagging, setFlagging } = useMinesweeper();
-    const vicinity = gameState?.game.vicinity.matrix;
-    const flagged = gameState?.game.flagged.matrix;
-    const revealed = gameState?.game.revealed.matrix;
+    const vicinity = gameState?.game.vicinity.matrix as [[number]];
+    const flagged = gameState?.game.flagged.matrix as [[boolean]];
+    const revealed = gameState?.game.revealed.matrix as [[boolean]];
     const progress = gameState?.progress as Progress;
-    const boardsize = gameState?.game.mines.size;
-    const difficulty = gameState?.difficulty;
+    const boardsize = gameState?.game.mines.size as number;
+    const difficulty = gameState?.difficulty as number;
 
 
     
@@ -81,7 +81,7 @@ export const MinesweeperPlay = () => {
         return images[type] || null;
     }
 
-    function flagging_switcher(check: bool) {
+    function flagging_switcher(check: boolean) {
         console.log("Setting flag switch to", check);
         setFlagging(check);
     }
@@ -179,7 +179,7 @@ export const MinesweeperPlay = () => {
     }
 
     // Playing board
-    function Column({x}) {
+    function Column({x}: {x: number}) {
         return(
             <div className="grid grid-flow-row">
                 {[...Array(boardsize).keys()].map(y => <Square key={`(${x} * ${boardsize}) + ${y}`} x={x} y={y} />)}
@@ -187,7 +187,7 @@ export const MinesweeperPlay = () => {
         )
     }
 
-    function Square({x, y}) {
+    function Square({ x, y }: { x: number; y: number }) {
         const vic = vicinity[y][x];
         const flag = flagged[y][x];
         const rev = revealed[y][x];
@@ -218,7 +218,7 @@ export const MinesweeperPlay = () => {
                 className={getButtonMarkup("blue")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                onClick={() => window.location.reload(true)}
+                onClick={() => window.location.reload()}
             >
                 Back to menu
             </button>

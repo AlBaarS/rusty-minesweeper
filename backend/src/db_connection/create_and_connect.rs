@@ -17,17 +17,16 @@ use crate::domain::play::Play;
 
 async fn get_connection() -> mongodb::Collection<Document>  {
     // Define the link to the database
-    let DB_URI: String = match env::var("DATABASE_URL") {
+    let db_uri: String = match env::var("DATABASE_URL") {
         Ok(val) => val,
         Err(e) => panic!("Could not find DATABASE_URL environment variable, {}", e),
     };
 
     // Establish connection to MongoDB
-    let mut client_options: ClientOptions =
-        match ClientOptions::parse(DB_URI).await {
-            Ok(client_options) => client_options,
-            Err(e) => panic!("Unable to obtain client options: {}", e)
-        };
+    let mut client_options: ClientOptions = match ClientOptions::parse(db_uri).await {
+        Ok(client_options) => client_options,
+        Err(e) => panic!("Unable to obtain client options: {}", e)
+    };
 
     // Set the server_api field of the client_options object to set the version of the Stable API on the client
     let server_api: ServerApi = ServerApi::builder().version(ServerApiVersion::V1).build();
