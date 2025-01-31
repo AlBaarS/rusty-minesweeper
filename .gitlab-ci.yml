@@ -17,6 +17,12 @@ building:
   image: docker:27.5.1
   script:
     - docker compose build --no-cache
+    - docker compose save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
+  artifacts:
+    name: rusty-minesweeper
+    paths:
+      - $CI_PROJECT_DIR/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar
+
 
 release_job:
   stage: release
@@ -27,8 +33,6 @@ release_job:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Run this job when commits are pushed or merged to the default branch
   script:
     - echo "running release_job for $TAG"
-    - docker compose build --no-cache
-    - docker compose save -o rusty-minesweeper.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
   release:                                         # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
     tag_name: 'v0.$CI_PIPELINE_IID'                # The version is incremented per pipeline.
     description: 'v0.$CI_PIPELINE_IID'
