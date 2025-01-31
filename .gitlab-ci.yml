@@ -22,6 +22,7 @@ building:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""              #Disables TLS
   script:
+    - docker pull mongo:8 
     - docker compose build --no-cache
     - docker save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
   needs: ["unit-tests"]
