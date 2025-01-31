@@ -1,8 +1,9 @@
-# /backend/target
-# /target
+/backend/target
+/target
 /node_modules
 /.next
 /.idea
 /backend/.idea
 folder_structure.txt
 build_logs.txt
+rusty-minesweeper.tar
