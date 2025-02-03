@@ -38,7 +38,7 @@ release_job:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   before_script:
-    - git config --global user.email "ci-bot@example.com"
+    - git config --global user.email "ci-bot@git.sogyo.nl"
     - git config --global user.name "GitLab CI Bot"
     - git remote set-url origin "https://oauth2:$CI_PUSH_TOKEN@git.sogyo.nl/abaars/rusty-minesweeper.git"
   script:
