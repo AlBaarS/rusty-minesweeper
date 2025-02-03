@@ -36,20 +36,19 @@ release_job:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Only run this job on merges to main
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  before_script:
+    - git config --global user.email "ci-bot@example.com"
+    - git config --global user.name "GitLab CI Bot"
+    - git remote set-url origin "https://oauth2:$CI_PUSH_TOKEN@git.sogyo.nl/abaars/rusty-minesweeper.git"
   script:
     - echo "Running release_job for pipeline $CI_PIPELINE_IID"
-    - export TAG_NAME="v0.$CI_PIPELINE_IID"  # Define the tag dynamically
-    - git remote set-url origin "https://gitlab-ci-token:$CI_JOB_TOKEN@git.sogyo.nl/abaars/rusty-minesweeper.git" # Set the origin to push to using the CI pipeline token
-    - git tag $TAG_NAME $CI_COMMIT_SHA       # Create the tag
-    - git push origin $TAG_NAME              # Push the tag to GitLab
+    - export TAG_NAME="v0.$CI_PIPELINE_IID"
+    - git tag $TAG_NAME $CI_COMMIT_SHA
+    - git push origin $TAG_NAME
     - release-cli create --name "Release $TAG_NAME" \
         --tag-name "$TAG_NAME" \
         --description "Release $TAG_NAME" \
         --ref "$CI_COMMIT_SHA" \
         --assets-link "{\"name\":\"Executable file\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/rusty-minesweeper_$TAG_NAME.tar\"}"
   needs: ["building"]
-  release:
-    tag_name: "v0.$CI_PIPELINE_IID"
-    description: "Release v0.$CI_PIPELINE_IID"
-    ref: "$CI_COMMIT_SHA"
