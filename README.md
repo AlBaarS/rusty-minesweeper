@@ -1,8 +1,4 @@
-![coverage](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/coverage.svg?job=unit-tests) in the main branch
-
-![coverage](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/develop/coverage.svg?job=unit-tests) in the development branch
-
-![status](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/pipeline.svg?ignore_skipped=true)
+![coverage](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/coverage.svg?job=unit-tests) in the main branch ![status](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/pipeline.svg?ignore_skipped=true)
 
 # Rusty Minesweeper
 Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars as his individual project at Sogyo.
@@ -12,17 +8,37 @@ Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars
 ## Download Rusty Minesweeper
 You can download a [release](https://git.sogyo.nl/abaars/rusty-minesweeper/-/releases/permalink/latest) or clone the source code using git:
 
-`git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git`
+```
+git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git
+# Or using wget:
+wget https://git.sogyo.nl/abaars/rusty-minesweeper.git
+```
 
-Alternatively, you can download the source code using wget:
+On our releases page, you can also find a ready-to-go docker image.
 
-`wget https://git.sogyo.nl/abaars/rusty-minesweeper.git`
+## Run using the docker image
 
-## Install dependencies 
+The easiest way to play Rusty Minesweeper is using the provided docker image. Make sure you have [Docker](https://docs.docker.com/engine/install/) installed on your computer before using this programme. Once you've downloaded Rusty Minesweeper, navigate to the directory with the rusty-minesweeper_|version|.tar file and use the following commands in your terminal:
 
-First, make sure that [Rust](https://www.rust-lang.org/tools/install) is installed on your system. You can check using `rustup --help` on your CLI. Next, install [nvm and Node.js](https://nodejs.org/en/download). Finally, install [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/) locally on your system.
+```
+docker load -i rusty-minesweeper_|version|.tar
+docker compose up -d
+```
 
-With Rust, nvm, Node.js, and MongoDB installed, you can install the project dependencies with the following commands:
+Once it's running, open your web browser of choice and navigate to <http://localhost:3000/>. Do not close the terminal window while the programme runs. The game will open on its starting page and you are ready to play.
+
+To terminate, simply do `Ctrl + C` __once__ while in your terminal window that is running the programme.
+
+## Run from source
+
+### Install dependencies
+
+Install the following:
+* [Rust](https://www.rust-lang.org/tools/install)
+* [nvm and Node.js](https://nodejs.org/en/download)
+* [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/)
+
+Then you can install the project dependencies with the following commands:
 
 ```
 cd rusty-minesweeper/
@@ -30,19 +46,14 @@ npm install
 npm update
 ```
 
-## Starting and terminating the programme
+### Starting and terminating the programme
 
-To start the programme, run the `.init.sh` file in the project root (you will need sudo rights to activate the database):
-
+To start the programme, simply use the provided `.init.sh` script as follows:
 ```
 bash .init.sh
-
-# Or, alternatively:
-chmod +x .init.sh       # execute this only once
-./.init.sh
 ```
 
-Open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play.
+The first time you do this it might take a while for everything to build. Once that's done, open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play.
 
 To terminate, simply do `Ctrl + C` __twice__ while in your terminal window that is running the programme.
 
@@ -61,12 +72,11 @@ To terminate, simply do `Ctrl + C` __twice__ while in your terminal window that 
 * Implement a timer that starts upon clicking the first tile
 
 ## Could
-* Keep track of personal and global best time
-* Have multiple save slots per player
-* Delete saved games from GUI
-* Basic animations
-* Have different board sizes
+* Difficulty selector
 * Deploy using Docker to make it platform independent
+* Keep track of personal and global best time
+* Have different board sizes
+
 
 ## Would
 * Have different themes for the board
