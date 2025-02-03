@@ -23,12 +23,12 @@ The easiest way to play Rusty Minesweeper is using the provided docker image. Ma
 ```
 gunzip rusty-minesweeper_|version|.tar.gz           # unpacks the tarball
 docker load -i rusty-minesweeper_|version|.tar      # loads the file onto docker
-docker compose up -d                                # runs the programme
+docker compose up -d                                # runs the programme and detaches it from your terminal
 ```
 
-Once it's running, open your web browser of choice and navigate to <http://localhost:3000/>. Do not close the terminal window while the programme runs. The game will open on its starting page and you are ready to play.
+Once it's running, open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play. You can close the terminal while the programme is active if you wish.
 
-To terminate, simply do `Ctrl + C` __once__ while in your terminal window that is running the programme.
+To terminate, simply type `docker compose down` while in your terminal window that is running the programme.
 
 ## Run from source
 
