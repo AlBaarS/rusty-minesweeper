@@ -45,9 +45,9 @@ release_job:
     - echo "Running release_job for pipeline $CI_PIPELINE_IID"
     - git tag "v0.$CI_PIPELINE_IID" $CI_COMMIT_SHA
     - git push origin "v0.$CI_PIPELINE_IID"
-    - release-cli create --name "Release v0.$CI_PIPELINE_IID" \
-        --tag-name "v0.$CI_PIPELINE_IID" \
-        --description "Release "v0.$CI_PIPELINE_IID"" \
-        --ref "$CI_COMMIT_SHA" \
+    - release-cli create --name "Release v0.$CI_PIPELINE_IID"
+        --tag-name "v0.$CI_PIPELINE_IID"
+        --description "Release "v0.$CI_PIPELINE_IID""
+        --ref "$CI_COMMIT_SHA"
         --assets-link "{\"name\":\"Executable file\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar\"}"
   needs: ["building"]
