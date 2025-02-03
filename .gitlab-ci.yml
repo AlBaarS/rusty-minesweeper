@@ -43,13 +43,11 @@ release_job:
     - git remote set-url origin "https://oauth2:$CI_PUSH_TOKEN@git.sogyo.nl/abaars/rusty-minesweeper.git"
   script:
     - echo "Running release_job for pipeline $CI_PIPELINE_IID"
-    - export TAG_NAME="v0.$CI_PIPELINE_IID"
-    - echo "Tag name: $TAG_NAME"
-    - git tag $TAG_NAME $CI_COMMIT_SHA
-    - git push origin $TAG_NAME
-    - release-cli create --name "Release $TAG_NAME" \
-        --tag-name "$TAG_NAME" \
-        --description "Release $TAG_NAME" \
+    - git tag "v0.$CI_PIPELINE_IID" $CI_COMMIT_SHA
+    - git push origin "v0.$CI_PIPELINE_IID"
+    - release-cli create --name "Release v0.$CI_PIPELINE_IID" \
+        --tag-name "v0.$CI_PIPELINE_IID" \
+        --description "Release "v0.$CI_PIPELINE_IID"" \
         --ref "$CI_COMMIT_SHA" \
-        --assets-link "{\"name\":\"Executable file\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/rusty-minesweeper_$TAG_NAME.tar\"}"
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar\"}"
   needs: ["building"]
