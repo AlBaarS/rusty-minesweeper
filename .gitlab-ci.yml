@@ -49,5 +49,5 @@ release_job:
         --tag-name "v0.$CI_PIPELINE_IID"
         --description "Release "v0.$CI_PIPELINE_IID""
         --ref "$CI_COMMIT_SHA"
-        --assets-link "{\"name\":\"Executable file\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar\"}"
+        --assets-link "{\"name\":\"Docker executable\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar\"}"
   needs: ["building"]
