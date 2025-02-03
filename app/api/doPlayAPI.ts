@@ -18,7 +18,7 @@ const doPlayAPI = async (user: any, x: number, y: number): Promise<object> => {
 
     if (response.ok) {
         const gameState = await response.json();
-        console.log("doPlayAPI call successful:", gameState);
+        console.log("doPlayAPI call successful");
         return gameState.playboard as GameState;
     } else {
         return {
