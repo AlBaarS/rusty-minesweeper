@@ -25,7 +25,7 @@ building:
     - docker pull mongo:8 
     - docker compose build --no-cache
     - docker save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
-    - gzip -9 rusty-minesweeper_v0.$CI_PIPELINE_IID.tar
+    - tar -zcf rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz rusty-minesweeper_v0.$CI_PIPELINE_IID.tar docker-compose.yml
     - echo "OLD_CI_JOB_ID=$CI_JOB_ID" > envar.txt
   needs: ["unit-tests"]
   artifacts:
