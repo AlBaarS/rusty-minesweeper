@@ -25,11 +25,13 @@ building:
     - docker pull mongo:8 
     - docker compose build --no-cache
     - docker save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
+    - echo "OLD_CI_JOB_ID=$CI_JOB_ID" > envar.txt
   needs: ["unit-tests"]
   artifacts:
     name: rusty-minesweeper
     paths:
       - $CI_PROJECT_DIR/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar
+      - envar.txt
 
 
 release_job:
@@ -38,6 +40,7 @@ release_job:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   before_script:
+    - source envar.txt
     - git config --global user.email "ci-bot@git.sogyo.nl"
     - git config --global user.name "GitLab CI Bot"
     - git remote set-url origin "https://oauth2:$CI_PUSH_TOKEN@git.sogyo.nl/abaars/rusty-minesweeper.git"
@@ -49,5 +52,5 @@ release_job:
         --tag-name "v0.$CI_PIPELINE_IID"
         --description "Release "v0.$CI_PIPELINE_IID""
         --ref "$CI_COMMIT_SHA"
-        --assets-link "{\"name\":\"Docker executable\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar\"}"
+        --assets-link "{\"name\":\"Docker executable\",\"url\":\"$CI_PROJECT_URL/-/jobs/$OLD_CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar\"}"
   needs: ["building"]
