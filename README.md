@@ -6,7 +6,7 @@ Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars
 
 # How to install:
 ## Download Rusty Minesweeper
-You can download a [release](https://drive.google.com/file/d/10Im_M0PlGCCkisP7JrqHFDqFxPNYjCtx/view?usp=drive_link) or clone the source code using git:
+You can download a [release](https://www.mediafire.com/file/0l3i6fh8dktq5da/rusty-minesweeper.tar.gz/file) or clone the source code using git:
 
 ```
 git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git     # clone using git CLI
