@@ -44,6 +44,7 @@ release_job:
   script:
     - echo "Running release_job for pipeline $CI_PIPELINE_IID"
     - export TAG_NAME="v0.$CI_PIPELINE_IID"
+    - echo "Tag name: $TAG_NAME"
     - git tag $TAG_NAME $CI_COMMIT_SHA
     - git push origin $TAG_NAME
     - release-cli create --name "Release $TAG_NAME" \
