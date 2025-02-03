@@ -28,7 +28,7 @@ docker compose up -d                                # runs the programme
 
 Once it's running, open your web browser of choice and navigate to <http://localhost:3000/>. Do not close the terminal window while the programme runs. The game will open on its starting page and you are ready to play.
 
-To terminate, simply do `Ctrl + C` __once__ while in your terminal window that is running the programme.
+To terminate, simply type `docker compose down -d` while in your terminal window that is running the programme.
 
 ## Run from source
 
