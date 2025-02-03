@@ -18,7 +18,7 @@ const doFlagAPI = async (user: any, x: number, y: number): Promise<object> => {
 
     if (response.ok) {
         const gameState = await response.json();
-        console.log("doFlagAPI call successful:", gameState);
+        console.log("doFlagAPI call successful");
         return gameState.playboard as GameState;
     } else {
         return {

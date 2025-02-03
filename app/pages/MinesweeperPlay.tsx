@@ -13,6 +13,7 @@ import cell6_texture from '../../public/cell_textures/cell6.png';
 import cell7_texture from '../../public/cell_textures/cell7.png';
 import cell8_texture from '../../public/cell_textures/cell8.png';
 import mine_expl_texture from '../../public/cell_textures/blast.png';
+import mine_unexp_texture from '../../public/cell_textures/cellmine.png';
 import flag_texture from '../../public/cell_textures/cellflag.png';
 import blank_texture from '../../public/cell_textures/cellup.png';
 import mine_unex_texture from '../../public/cell_textures/cellmine.png';
@@ -22,6 +23,7 @@ import doFlagAPI from "../api/doFlagAPI";
 import getSeed from "../functions/getSeed";
 import getGameAPI from "../api/getGameAPI";
 import getButtonMarkup from "../functions/getButtonMarkup";
+import { useState } from "react";
 
 const images: { [key: number]: StaticImageData } = {
     0: cell0_texture,
@@ -32,8 +34,7 @@ const images: { [key: number]: StaticImageData } = {
     5: cell5_texture,
     6: cell6_texture,
     7: cell7_texture,
-    8: cell8_texture,
-    9: mine_expl_texture
+    8: cell8_texture
 };
 
 export const MinesweeperPlay = () => {
@@ -45,6 +46,7 @@ export const MinesweeperPlay = () => {
     const progress = gameState?.progress as Progress;
     const boardsize = gameState?.game.mines.size as number;
     const difficulty = gameState?.difficulty as number;
+    const [ clicked, setClicked ] = useState<[number, number]>([-1, -1]);
 
 
     
@@ -77,8 +79,17 @@ export const MinesweeperPlay = () => {
         }
     }
 
-    function getImage(type: number) {
-        return images[type] || null;
+    function getImage(type: number, x: number, y: number) {
+        if (type < 9) {
+            return images[type] || null;
+        } else {
+            if (x == clicked[0] && y == clicked[1]) {
+                return mine_expl_texture;
+            } else {
+                return mine_unexp_texture;
+            }
+        }
+        
     }
 
     function flagging_switcher(check: boolean) {
@@ -191,7 +202,7 @@ export const MinesweeperPlay = () => {
         const vic = vicinity[y][x];
         const flag = flagged[y][x];
         const rev = revealed[y][x];
-        const cellImg = getImage(vic);
+        const cellImg = getImage(vic, x, y);
 
         return rev ? (
             <div className="object-cover">
@@ -202,7 +213,7 @@ export const MinesweeperPlay = () => {
                 type = "button"
                 disabled={(flag && !flagging) || progress != Progress.InProgress}
                 onClick = {
-                    function(){ doClick(x, y) }
+                    function(){ setClicked([x, y]) ; doClick(x, y) }
                 }
             >
                 <Image src={flagOrNot(flag)} alt="Cell Texture" width={32} height={32} />
