@@ -1,7 +1,7 @@
 ![coverage](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/coverage.svg?job=unit-tests) ![status](https://git.sogyo.nl/abaars/rusty-minesweeper/badges/main/pipeline.svg?ignore_skipped=true)
 
 # Rusty Minesweeper
-Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars as his individual project at Sogyo.
+Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars as his individual project at Sogyo. Disclaimer: This project uses the original art made by Microsoft, and this repository can therefore not be used for commercial purposes.
 
 
 # How to install:
