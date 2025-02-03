@@ -18,7 +18,7 @@ const getGameAPI = async (seed: number, user: any, difficulty: number): Promise<
     
     if (response.ok) {
         const gameState = await response.json();
-        console.log("getGameAPI call successful:", gameState);
+        console.log("getGameAPI call successful");
         return gameState.playboard as GameState;
     } else {
         return {
