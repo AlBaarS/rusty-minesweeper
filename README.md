@@ -9,20 +9,21 @@ Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars
 You can download a [release](https://git.sogyo.nl/abaars/rusty-minesweeper/-/releases/permalink/latest) or clone the source code using git:
 
 ```
-git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git
+git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git     # clone using git CLI
 # Or using wget:
-wget https://git.sogyo.nl/abaars/rusty-minesweeper.git
+wget https://git.sogyo.nl/abaars/rusty-minesweeper.git      # download using generic wget protocol
 ```
 
-On our releases page, you can also find a ready-to-go docker image.
+On our releases page, you can also find a docker image.
 
 ## Run using the docker image
 
-The easiest way to play Rusty Minesweeper is using the provided docker image. Make sure you have [Docker](https://docs.docker.com/engine/install/) installed on your computer before using this programme. Once you've downloaded Rusty Minesweeper, navigate to the directory with the rusty-minesweeper_|version|.tar file and use the following commands in your terminal:
+The easiest way to play Rusty Minesweeper is using the provided docker image. Make sure you have [Docker](https://docs.docker.com/engine/install/) installed on your computer before using this programme. Once you've downloaded Rusty Minesweeper, navigate to the directory with the rusty-minesweeper_|version|.tar.gz file and use the following commands in your terminal:
 
 ```
-docker load -i rusty-minesweeper_|version|.tar
-docker compose up -d
+gunzip rusty-minesweeper_|version|.tar.gz           # unpacks the tarball
+docker load -i rusty-minesweeper_|version|.tar      # loads the file onto docker
+docker compose up -d                                # runs the programme
 ```
 
 Once it's running, open your web browser of choice and navigate to <http://localhost:3000/>. Do not close the terminal window while the programme runs. The game will open on its starting page and you are ready to play.
@@ -41,19 +42,19 @@ Install the following:
 Then you can install the project dependencies with the following commands:
 
 ```
-cd rusty-minesweeper/
-npm install
-npm update
+cd rusty-minesweeper/   # navigate into the rusty-minesweeper directory
+npm install             # install dependencies
+npm update              # update the state of the dependencies
 ```
 
 ### Starting and terminating the programme
 
 To start the programme, simply use the provided `.init.sh` script as follows:
 ```
-bash .init.sh
+bash .init.sh           # this script takes care of starting the programme.
 ```
 
-The first time you do this it might take a while for everything to build. Once that's done, open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play.
+The script assumes the user has access to the systemctl command. Use 'sudo' if you get a permission error. The first time you do this it might take a while for everything to build. Once that's done, open your web browser of choice and navigate to <http://localhost:3000/>. The game will open on its starting page and you are ready to play.
 
 To terminate, simply do `Ctrl + C` __twice__ while in your terminal window that is running the programme.
 
