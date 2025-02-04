@@ -1,22 +1,27 @@
 services:
   backend:
-    image: rusty-minesweeper-backend:latest
-    restart: unless-stopped
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
+    depends_on:
+      - mongo
     environment:
       DATABASE_URL: "mongodb://mongo:27017/mydb"
 
   frontend:
-    image: rusty-minesweeper-frontend:latest
-    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
 
   mongo:
     image: mongo:8
     container_name: mongoMineSweeper
-    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
