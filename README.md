@@ -20,7 +20,7 @@ The easiest way to play Rusty Minesweeper is using the provided docker image. Ma
 
 ```
 tar -zxf rusty-minesweeper_{version}.tar.gz         # unpacks the tarball
-docker load -i rusty-minesweeper_{version}.tar      # loads the file onto docker
+docker load -i rusty-minesweeper.tar                # loads the file onto docker
 docker compose up -d                                # runs the programme and detaches it from your terminal
 ```
 
