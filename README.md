@@ -3,16 +3,18 @@
 # Rusty Minesweeper
 Implementation of the computer game Minesweeper, made in Rust by Alejandro Baars as his individual project at Sogyo.
 
+Disclaimer: This implementation contains the original images used by Microsoft's Minesweeper, as well as a wallpaper by shutterstock. I do not own the rights to either of these, hence this code cannot be used for commercial purposes. Feel free to take a look if you need inspiration or want to see an example of an app that uses Rust with React and Typescript.
+
 
 # How to install:
 ## Download Rusty Minesweeper
-You can download a docker image or the source code as a [release](https://git.sogyo.nl/abaars/rusty-minesweeper/-/releases/permalink/latest), or clone the repository using git:
+You can download a docker image or the source code as a [release (mediafire)](https://www.mediafire.com/file/zxvs1bg86q2127k/rusty-minesweeper_v0.244.tar.gz/file), or clone the repository using git:
 
-`git clone git@git.sogyo.nl:abaars/rusty-minesweeper.git`
+`git clone git@github.com:AlBaarS/rusty-minesweeper.git`
 
 Or using wget:
 
-`wget https://git.sogyo.nl/abaars/rusty-minesweeper.git`
+`wget https://github.com/AlBaarS/rusty-minesweeper.git`
 
 ## Run using the docker image
 
