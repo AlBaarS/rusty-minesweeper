@@ -18,11 +18,11 @@ On our releases page, you can also find a docker image.
 
 ## Run using the docker image
 
-The easiest way to play Rusty Minesweeper is using the provided docker image. Make sure you have [Docker](https://docs.docker.com/engine/install/) installed on your computer before using this programme. Once you've downloaded Rusty Minesweeper, navigate to the directory with the rusty-minesweeper_|version|.tar.gz file and use the following commands in your terminal:
+The easiest way to play Rusty Minesweeper is using the provided docker image. Make sure you have [Docker](https://docs.docker.com/engine/install/) installed on your computer before using this programme. Once you've downloaded Rusty Minesweeper, navigate to the directory with the rusty-minesweeper_{version}.tar.gz file and use the following commands in your terminal:
 
 ```
-gunzip rusty-minesweeper_|version|.tar.gz           # unpacks the tarball
-docker load -i rusty-minesweeper_|version|.tar      # loads the file onto docker
+tar -zxf rusty-minesweeper_{version}.tar.gz         # unpacks the tarball
+docker load -i rusty-minesweeper_{version}.tar      # loads the file onto docker
 docker compose up -d                                # runs the programme and detaches it from your terminal
 ```
 
