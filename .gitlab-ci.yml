@@ -24,8 +24,8 @@ building:
   script:
     - docker pull mongo:8 
     - docker compose -f docker-compose.build.yml build --no-cache
-    - docker save -o rusty-minesweeper_v0.$CI_PIPELINE_IID.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
-    - tar -zcf rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz rusty-minesweeper_v0.$CI_PIPELINE_IID.tar docker-compose.yml
+    - docker save -o rusty-minesweeper.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
+    - tar -zcf rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz rusty-minesweeper.tar docker-compose.yml
     - echo "OLD_CI_JOB_ID=$CI_JOB_ID" > envar.txt
   needs: ["unit-tests"]
   artifacts:
@@ -53,5 +53,5 @@ release_job:
         --tag-name "v0.$CI_PIPELINE_IID"
         --description "Release "v0.$CI_PIPELINE_IID""
         --ref "$CI_COMMIT_SHA"
-        --assets-link "{\"name\":\"Docker executable\",\"url\":\"$CI_PROJECT_URL/-/jobs/$OLD_CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz\"}"
+        --assets-link "{\"name\":\"Docker image\",\"url\":\"$CI_PROJECT_URL/-/jobs/$OLD_CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz\"}"
   needs: ["building"]
