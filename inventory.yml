@@ -1,11 +1,11 @@
 webservers:
   hosts:
     webserver01:
-      ansible_host: "{{ ip_vsphere_server_00 }}"  #10.10.6.248
+      ansible_host: "{{ ip_server_00 }}"  #10.10.6.248
       http_port: 22
     webserver02:
-      ansible_host: "{{ ip_vsphere_server_01 }}"   #10.10.6.246
+      ansible_host: "{{ ip_server_01 }}"   #10.10.6.246
       http_port: 22
   vars:
     user: ubuntu
-    password: "{{ pw_vsphere_server }}"   #'{AN+dtR:gc=VU#0DWii&W(0i'
+    password: "{{ pw_server }}"   #'{AN+dtR:gc=VU#0DWii&W(0i'
