@@ -1,5 +1,5 @@
 variables:
-  DOCKER_RUST: rust:1.85.0-alpine3.21
+  DOCKER_RUST: rust:1.85.0
   DOCKER_DOCKER: docker:27.5.1
   DOCKER_GITLAB_RELEASE: registry.gitlab.com/gitlab-org/release-cli:latest
   DOCKER_ANSIBLE: alpine/ansible:2.18.1
