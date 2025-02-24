@@ -35,7 +35,7 @@ build_docker_image:
     - docker save -o rusty-minesweeper.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
     - tar -zcf rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz rusty-minesweeper.tar docker-compose.yml
     - echo "OLD_CI_JOB_ID=$CI_JOB_ID" > envar.txt
-  needs: ["unit-tests"]
+  needs: ["run_unit_tests"]
   artifacts:
     name: rusty-minesweeper
     paths:
@@ -62,7 +62,7 @@ release_minesweeper_tarball:
         --description "Release "v0.$CI_PIPELINE_IID""
         --ref "$CI_COMMIT_SHA"
         --assets-link "{\"name\":\"Docker image\",\"url\":\"$CI_PROJECT_URL/-/jobs/$OLD_CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz\"}"
-  needs: ["building"]
+  needs: ["build_docker_image"]
 
 
 
@@ -73,7 +73,7 @@ verify_ansible_playbook:
     - ansible-galaxy collection install infisical.vault
     - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml
     - ansible-playbook --inventory inventory.yml --check playbook.yml
-  needs: ["building"]
+  needs: ["build_docker_image"]
 
 
 
@@ -86,4 +86,4 @@ deploy_minesweeper:
   script:
     - ansible-galaxy collection install infisical.vault
     - ansible-playbook --inventory inventory.yml playbook.yml
-  needs: ["verify"]
+  needs: ["verify_ansible_playbook"]
