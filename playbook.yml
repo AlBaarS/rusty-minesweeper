@@ -1,6 +1,7 @@
 ---
 - name: Update web servers
   hosts: webservers
+  remote_user: ubuntu
 
   tasks:
     - name: Download and install Docker
