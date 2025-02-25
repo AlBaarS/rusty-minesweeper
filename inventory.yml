@@ -6,9 +6,11 @@ webservers:
   hosts:
     webserver01:
       ansible_host: 10.10.6.248             #"{{ ip_server_00 }}"
+      ansible_ssh_pass: '{AN+dtR:gc=VU#0DWii&W(0i'
       http_port: 22
     webserver02:
       ansible_host: 10.10.6.246             #"{{ ip_server_01 }}"
+      ansible_ssh_pass: '{AN+dtR:gc=VU#0DWii&W(0i'
       http_port: 22
   vars:
     user: 'ubuntu'
