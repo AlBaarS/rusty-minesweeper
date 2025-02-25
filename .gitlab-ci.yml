@@ -3,7 +3,7 @@ variables:
   DOCKER_DOCKER: docker:27.5.1
   DOCKER_GITLAB_RELEASE: registry.gitlab.com/gitlab-org/release-cli:latest
   DOCKER_ANSIBLE: alpine/ansible:2.18.1
-  ANSIBLE_VARS: --extra-vars ip_vsphere_server_00=$IP_VSPHERE_SERVER_00 --extra-vars ip_vsphere_server_01=$IP_VSPHERE_SERVER_01 --extra-vars pw_vsphere_server=$PW_VSPHERE_SERVER
+  ANSIBLE_VARS: --extra-vars "ip_vsphere_server_00=$IP_VSPHERE_SERVER_00" --extra-vars "ip_vsphere_server_01=$IP_VSPHERE_SERVER_01" --extra-vars "pw_vsphere_server=$PW_VSPHERE_SERVER"
 
 stages:
   # - test
