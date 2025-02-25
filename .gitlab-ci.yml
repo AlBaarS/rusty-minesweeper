@@ -10,6 +10,9 @@ stages:
   # - build
   # - release
   - verify
+  - test
+  - build
+  - release
   - deploy
 
 run_unit_tests:
