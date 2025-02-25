@@ -1,4 +1,8 @@
 webservers:
+  vars:
+    ip_server_00: "{{ ip_vsphere_server_00 }}"
+    ip_server_01: "{{ ip_vsphere_server_01 }}"
+    pw_server:    "{{ pw_vsphere_server }}"
   hosts:
     webserver01:
       ansible_host: "{{ ip_server_00 }}"  #10.10.6.248
