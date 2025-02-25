@@ -2,7 +2,7 @@ webservers:
   vars:
     ip_server_00: "{{ ip_vsphere_server_00 }}"
     ip_server_01: "{{ ip_vsphere_server_01 }}"
-    password: "{{ pw_vsphere_server }}"
+    password: '{AN+dtR:gc=VU#0DWii&W(0i'    #"{{ pw_vsphere_server }}"
     user: 'ubuntu'
   hosts:
     webserver01:
@@ -17,4 +17,4 @@ webservers:
       http_port: 22
   # vars:
   #   user: 'ubuntu'
-  #   password: '{AN+dtR:gc=VU#0DWii&W(0i'    #"{{ pw_server }}"
+  #   password: '{AN+dtR:gc=VU#0DWii&W(0i'
