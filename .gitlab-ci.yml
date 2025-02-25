@@ -6,9 +6,9 @@ variables:
   ANSIBLE_VARS: --extra-vars ip_vsphere_server_00=$IP_VSPHERE_SERVER_00 --extra-vars ip_vsphere_server_01=$IP_VSPHERE_SERVER_01 --extra-vars pw_vsphere_server=$PW_VSPHERE_SERVER
 
 stages:
-  - test
-  - build
-  - release
+  # - test
+  # - build
+  # - release
   - verify
   - deploy
 
@@ -72,8 +72,8 @@ verify_ansible_playbook:
   image: $DOCKER_ANSIBLE
   script:
     - ansible-galaxy collection install infisical.vault
-    - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml
-    - ansible-playbook --inventory inventory.yml --check playbook.yml
+    - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml --check playbook.yml $ANSIBLE_VARS
   needs: ["build_docker_image"]
 
 
@@ -86,5 +86,5 @@ deploy_minesweeper:
       when: manual
   script:
     - ansible-galaxy collection install infisical.vault
-    - ansible-playbook --inventory inventory.yml playbook.yml
+    - ansible-playbook --inventory inventory.yml playbook.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]

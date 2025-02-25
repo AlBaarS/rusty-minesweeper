@@ -2,10 +2,10 @@
 - name: Update web servers
   hosts: webservers
   remote_user: ubuntu
-  # vars:
-  #   ip_server_00: "{{ ip_vsphere_server_00 }}"
-  #   ip_server_01: "{{ ip_vsphere_server_01 }}"
-  #   pw_server:    "{{ pw_vsphere_server }}"
+  vars:
+    ip_server_00: "{{ ip_vsphere_server_00 }}"
+    ip_server_01: "{{ ip_vsphere_server_01 }}"
+    pw_server:    "{{ pw_vsphere_server }}"
 
   tasks:
   - name: Download and install Docker
