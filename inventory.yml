@@ -11,5 +11,5 @@ webservers:
       ansible_host: 10.10.6.246             #"{{ ip_server_01 }}"
       http_port: 22
   vars:
-    user: ubuntu
+    user: 'ubuntu'
     password: '{AN+dtR:gc=VU#0DWii&W(0i'    #"{{ pw_server }}"
