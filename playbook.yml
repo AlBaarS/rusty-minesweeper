@@ -4,6 +4,13 @@
   remote_user: ubuntu
 
   tasks:
+    - name: Download, install, and configure Nginx
+      ansible.builtin.shell:
+        cmd: |
+          sudo apt update
+          sudo apt install nginx
+          sudo ufw app list
+
     - name: Download and install Docker
       ansible.builtin.shell:
         cmd: |
@@ -27,12 +34,12 @@
           # Test Docker installation
           sudo docker run hello-world
 
-    - name: Download, install, and configure Nginx
-      ansible.builtin.shell:
-        cmd: |
-          sudo apt update
-          sudo apt install nginx
-          sudo ufw app list
+    # - name: Download, install, and configure Nginx
+    #   ansible.builtin.shell:
+    #     cmd: |
+    #       sudo apt update
+    #       sudo apt install nginx
+    #       sudo ufw app list
 
 
     # The code below seems to work, but requires the user to have rights to apt. sudo cannot be used within the apt module.
