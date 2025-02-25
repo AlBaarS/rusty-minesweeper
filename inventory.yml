@@ -1,15 +1,11 @@
 webservers:
-  vars:
-    ip_server_00: "{{ ip_vsphere_server_00 }}"
-    ip_server_01: "{{ ip_vsphere_server_01 }}"
-    pw_server:    "{{ pw_vsphere_server }}"
   hosts:
     webserver01:
-      ansible_host: "{{ ip_server_00 }}"  #10.10.6.248
+      ansible_host: "{{ lookup('env', 'IP_VSPHERE_SERVER_00') }}"  #10.10.6.248
       http_port: 22
     webserver02:
-      ansible_host: "{{ ip_server_01 }}"   #10.10.6.246
+      ansible_host: "{{ lookup('env', 'IP_VSPHERE_SERVER_01') }}"   #10.10.6.246
       http_port: 22
   vars:
     user: ubuntu
-    password: "{{ pw_server }}"   #'{AN+dtR:gc=VU#0DWii&W(0i'
+    password: "{{ lookup('env', 'PW_VSPHERE_SERVER') }}"   #'{AN+dtR:gc=VU#0DWii&W(0i'
