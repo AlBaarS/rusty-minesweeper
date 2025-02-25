@@ -77,7 +77,7 @@ verify_ansible_playbook:
     - ansible-galaxy collection install infisical.vault
     - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml $ANSIBLE_VARS
     - ansible-playbook --inventory inventory.yml --check playbook.yml $ANSIBLE_VARS
-  needs: ["build_docker_image"]
+  # needs: ["build_docker_image"]
 
 
 
