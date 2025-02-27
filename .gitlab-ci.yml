@@ -99,5 +99,5 @@ deploy_minesweeper:
     - cd $CI_PROJECT_DIR/ansible/
     - cp .ansible.cfg ~/.ansible.cfg
   script:
-    - ansible-playbook --inventory inventory.yml -vvv playbook.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml playbook.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]
