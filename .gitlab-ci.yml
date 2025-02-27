@@ -2,7 +2,7 @@ variables:
   DOCKER_RUST: rust:1.85.0
   DOCKER_DOCKER: docker:27.5.1
   DOCKER_GITLAB_RELEASE: registry.gitlab.com/gitlab-org/release-cli:latest
-  DOCKER_ANSIBLE: librespace/ansible:9.13.0
+  DOCKER_ANSIBLE: alpine/ansible:2.18.1
   ANSIBLE_VARS: --extra-vars ip_vsphere_server_00=$IP_VSPHERE_SERVER_00 --extra-vars ip_vsphere_server_01=$IP_VSPHERE_SERVER_01
 
 stages:
@@ -75,6 +75,7 @@ verify_ansible_playbook:
   stage: verify
   image: $DOCKER_ANSIBLE
   script:
+    - pip install infisicalsdk
     - cd $CI_PROJECT_DIR/ansible/
     - ansible-galaxy collection install infisical.vault
     - cp .ansible.cfg ~/.ansible.cfg
@@ -92,6 +93,7 @@ deploy_minesweeper:
     - if: $CI_COMMIT_BRANCH
       when: manual
   script:
+    - pip install infisicalsdk
     - cd $CI_PROJECT_DIR/ansible/
     - ansible-galaxy collection install infisical.vault
     - cp .ansible.cfg ~/.ansible.cfg
