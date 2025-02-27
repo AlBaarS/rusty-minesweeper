@@ -35,15 +35,15 @@
 
   tasks:
     - name: Create the .ssh directory
-      ansible.builtin.shell: mkdir ~.ssh/
+      ansible.builtin.shell: mkdir -p /home/ansible/.ssh/
       delegate_to: 127.0.0.1
 
     - name: Put private key on local runner
-      ansible.builtin.shell: cat "{{ ansible_private_key }}" > ~/.ssh/id_rsa
+      ansible.builtin.shell: cat "{{ ansible_private_key }}" > /home/ansible/.ssh/id_rsa
       delegate_to: 127.0.0.1
 
     - name: Put public key on local runner
-      ansible.builtin.shell: cat "{{ ansible_public_key }}" > ~/.ssh/id_rsa.pub
+      ansible.builtin.shell: cat "{{ ansible_public_key }}" > /home/ansible/.ssh/id_rsa.pub
       delegate_to: 127.0.0.1
 
     - name: List all entries of the .ssh directory
@@ -53,15 +53,16 @@
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
         cmd: |
-          echo "Started the nginx installation step" > ~/nginx.message
+          echo "Started the nginx installation step" > ~/nginx.begin.message
           sudo apt update
           sudo apt install nginx
           sudo ufw app list
+          echo "Finished the nginx installation step" > ~/nginx.end.message
 
     - name: Download and install Docker
       ansible.builtin.shell:
         cmd: |
-          echo "Started the Docker installation step" > ~/docker.message
+          echo "Started the Docker installation step" > ~/docker.begin.message
           # Add Docker's official GPG key:
           sudo apt-get update
           sudo apt-get install ca-certificates curl
@@ -81,6 +82,8 @@
 
           # Test Docker installation
           sudo docker run hello-world
+
+          echo "Finished the Docker installation step" > ~/docker.end.message
 
     # - name: Download, install, and configure Nginx
     #   ansible.builtin.shell:
