@@ -35,16 +35,20 @@
 
   tasks:
     - name: Create the .ssh directory
-      local_action: ansible.builtin.shell mkdir ~.ssh/
+      ansible.builtin.shell: mkdir ~.ssh/
+      delegate_to: 127.0.0.1
 
     - name: Put private key on local runner
-      local_action: ansible.builtin.shell cat "{{ ansible_private_key }}" > ~/.ssh/id_rsa
+      ansible.builtin.shell: cat "{{ ansible_private_key }}" > ~/.ssh/id_rsa
+      delegate_to: 127.0.0.1
 
     - name: Put public key on local runner
-      local_action: ansible.builtin.shell cat "{{ ansible_public_key }}" > ~/.ssh/id_rsa.pub
+      ansible.builtin.shell: cat "{{ ansible_public_key }}" > ~/.ssh/id_rsa.pub
+      delegate_to: 127.0.0.1
 
     - name: List all entries of the .ssh directory
-      local_action: ansible.builtin.shell ls -lah ~.ssh/
+      ansible.builtin.shell: ls -lah ~.ssh/
+      delegate_to: 127.0.0.1
 
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
