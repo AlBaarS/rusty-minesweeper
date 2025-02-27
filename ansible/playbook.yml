@@ -16,6 +16,12 @@
 
 # -[Install necessary software on the host]------------------------------------
   tasks:
+    - name: Put private key on local runner
+      ansible.builtin.shell:
+        cmd: |
+          cat "{{ ansible_private_key }}" > .ssh/id_rsa
+      delegate_to: localhost
+
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
         cmd: |
