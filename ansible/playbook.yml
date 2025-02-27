@@ -49,7 +49,7 @@
     - name: List all entries of the .ssh directory
       ansible.builtin.shell: ls -lah ~.ssh/
       delegate_to: 127.0.0.1
-      register: ls -lah
+      register: ls
     - debug: var=ls.stdout_lines
 
     - name: Download, install, and configure Nginx
