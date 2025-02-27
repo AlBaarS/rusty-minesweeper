@@ -2,12 +2,12 @@
 webservers:
   hosts:
     webserver01:
-      ansible_host: "{{ ip_server_01 }}"
-      ansible_ssh_token: "{{ ansible_private_key }}"
-      ansible_ssh_user: "{{ user }}"
+      ansible_host: "{{ ip_server_01 }}.value"
+      ansible_ssh_token: "{{ ansible_private_key }}.value"
+      ansible_ssh_user: "{{ user }}.value"
       http_port: 22
     webserver02:
-      ansible_host: "{{ ip_server_02 }}"
-      ansible_ssh_token: "{{ ansible_private_key }}"
-      ansible_ssh_user: "{{ user }}"
+      ansible_host: "{{ ip_server_02 }}.value"
+      ansible_ssh_token: "{{ ansible_private_key }}.value"
+      ansible_ssh_user: "{{ user }}.value"
       http_port: 22
