@@ -75,8 +75,9 @@ verify_ansible_playbook:
   stage: verify
   image: $DOCKER_ANSIBLE
   script:
+    - cd $CI_PROJECT_DIR/ansible/
     - ansible-galaxy collection install infisical.vault
-    - cp $CI_PROJECT_DIR/.ansible.cfg ~/.ansible.cfg
+    - cp .ansible.cfg ~/.ansible.cfg
     - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml $ANSIBLE_VARS
     - ansible-playbook --inventory inventory.yml --check playbook.yml $ANSIBLE_VARS
   # needs: ["build_docker_image"]
@@ -91,7 +92,8 @@ deploy_minesweeper:
     - if: $CI_COMMIT_BRANCH
       when: manual
   script:
+    - cd $CI_PROJECT_DIR/ansible/
     - ansible-galaxy collection install infisical.vault
-    - cp $CI_PROJECT_DIR/.ansible.cfg ~/.ansible.cfg
+    - cp .ansible.cfg ~/.ansible.cfg
     - ansible-playbook --inventory inventory.yml -vvv playbook.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]

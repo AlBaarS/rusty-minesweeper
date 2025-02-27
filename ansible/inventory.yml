@@ -1,0 +1,22 @@
+vars:
+  infisical_cid: "{{ lookup('ansible.builtin.env', 'INFISICAL_CID') }}"
+  infisical_pid: "{{ lookup('ansible.builtin.env', 'INFISICAL_PID') }}"
+  infisical_cs: "{{ lookup('ansible.builtin.env', 'INFISICAL_CS') }}"
+  ansible_private_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id='{{ infisical_cid }}', universal_auth_client_secret='{{ infisical_cs }}', project_id='{{ infisical_pid }}', path='/', env_slug='dev', secret_name='VM_KEY_PRIVATE') }}"
+  client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id='{{ infisical_cid }}', universal_auth_client_secret='{{ infisical_cs }}', project_id='{{ infisical_pid }}', path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO') }}"
+  ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id='{{ infisical_cid }}', universal_auth_client_secret='{{ infisical_cs }}', project_id='{{ infisical_pid }}', path='/', env_slug='dev', secret_name='VM_IP_01') }}"
+  ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id='{{ infisical_cid }}', universal_auth_client_secret='{{ infisical_cs }}', project_id='{{ infisical_pid }}', path='/', env_slug='dev', secret_name='VM_IP_02') }}"
+  user: 'ubuntu'
+
+webservers:
+  hosts:
+    webserver01:
+      ansible_host: "{{ ip_server_01 }}"
+      ansible_ssh_token: "{{ ansible_private_key }}"
+      ansible_ssh_user: "{{ user }}"
+      http_port: 22
+    webserver02:
+      ansible_host: "{{ ip_server_02 }}"
+      ansible_ssh_token: "{{ ansible_private_key }}"
+      ansible_ssh_user: "{{ user }}"
+      http_port: 22
