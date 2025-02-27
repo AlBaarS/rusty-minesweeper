@@ -74,11 +74,12 @@ release_minesweeper_tarball:
 verify_ansible_playbook:
   stage: verify
   image: $DOCKER_ANSIBLE
-  script:
+  before_script:
     - pip install infisicalsdk
-    - cd $CI_PROJECT_DIR/ansible/
     - ansible-galaxy collection install infisical.vault
+    - cd $CI_PROJECT_DIR/ansible/
     - cp .ansible.cfg ~/.ansible.cfg
+  script:
     - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml $ANSIBLE_VARS
     - ansible-playbook --inventory inventory.yml --check playbook.yml $ANSIBLE_VARS
   # needs: ["build_docker_image"]
@@ -92,10 +93,11 @@ deploy_minesweeper:
   rules:
     - if: $CI_COMMIT_BRANCH
       when: manual
-  script:
+  before_script:
     - pip install infisicalsdk
-    - cd $CI_PROJECT_DIR/ansible/
     - ansible-galaxy collection install infisical.vault
+    - cd $CI_PROJECT_DIR/ansible/
     - cp .ansible.cfg ~/.ansible.cfg
+  script:
     - ansible-playbook --inventory inventory.yml -vvv playbook.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]
