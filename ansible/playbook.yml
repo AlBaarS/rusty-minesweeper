@@ -27,14 +27,24 @@
     infisical_pid: "{{ lookup('ansible.builtin.env', 'INFISICAL_PID') }}"
     infisical_cs: "{{ lookup('ansible.builtin.env', 'INFISICAL_CS') }}"
     ansible_private_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_KEY_PRIVATE') }}"
+    ansible_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_KEY_PUBLIC') }}"
     client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO') }}"
     ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_01') }}"
     ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_02') }}"
     user: ubuntu
 
   tasks:
+    - name: Create the .ssh directory
+      local_action: ansible.builtin.shell mkdir ~.ssh/
+
     - name: Put private key on local runner
       local_action: ansible.builtin.shell cat "{{ ansible_private_key }}" > ~/.ssh/id_rsa
+
+    - name: Put public key on local runner
+      local_action: ansible.builtin.shell cat "{{ ansible_public_key }}" > ~/.ssh/id_rsa.pub
+
+    - name: List all entries of the .ssh directory
+      local_action: ansible.builtin.shell ls -lah ~.ssh/
 
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
