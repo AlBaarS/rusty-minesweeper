@@ -80,11 +80,12 @@ verify_ansible_playbook:
     - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
-    - cd $CI_PROJECT_DIR/ansible/
-    - cp .ansible.cfg ~/.ansible.cfg
+    - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - ansible-playbook --inventory inventory.yml --syntax-check playbook.yml $ANSIBLE_VARS
-    - ansible-playbook --inventory inventory.yml --check playbook.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml --syntax-check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml --check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml --check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   # needs: ["build_docker_image"]
   allow_failure: true
 
@@ -102,8 +103,8 @@ deploy_minesweeper:
     - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
-    - cd $CI_PROJECT_DIR/ansible/
-    - cp .ansible.cfg ~/.ansible.cfg
+    - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - ansible-playbook --inventory inventory.yml playbook.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml ansible_get_key/playbook_key.yml $ANSIBLE_VARS
+    - ansible-playbook --inventory inventory.yml ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]

@@ -7,51 +7,10 @@
     infisical_cid: "{{ lookup('ansible.builtin.env', 'INFISICAL_CID') }}"
     infisical_pid: "{{ lookup('ansible.builtin.env', 'INFISICAL_PID') }}"
     infisical_cs: "{{ lookup('ansible.builtin.env', 'INFISICAL_CS') }}"
-    ansible_private_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_KEY_PRIVATE') }}"
-    ansible_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_KEY_PUBLIC') }}"
-    client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO') }}"
     ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_01') }}"
     ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_02') }}"
-    user: ubuntu
 
   tasks:
-    # Prepare the key on the local machine
-    - name: Create .ssh directory
-      local_action:
-        module: ansible.builtin.file
-        path: /home/ansible/.ssh
-        state: directory
-        mode: u=rwx
-        owner: ansible
-        group: ansible
-
-    - name: Copy private key 
-      local_action:
-        module: ansible.builtin.file
-        path: /home/ansible/.ssh/id_rsa
-        content: "{{ ansible_private_key }}"
-        mode: u=rw
-        owner: ansible
-        group: ansible
-
-    - name: Copy public key
-      local_action:
-        module: ansible.builtin.file
-        path: /home/ansible/.ssh/id_rsa.pub
-        content: "{{ ansible_public_key }}"
-        mode: u=rw,go=r
-        owner: ansible
-        group: ansible
-
-    - name: List all entries of the .ssh directory
-      ansible.builtin.shell: ls -lah ~/.ssh/ && ls -lah / && ls -lah /home/ansible/
-      delegate_to: 127.0.0.1
-      register: ls
-    - debug: var=ls.stdout_lines
-
-
-
-    # Install desired software
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
         cmd: |
