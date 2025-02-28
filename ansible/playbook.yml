@@ -43,6 +43,12 @@
         owner: ansible
         group: ansible
 
+    - name: List all entries of the .ssh directory
+      ansible.builtin.shell: ls -lah ~/.ssh/ && ls -lah / && ls -lah /home/ansible/
+      delegate_to: 127.0.0.1
+      register: ls
+    - debug: var=ls.stdout_lines
+
 
 
     # Install desired software
