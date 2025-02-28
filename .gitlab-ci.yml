@@ -104,5 +104,6 @@ deploy_minesweeper:
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
     - ansible-playbook ansible_get_key/playbook_key.yml $ANSIBLE_VARS
+    - ls -lah ~/.ssh/
     - ansible-playbook --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]
