@@ -13,8 +13,7 @@
 
   tasks:
     - name: Create .ssh directory
-      local_action:
-        module: ansible.builtin.file
+      ansible.builtin.file:
         path: /home/ansible/.ssh
         state: directory
         mode: u=rwx
@@ -22,8 +21,7 @@
         group: ansible
 
     - name: Copy private key 
-      local_action:
-        module: ansible.builtin.file
+      ansible.builtin.file:
         path: /home/ansible/.ssh/id_rsa
         content: "{{ ansible_private_key }}"
         mode: u=rw
@@ -31,8 +29,7 @@
         group: ansible
 
     - name: Copy public key
-      local_action:
-        module: ansible.builtin.file
+      ansible.builtin.file:
         path: /home/ansible/.ssh/id_rsa.pub
         content: "{{ ansible_public_key }}"
         mode: u=rw,go=r
