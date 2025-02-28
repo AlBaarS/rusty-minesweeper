@@ -21,7 +21,7 @@
 
     - name: Copy private key 
       ansible.builtin.copy:
-        dest: /ssh/id_rsa
+        dest: ~/.ssh/id_rsa
         content: "{{ ansible_private_key }}"
         mode: u=rw
         owner: ansible
@@ -29,7 +29,7 @@
 
     - name: Copy public key
       ansible.builtin.copy:
-        dest: /ssh/id_rsa.pub
+        dest: ~/.ssh/id_rsa.pub
         content: "{{ ansible_public_key }}"
         mode: u=rw,go=r
         owner: ansible

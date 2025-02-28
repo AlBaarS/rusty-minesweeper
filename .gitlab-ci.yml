@@ -77,13 +77,10 @@ verify_ansible_playbook:
     name: $DOCKER_ANSIBLE
     entrypoint: ['sh', '-c', 'exec su ansible -c sh']
   before_script:
-    # - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    # - su ansible
-    - whoami
     - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
@@ -97,17 +94,15 @@ deploy_minesweeper:
   stage: deploy
   image: 
     name: $DOCKER_ANSIBLE
-    # entrypoint: ['sh', '-c', 'exec su ansible -c sh'] # necessary to make the image run as 'ansible' rather than 'root', based on the workaround for alpine linux at https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2750
+    entrypoint: ['sh', '-c', 'exec su ansible -c sh'] # necessary to make the image run as 'ansible' rather than 'root', based on the workaround for alpine linux at https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2750
   rules:
     - if: $CI_COMMIT_BRANCH
       when: manual
   before_script:
-    # - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - su ansible
     - ansible-playbook ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]
