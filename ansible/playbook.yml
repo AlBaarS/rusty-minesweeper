@@ -16,32 +16,45 @@
 
   tasks:
     # Prepare the key on the local machine
-    - name: Create .ssh directory
-      ansible.builtin.file:
-        path: /home/ansible/.ssh
-        state: directory
-        mode: u=rwx
-        owner: ansible
-        group: ansible
-      delegate_to: 127.0.0.1
+    # - name: Create .ssh directory
+    #   ansible.builtin.file:
+    #     path: /home/ansible/.ssh
+    #     state: directory
+    #     mode: u=rwx
+    #     owner: ansible
+    #     group: ansible
+    #   delegate_to: 127.0.0.1
 
-    - name: Copy private key 
-      ansible.builtin.copy:
-        path: /home/ansible/.ssh/id_rsa
-        content: "{{ ansible_private_key }}"
-        mode: u=rw
-        owner: ansible
-        group: ansible
-      delegate_to: 127.0.0.1
+    # - name: Copy private key 
+    #   ansible.builtin.copy:
+    #     path: /home/ansible/.ssh/id_rsa
+    #     content: "{{ ansible_private_key }}"
+    #     mode: u=rw
+    #     owner: ansible
+    #     group: ansible
+    #   delegate_to: 127.0.0.1
 
-    - name: Copy public key
-      ansible.builtin.copy:
-        path: /home/ansible/.ssh/id_rsa.pub
-        content: "{{ ansible_public_key }}"
-        mode: u=rw,go=r
-        owner: ansible
-        group: ansible
-      delegate_to: 127.0.0.1
+    # - name: Copy public key
+    #   ansible.builtin.copy:
+    #     path: /home/ansible/.ssh/id_rsa.pub
+    #     content: "{{ ansible_public_key }}"
+    #     mode: u=rw,go=r
+    #     owner: ansible
+    #     group: ansible
+    #   delegate_to: 127.0.0.1
+
+    - name: Create the .ssh directory
+      local_action: ansible.builtin.shell mkdir ~.ssh/
+
+    - name: Put private key on local runner
+      local_action: ansible.builtin.shell cat "{{ ansible_private_key }}" > ~/.ssh/id_rsa
+
+    - name: Put public key on local runner
+      local_action: ansible.builtin.shell cat "{{ ansible_public_key }}" > ~/.ssh/id_rsa.pub
+
+    - name: List all entries of the .ssh directory
+      local_action: ansible.builtin.shell ls -lah ~.ssh/
+
 
     # Install desired software
     - name: Download, install, and configure Nginx
