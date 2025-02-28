@@ -9,6 +9,9 @@
     infisical_cs: "{{ lookup('ansible.builtin.env', 'INFISICAL_CS') }}"
     ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_01') }}"
     ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_02') }}"
+    client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO') }}"
+    
+
 
   tasks:
     - name: Download, install, and configure Nginx
