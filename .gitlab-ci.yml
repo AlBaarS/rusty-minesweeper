@@ -77,11 +77,12 @@ verify_ansible_playbook:
     name: $DOCKER_ANSIBLE
     # entrypoint: ['sh', '-c', 'exec su ansible -c sh']
   before_script:
-    - su ansible
+    # - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
+    - su ansible
     - whoami
     - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
@@ -101,11 +102,12 @@ deploy_minesweeper:
     - if: $CI_COMMIT_BRANCH
       when: manual
   before_script:
-    - su ansible
+    # - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
+    - su ansible
     - ansible-playbook ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]
