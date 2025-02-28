@@ -75,14 +75,14 @@ verify_ansible_playbook:
   stage: verify
   image: 
     name: $DOCKER_ANSIBLE
-    # entrypoint: ['sh', '-c', 'exec su ansible -c sh']
+    entrypoint: ['sh', '-c', 'exec su ansible -c sh']
   before_script:
     # - su ansible
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - su ansible
+    # - su ansible
     - whoami
     - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
