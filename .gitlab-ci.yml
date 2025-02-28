@@ -84,7 +84,6 @@ verify_ansible_playbook:
   script:
     - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
     - ansible-playbook --check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
-    - ssh-add ~/.ssh/id_rsa
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   # needs: ["build_docker_image"]
@@ -107,6 +106,5 @@ deploy_minesweeper:
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
     - ansible-playbook ansible_get_key/playbook_key.yml $ANSIBLE_VARS
-    - ssh-add ~/.ssh/id_rsa
     - ansible-playbook --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
   needs: ["verify_ansible_playbook"]
