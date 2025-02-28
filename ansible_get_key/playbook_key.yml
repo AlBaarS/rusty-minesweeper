@@ -23,7 +23,7 @@
       ansible.builtin.copy:
         dest: ~/.ssh/id_rsa
         content: "{{ ansible_private_key }}"
-        mode: u=rw
+        mode: 0600      # equals chmod 600, the leading 0 is necessary to clarify that it is an octal number
         owner: ansible
         group: ansible
 
@@ -31,6 +31,6 @@
       ansible.builtin.copy:
         dest: ~/.ssh/id_rsa.pub
         content: "{{ ansible_public_key }}"
-        mode: u=rw,go=r
+        mode: 0644
         owner: ansible
         group: ansible
