@@ -93,7 +93,7 @@ deploy_minesweeper:
   stage: deploy
   image: 
     name: $DOCKER_ANSIBLE
-    entrypoint: ['sh', '-c', 'exec su ansible -c sh']
+    entrypoint: ['sh', '-c', 'exec su ansible -c sh'] # necessary to make the image run as 'ansible' rather than 'root', based on the workaround for alpine linux at https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2750
   rules:
     - if: $CI_COMMIT_BRANCH
       when: manual

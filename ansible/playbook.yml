@@ -34,24 +34,32 @@
     user: ubuntu
 
   tasks:
-    - name: Create the .ssh directory
-      ansible.builtin.shell: mkdir -p /home/ansible/.ssh/
-      delegate_to: 127.0.0.1
+    # Prepare the key on the local machine
+    - name: Create .ssh directory
+      ansible.builtin.file:
+        path: /home/ansible/.ssh
+        state: directory
+        mode: u=rwx
+        owner: ansible
+        group: ansible
 
-    - name: Put private key on local runner
-      ansible.builtin.shell: cat "{{ ansible_private_key }}" > /home/ansible/.ssh/id_rsa
-      delegate_to: 127.0.0.1
+    - name: Copy private key
+      ansible.builtin.copy:
+        path: /home/ansible/.ssh/id_rsa
+        content: "{{ ansible_private_key }}"
+        mode: u=rw
+        owner: ansible
+        group: ansible
 
-    - name: Put public key on local runner
-      ansible.builtin.shell: cat "{{ ansible_public_key }}" > /home/ansible/.ssh/id_rsa.pub
-      delegate_to: 127.0.0.1
+    - name: Copy public key
+      ansible.builtin.copy:
+        path: /home/ansible/.ssh/id_rsa.pub
+        content: "{{ ansible_public_key }}"
+        mode: u=rw,go=r
+        owner: ansible
+        group: ansible
 
-    - name: List all entries of the .ssh directory
-      ansible.builtin.shell: ls -lah ~.ssh/
-      delegate_to: 127.0.0.1
-      register: ls
-    - debug: var=ls.stdout_lines
-
+    # Install desired software
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
         cmd: |
