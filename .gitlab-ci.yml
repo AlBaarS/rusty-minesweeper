@@ -75,7 +75,7 @@ verify_ansible_playbook:
   stage: verify
   image: 
     name: $DOCKER_ANSIBLE
-    entrypoint: ['sh', '-c', 'adduser -D ansible && exec su ansible -c sh']
+    entrypoint: ['sh', '-c', 'exec su ansible -c sh']
   before_script:
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
@@ -93,7 +93,7 @@ deploy_minesweeper:
   stage: deploy
   image: 
     name: $DOCKER_ANSIBLE
-    entrypoint: ['sh', '-c', 'adduser -D ansible && exec su ansible -c sh']
+    entrypoint: ['sh', '-c', 'exec su ansible -c sh']
   rules:
     - if: $CI_COMMIT_BRANCH
       when: manual
