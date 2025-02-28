@@ -19,18 +19,25 @@
     #     owner: ansible
     #     group: ansible
 
-    - name: Copy private key 
-      ansible.builtin.copy:
-        dest: ~/.ssh/id_rsa
-        content: "{{ ansible_private_key }}"
-        mode: 0600      # equals chmod 600, the leading 0 is necessary to clarify that it is an octal number
-        owner: ansible
-        group: ansible
+    # - name: Copy private key 
+    #   ansible.builtin.copy:
+    #     dest: ~/.ssh/id_rsa
+    #     content: "{{ ansible_private_key }}"
+    #     mode: 0600      # equals chmod 600, the leading 0 is necessary to clarify that it is an octal number
+    #     owner: ansible
+    #     group: ansible
 
-    - name: Copy public key
-      ansible.builtin.copy:
-        dest: ~/.ssh/id_rsa.pub
-        content: "{{ ansible_public_key }}"
-        mode: 0644
-        owner: ansible
-        group: ansible
+    # - name: Copy public key
+    #   ansible.builtin.copy:
+    #     dest: ~/.ssh/id_rsa.pub
+    #     content: "{{ ansible_public_key }}"
+    #     mode: 0644
+    #     owner: ansible
+    #     group: ansible
+
+    - name: Parse the keys into their respective files
+      ansible.builtin.shell: 
+        cmd: |
+          cat "{{ ansible_private_key }}" > ~/.ssh/id_rsa
+          cat "{{ ansible_public_key }}" > ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa
