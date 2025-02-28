@@ -3,7 +3,6 @@ variables:
   DOCKER_DOCKER: docker:27.5.1
   DOCKER_GITLAB_RELEASE: registry.gitlab.com/gitlab-org/release-cli:latest
   DOCKER_ANSIBLE: serversideup/ansible:8.7.0-alpine3.20-python3.12
-  ANSIBLE_VARS: --extra-vars ip_vsphere_server_00=$IP_VSPHERE_SERVER_00 --extra-vars ip_vsphere_server_01=$IP_VSPHERE_SERVER_01
 
 stages:
   # - test
@@ -81,10 +80,10 @@ verify_ansible_playbook:
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
-    - ansible-playbook --check ansible_get_key/playbook_key.yml $ANSIBLE_VARS
-    - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
-    - ansible-playbook --inventory ansible_launch_app/inventory.yml --check ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
+    - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml
+    - ansible-playbook --check ansible_get_key/playbook_key.yml
+    - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml
+    - ansible-playbook --inventory ansible_launch_app/inventory.yml --check ansible_launch_app/playbook_vm.yml
   # needs: ["build_docker_image"]
   allow_failure: true
 
@@ -103,6 +102,6 @@ deploy_minesweeper:
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - ansible-playbook ansible_get_key/playbook_key.yml $ANSIBLE_VARS
-    - ansible-playbook -v --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml $ANSIBLE_VARS
+    - ansible-playbook ansible_get_key/playbook_key.yml
+    - ansible-playbook -v --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml
   needs: ["verify_ansible_playbook"]
