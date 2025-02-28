@@ -17,31 +17,31 @@
   tasks:
     # Prepare the key on the local machine
     - name: Create .ssh directory
-      local_action:
-        ansible.builtin.file:
-          path: /home/ansible/.ssh
-          state: directory
-          mode: u=rwx
-          owner: ansible
-          group: ansible
+      ansible.builtin.file:
+        path: /home/ansible/.ssh
+        state: directory
+        mode: u=rwx
+        owner: ansible
+        group: ansible
+      delegate_to: 127.0.0.1
 
-    - name: Copy private key
-      local_action: 
-        ansible.builtin.copy:
-          path: /home/ansible/.ssh/id_rsa
-          content: "{{ ansible_private_key }}"
-          mode: u=rw
-          owner: ansible
-          group: ansible
+    - name: Copy private key 
+      ansible.builtin.copy:
+        path: /home/ansible/.ssh/id_rsa
+        content: "{{ ansible_private_key }}"
+        mode: u=rw
+        owner: ansible
+        group: ansible
+      delegate_to: 127.0.0.1
 
     - name: Copy public key
-      local_action: 
-        ansible.builtin.copy:
-          path: /home/ansible/.ssh/id_rsa.pub
-          content: "{{ ansible_public_key }}"
-          mode: u=rw,go=r
-          owner: ansible
-          group: ansible
+      ansible.builtin.copy:
+        path: /home/ansible/.ssh/id_rsa.pub
+        content: "{{ ansible_public_key }}"
+        mode: u=rw,go=r
+        owner: ansible
+        group: ansible
+      delegate_to: 127.0.0.1
 
     # Install desired software
     - name: Download, install, and configure Nginx
