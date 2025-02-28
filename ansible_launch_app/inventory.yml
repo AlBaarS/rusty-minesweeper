@@ -2,11 +2,11 @@ webservers:
   hosts:
     webserver01:
       ansible_host: "{{ ip_server_01.value }}"
-      ansible_ssh_private_key_file: /home/ansible/.ssh/id_rsa     # <- DO NOT parse the actual key in here!!! It will fail and
-      ansible_ssh_user: "{{ user }}"                  # be echoed in the gitlab terminal, introducing a security risk!
+      ansible_ssh_private_key_file: /ssh/id_rsa     # <- DO NOT parse the actual key in here!!! It will fail and
+      ansible_ssh_user: "{{ user }}"                # be echoed in the gitlab terminal, introducing a security risk!
       http_port: 22
     webserver02:
       ansible_host: "{{ ip_server_02.value }}"
-      ansible_ssh_private_key_file: /home/ansible/.ssh/id_rsa 
+      ansible_ssh_private_key_file: /ssh/id_rsa 
       ansible_ssh_user: "{{ user }}"
       http_port: 22

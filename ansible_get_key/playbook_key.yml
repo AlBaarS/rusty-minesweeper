@@ -11,17 +11,17 @@
     ansible_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_KEY_PUBLIC') }}"
 
   tasks:
-    - name: Create .ssh directory
-      ansible.builtin.file:
-        path: /home/ansible/.ssh
-        state: directory
-        mode: u=rwx
-        owner: ansible
-        group: ansible
+    # - name: Create .ssh directory
+    #   ansible.builtin.file:
+    #     path: /home/ansible/.ssh
+    #     state: directory
+    #     mode: u=rwx
+    #     owner: ansible
+    #     group: ansible
 
     - name: Copy private key 
       ansible.builtin.copy:
-        dest: /home/ansible/.ssh/id_rsa
+        dest: /ssh/id_rsa
         content: "{{ ansible_private_key }}"
         mode: u=rw
         owner: ansible
@@ -29,7 +29,7 @@
 
     - name: Copy public key
       ansible.builtin.copy:
-        dest: /home/ansible/.ssh/id_rsa.pub
+        dest: /ssh/id_rsa.pub
         content: "{{ ansible_public_key }}"
         mode: u=rw,go=r
         owner: ansible
