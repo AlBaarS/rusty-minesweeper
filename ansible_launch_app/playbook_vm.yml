@@ -20,7 +20,7 @@
           echo "Started the nginx installation step" > ~/nginx.begin.message
           sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
           sudo apt update
-          sudo apt install nginx
+          sudo apt install nginx-core
           sudo ufw app list
           echo "Finished the nginx installation step" > ~/nginx.end.message
 
