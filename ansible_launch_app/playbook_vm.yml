@@ -7,6 +7,8 @@
     infisical_cid: "{{ lookup('ansible.builtin.env', 'INFISICAL_CID') }}"
     infisical_pid: "{{ lookup('ansible.builtin.env', 'INFISICAL_PID') }}"
     infisical_cs: "{{ lookup('ansible.builtin.env', 'INFISICAL_CS') }}"
+    ci_project_dir: "{{ lookup('ansible.builtin.env', 'CI_PROJECT_DIR') }}"
+    ci_pipeline_iid: "{{ lookup('ansible.builtin.env', 'CI_PIPELINE_IID') }}"
     ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_01') }}"
     ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_02') }}"
     client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO').value }}"
@@ -14,45 +16,6 @@
 
 
   tasks:
-    # - name: Download, install, and configure Nginx
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       echo "Started the nginx installation step" > ~/nginx.begin.message
-    #       sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
-    #       sudo apt update
-    #       sudo apt install nginx-core
-    #       sudo ufw app list
-    #       echo "Finished the nginx installation step" > ~/nginx.end.message
-
-    # - name: Download and install Docker
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       echo "Started the Docker installation step" > ~/docker.begin.message
-    #       # Add Docker's official GPG key:
-    #       sudo apt-get update
-    #       sudo apt-get install ca-certificates curl
-    #       sudo install -m 0755 -d /etc/apt/keyrings
-    #       sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    #       sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-    #       # Add the repository to Apt sources:
-    #       echo \
-    #         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    #         $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-    #         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    #       sudo apt-get update
-
-    #       # Download and install Docker
-    #       sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-    #       # Test Docker installation
-    #       sudo docker run hello-world
-
-    #       echo "Finished the Docker installation step" > ~/docker.end.message
-
-
-
-    # The code below seems to work, but requires the user to have rights to apt. sudo cannot be used within the apt module.
     - name: Sanity check --> make two text files
       ansible.builtin.shell:
         cmd: |
@@ -112,6 +75,13 @@
         state: latest
         update_cache: true
       become: true
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Copy minesweeper onto the remote host
+      ansible.builtin.copy:
+        src: ${{ci_project_dir}}/rusty-minesweeper_v0.${{ci_pipeline_iid}}.tar.gz
+        dest: /home/ubuntu/rusty-minesweeper_v0.${{ci_pipeline_iid}}.tar.gz
       register: out
     - debug: var=out.stdout_lines
     

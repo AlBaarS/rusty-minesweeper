@@ -5,15 +5,14 @@ variables:
   DOCKER_ANSIBLE: serversideup/ansible:8.7.0-alpine3.20-python3.12
 
 stages:
-  # - test
-  # - build
-  # - release
-  - verify
-  - deploy
   - test
   - build
   - release
-  # - deploy
+  - verify
+  - deploy
+  # - test
+  # - build
+  # - release
 
 run_unit_tests:
   stage: test
@@ -82,9 +81,10 @@ verify_ansible_playbook:
   script:
     - ansible-playbook --syntax-check ansible_get_key/playbook_key.yml
     - ansible-playbook --check ansible_get_key/playbook_key.yml
+    - ansible-playbook ansible_get_key/playbook_key.yml           # <- the key needs to be present for the subsequent checks
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --check ansible_launch_app/playbook_vm.yml
-  # needs: ["build_docker_image"]
+  needs: ["build_docker_image"]
   allow_failure: true
 
 
