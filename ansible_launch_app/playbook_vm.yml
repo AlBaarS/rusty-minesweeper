@@ -14,85 +14,85 @@
 
 
   tasks:
+    # - name: Download, install, and configure Nginx
+    #   ansible.builtin.shell:
+    #     cmd: |
+    #       echo "Started the nginx installation step" > ~/nginx.begin.message
+    #       sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
+    #       sudo apt update
+    #       sudo apt install nginx-core
+    #       sudo ufw app list
+    #       echo "Finished the nginx installation step" > ~/nginx.end.message
+
+    # - name: Download and install Docker
+    #   ansible.builtin.shell:
+    #     cmd: |
+    #       echo "Started the Docker installation step" > ~/docker.begin.message
+    #       # Add Docker's official GPG key:
+    #       sudo apt-get update
+    #       sudo apt-get install ca-certificates curl
+    #       sudo install -m 0755 -d /etc/apt/keyrings
+    #       sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    #       sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    #       # Add the repository to Apt sources:
+    #       echo \
+    #         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    #         $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+    #         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    #       sudo apt-get update
+
+    #       # Download and install Docker
+    #       sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    #       # Test Docker installation
+    #       sudo docker run hello-world
+
+    #       echo "Finished the Docker installation step" > ~/docker.end.message
+
+
+
+    # The code below seems to work, but requires the user to have rights to apt. sudo cannot be used within the apt module.
     - name: Download, install, and configure Nginx
       ansible.builtin.shell:
         cmd: |
           echo "Started the nginx installation step" > ~/nginx.begin.message
           sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
-          sudo apt update
-          sudo apt install nginx-core
-          sudo ufw app list
-          echo "Finished the nginx installation step" > ~/nginx.end.message
 
-    - name: Download and install Docker
+    - name: Update the repository cache and install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: true
+    
+    - name: Allow Nginx through the firewall
+      ansible.builtin.shell:
+        cmd: sudo ufw allow 'Nginx HTTP'
+
+    - name: Update apt-get repositories and install ca-certificates
+      ansible.builtin.apt:
+        name: ca-certificates, curl
+        state: latest
+        update_cache: true
+
+    - name: Download and install Docker keyrings
       ansible.builtin.shell:
         cmd: |
-          echo "Started the Docker installation step" > ~/docker.begin.message
-          # Add Docker's official GPG key:
-          sudo apt-get update
-          sudo apt-get install ca-certificates curl
           sudo install -m 0755 -d /etc/apt/keyrings
           sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
           sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-          # Add the repository to Apt sources:
+    - name: Add Docker repository to Apt resources
+      ansible.builtin.shell:
+        cmd: |
           echo \
             "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
             $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-
-          # Download and install Docker
-          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-          # Test Docker installation
-          sudo docker run hello-world
-
-          echo "Finished the Docker installation step" > ~/docker.end.message
-
-    # - name: Download, install, and configure Nginx
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       sudo apt update
-    #       sudo apt install nginx
-    #       sudo ufw app list
-
-
-    # The code below seems to work, but requires the user to have rights to apt. sudo cannot be used within the apt module.
-    # - name: Update apt-get repositories and install ca-certificates
-    #   ansible.builtin.apt:
-    #     name: ca-certificates, curl
-    #     state: latest
-    #     update_cache: true
-
-    # - name: Download and install Docker keyrings
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       sudo install -m 0755 -d /etc/apt/keyrings
-    #       sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    #       sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-    # - name: Add Docker repository to Apt resources
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       echo \
-    #         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    #         $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-    #         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     
-    # - name: Update the repository cache and install Docker
-    #   ansible.builtin.apt:
-    #     name: docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
-    #     state: latest
-    #     update_cache: true
-    
-    # - name: Update the repository cache and install Nginx
-    #   ansible.builtin.apt:
-    #     name: nginx
-    #     state: latest
-    #     update_cache: true
-    
-    # - name: Allow Nginx through the firewall
-    #   ansible.builtin.shell:
-    #     cmd: sudo ufw allow 'Nginx HTTP'
+    - name: Update the repository cache and install Docker
+      ansible.builtin.apt:
+        name: docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
+        state: latest
+        update_cache: true
     
