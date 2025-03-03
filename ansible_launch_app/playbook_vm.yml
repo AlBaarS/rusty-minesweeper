@@ -65,7 +65,7 @@
         state: latest
         update_cache: true
       become: true
-      become_user: ansible
+      become_user: ubuntu
     
     - name: Allow Nginx through the firewall
       ansible.builtin.shell:
@@ -77,7 +77,7 @@
         state: latest
         update_cache: true
       become: true
-      become_user: ansible
+      become_user: ubuntu
 
     - name: Download and install Docker keyrings
       ansible.builtin.shell:
@@ -100,5 +100,5 @@
         state: latest
         update_cache: true
       become: true
-      become_user: ansible
+      become_user: ubuntu
     
