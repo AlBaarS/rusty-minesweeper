@@ -73,7 +73,7 @@
     - name: Allow Nginx through the firewall
       ansible.builtin.shell:
         cmd: |
-          sudo ufw enable
+          yes | sudo ufw enable
           sudo ufw allow 'Nginx HTTP'
       register: out
     - debug: var=out.stdout_lines
