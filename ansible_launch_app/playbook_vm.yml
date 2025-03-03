@@ -53,7 +53,7 @@
 
 
     # The code below seems to work, but requires the user to have rights to apt. sudo cannot be used within the apt module.
-    - name: Download, install, and configure Nginx
+    - name: Sanity check --> make two text files
       ansible.builtin.shell:
         cmd: |
           echo "Started the nginx installation step" > ~/nginx.begin.message
@@ -64,6 +64,8 @@
         name: nginx
         state: latest
         update_cache: true
+      become: true
+      become_user: ansible
     
     - name: Allow Nginx through the firewall
       ansible.builtin.shell:
@@ -74,6 +76,8 @@
         name: ca-certificates, curl
         state: latest
         update_cache: true
+      become: true
+      become_user: ansible
 
     - name: Download and install Docker keyrings
       ansible.builtin.shell:
@@ -95,4 +99,6 @@
         name: docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
         state: latest
         update_cache: true
+      become: true
+      become_user: ansible
     
