@@ -79,7 +79,7 @@
 
     - name: Create minesweeper directory
       ansible.builtin.file:
-        path: "/home/{{user}}/rusty-minesweeper/"
+        path: "/home/{{user}}/rusty-minesweeper"
         state: directory
         mode: '600'
         owner: "{{user}}"
