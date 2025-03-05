@@ -81,7 +81,7 @@
       ansible.builtin.file:
         path: "/home/{{user}}/rusty-minesweeper"
         state: directory
-        mode: '600'
+        mode: '700'
         owner: "{{user}}"
         group: "{{user}}"
 
@@ -90,7 +90,7 @@
         src: "{{ci_project_dir}}/rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz"
         dest: "/home/{{user}}/rusty-minesweeper/"
         copy: true
-        mode: '600'
+        mode: '700'
       register: out
     - debug: var=out.stdout_lines
 
