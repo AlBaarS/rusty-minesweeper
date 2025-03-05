@@ -94,9 +94,6 @@ verify_ansible_playbook:
     - ansible-playbook ansible_get_key/playbook_key.yml           # <- the key needs to be present for the subsequent checks
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --check ansible_launch_app/playbook_vm.yml
-    - ls -lah
-    - pwd
-    - echo $CI_PROJECT_DIR
   needs: ["build_docker_image"]
   resource_group: default
   allow_failure: true
@@ -119,9 +116,6 @@ deploy_minesweeper:
     - ansible-galaxy collection install infisical.vault
     - cp ansible_launch_app/.ansible.cfg ~/.ansible.cfg
   script:
-    - ls -lah
-    - pwd
-    - echo $CI_PROJECT_DIR
     - ansible-playbook ansible_get_key/playbook_key.yml
     - ansible-playbook -v --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml
   # needs: ["verify_ansible_playbook"]

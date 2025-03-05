@@ -16,7 +16,9 @@
 
 
   tasks:
-    - name: Sanity check --> make two text files
+
+    # Check if Ansible can connect and use sudo
+    - name: Connection check --> make two text files
       ansible.builtin.shell:
         cmd: |
           echo "Started the nginx installation step" > ~/nginx.begin.message
@@ -24,6 +26,9 @@
       register: out
     - debug: var=out.stdout_lines
 
+
+
+    # Install and configure nginx
     - name: Update the repository cache and install Nginx
       ansible.builtin.apt:
         name: nginx
@@ -40,6 +45,35 @@
       register: out
     - debug: var=out.stdout_lines
 
+    - name: Create nginx directory
+      ansible.builtin.file:
+        path: "/home/{{user}}/nginx"
+        state: directory
+        mode: '700'
+        owner: "{{user}}"
+        group: "{{user}}"
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Copy nginx.conf onto the remote host
+      ansible.builtin.unarchive:
+        src: "{{ci_project_dir}}/nginx/nginx.conf"
+        dest: "/home/{{user}}/nginx/"
+        copy: true
+        mode: '700'
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Add IP address to the nginx config file
+      ansible.builtin.shell:
+        cmd: |
+          "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"
+      register: out
+    - debug: var=out.stdout_lines
+
+
+
+    # Install and configure docker
     - name: Update apt-get repositories and install ca-certificates
       ansible.builtin.apt:
         name: ca-certificates, curl
@@ -77,6 +111,17 @@
       register: out
     - debug: var=out.stdout_lines
 
+    - name: Start and enable the docker daemon
+      ansible.builtin.systemd_service:
+        state: started
+        enabled: true
+        name: docker
+      register: out
+    - debug: var=out.stdout_lines
+
+
+
+    # Install Minesweeper
     - name: Create minesweeper directory
       ansible.builtin.file:
         path: "/home/{{user}}/rusty-minesweeper"
@@ -84,6 +129,8 @@
         mode: '700'
         owner: "{{user}}"
         group: "{{user}}"
+      register: out
+    - debug: var=out.stdout_lines
 
     - name: Copy minesweeper onto the remote host
       ansible.builtin.unarchive:
@@ -93,7 +140,14 @@
         mode: '700'
       register: out
     - debug: var=out.stdout_lines
-
-    # - name: Launch minesweeper
+    
+    - name: Launch minesweeper
+      ansible.builtin.shell:
+        cmd: |
+          'cd rusty-minesweeper/'
+          'docker load -i rusty-minesweeper.tar'
+          'docker compose up -d'
+      register: out
+    - debug: var=out.stdout_lines
 
     
