@@ -56,10 +56,9 @@
     - debug: var=out.stdout_lines
 
     - name: Copy nginx.conf onto the remote host
-      ansible.builtin.unarchive:
+      ansible.builtin.copy:
         src: "{{ci_project_dir}}/nginx/nginx.conf"
         dest: "/home/{{user}}/nginx/"
-        copy: true
         mode: '700'
       register: out
     - debug: var=out.stdout_lines
