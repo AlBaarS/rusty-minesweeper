@@ -27,8 +27,8 @@ run_unit_tests:
 build_docker_image:
   stage: build
   image: $DOCKER_DOCKER
-  dependencies:
-  - run_unit_tests
+  # dependencies:
+  # - run_unit_tests
   services:
     - name: docker:27.5.1-dind
       alias: docker
@@ -41,7 +41,7 @@ build_docker_image:
     - docker save -o rusty-minesweeper.tar rusty-minesweeper-backend rusty-minesweeper-frontend mongo
     - tar -zcf rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz rusty-minesweeper.tar docker-compose.yml
     - echo "OLD_CI_JOB_ID=$CI_JOB_ID" > envar.txt
-  # needs: ["run_unit_tests"]
+  needs: ["run_unit_tests"]
   resource_group: default
   artifacts:
     name: rusty-minesweeper
@@ -56,8 +56,8 @@ release_minesweeper_tarball:
   image: $DOCKER_GITLAB_RELEASE
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  dependencies:
-  - build_docker_image
+  # dependencies:
+  # - build_docker_image
   before_script:
     - source envar.txt
     - git config --global user.email "ci-bot@git.sogyo.nl"
@@ -72,7 +72,7 @@ release_minesweeper_tarball:
         --description "Release "v0.$CI_PIPELINE_IID""
         --ref "$CI_COMMIT_SHA"
         --assets-link "{\"name\":\"Docker image\",\"url\":\"$CI_PROJECT_URL/-/jobs/$OLD_CI_JOB_ID/artifacts/file/rusty-minesweeper_v0.$CI_PIPELINE_IID.tar.gz\"}"
-  # needs: ["build_docker_image"]
+  needs: ["build_docker_image"]
   resource_group: default
 
 
@@ -82,8 +82,8 @@ verify_ansible_playbook:
   image: 
     name: $DOCKER_ANSIBLE
     entrypoint: ['sh', '-c', 'exec su ansible -c sh']
-  dependencies:
-  - build_docker_image
+  # dependencies:
+  # - build_docker_image
   before_script:
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
@@ -94,7 +94,7 @@ verify_ansible_playbook:
     - ansible-playbook ansible_get_key/playbook_key.yml           # <- the key needs to be present for the subsequent checks
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --syntax-check ansible_launch_app/playbook_vm.yml
     - ansible-playbook --inventory ansible_launch_app/inventory.yml --check ansible_launch_app/playbook_vm.yml
-  # needs: ["build_docker_image"]
+  needs: ["build_docker_image"]
   resource_group: default
   allow_failure: true
 
@@ -108,8 +108,8 @@ deploy_minesweeper:
   rules:
     - if: $CI_COMMIT_BRANCH
       when: manual
-  dependencies:
-  - verify_ansible_playbook
+  # dependencies:
+  # - verify_ansible_playbook
   before_script:
     - pip install infisicalsdk
     - ansible-galaxy collection install infisical.vault
@@ -118,5 +118,5 @@ deploy_minesweeper:
     - ls -lah
     - ansible-playbook ansible_get_key/playbook_key.yml
     - ansible-playbook -v --inventory ansible_launch_app/inventory.yml ansible_launch_app/playbook_vm.yml
-  # needs: ["verify_ansible_playbook"]
+  needs: ["verify_ansible_playbook"]
   resource_group: default
