@@ -77,10 +77,23 @@
       register: out
     - debug: var=out.stdout_lines
 
+    - name: Create minesweeper directory
+      ansible.builtin.file:
+        path: "/home/{{user}}/rusty-minesweeper/"
+        state: directory
+        mode: '600'
+        owner: "{{user}}"
+        group: "{{user}}"
+
     - name: Copy minesweeper onto the remote host
-      ansible.builtin.copy:
+      ansible.builtin.unarchive:
         src: "{{ci_project_dir}}/rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz"
-        dest: "/home/ubuntu/rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz"
+        dest: "/home/{{user}}/rusty-minesweeper/"
+        copy: true
+        mode: '600'
       register: out
     - debug: var=out.stdout_lines
+
+    # - name: Launch minesweeper
+
     
