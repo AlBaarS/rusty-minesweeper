@@ -59,14 +59,15 @@
       ansible.builtin.copy:
         src: "{{ci_project_dir}}/nginx/nginx.conf"
         dest: "/home/{{user}}/nginx/"
-        mode: '700'
+        mode: '600'
       register: out
     - debug: var=out.stdout_lines
 
     - name: Add IP address to the nginx config file
       ansible.builtin.shell:
         cmd: |
-          "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"
+          "sleep 5s"    # wait to ensure that the file is present
+          "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
       register: out
     - debug: var=out.stdout_lines
 
