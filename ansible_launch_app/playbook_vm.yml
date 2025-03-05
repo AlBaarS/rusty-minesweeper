@@ -79,7 +79,7 @@
 
     - name: Copy minesweeper onto the remote host
       ansible.builtin.copy:
-        src: rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz
+        src: ${{ci_project_dir}}/rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz
         dest: /home/ubuntu/rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz
       register: out
     - debug: var=out.stdout_lines
