@@ -193,6 +193,7 @@
           sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
 
 
@@ -205,6 +206,7 @@
       become: true
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
     
     - name: Allow Nginx through the firewall
       ansible.builtin.shell:
@@ -212,6 +214,7 @@
           sudo ufw allow 'Nginx HTTP'
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Create nginx directory
       ansible.builtin.file:
@@ -222,6 +225,7 @@
         group: "{{user}}"
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Copy nginx.conf onto the remote host
       ansible.builtin.copy:
@@ -230,6 +234,7 @@
         mode: '600'
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Add IP address to the nginx config file
       ansible.builtin.shell:
@@ -238,6 +243,7 @@
           "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
 
 
@@ -250,6 +256,7 @@
       become: true
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Download and install Docker keyrings
       ansible.builtin.shell:
@@ -259,6 +266,7 @@
           sudo chmod a+r /etc/apt/keyrings/docker.asc
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Add Docker repository to Apt resources
       ansible.builtin.shell:
@@ -269,6 +277,7 @@
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
     
     - name: Update the repository cache and install Docker
       ansible.builtin.apt:
@@ -278,6 +287,7 @@
       become: true
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Start and enable the docker daemon
       ansible.builtin.systemd_service:
@@ -286,6 +296,7 @@
         name: docker
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
 
 
@@ -299,6 +310,7 @@
         group: "{{user}}"
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
 
     - name: Copy minesweeper onto the remote host
       ansible.builtin.unarchive:
@@ -308,6 +320,7 @@
         mode: '700'
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
     
     - name: Launch minesweeper
       ansible.builtin.shell:
@@ -317,3 +330,4 @@
           'docker compose up -d'
       register: out
     - debug: var=out.stdout_lines
+    - debug: var=out.stderr_lines
