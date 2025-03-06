@@ -1,3 +1,171 @@
+# ---
+# - name: Install the necessary software on the remote hosts
+#   hosts: webservers
+#   remote_user: ubuntu
+
+#   vars:
+#     infisical_cid: "{{ lookup('ansible.builtin.env', 'INFISICAL_CID') }}"
+#     infisical_pid: "{{ lookup('ansible.builtin.env', 'INFISICAL_PID') }}"
+#     infisical_cs: "{{ lookup('ansible.builtin.env', 'INFISICAL_CS') }}"
+#     ci_project_dir: "{{ lookup('ansible.builtin.env', 'CI_PROJECT_DIR') }}"
+#     ci_pipeline_iid: "{{ lookup('ansible.builtin.env', 'CI_PIPELINE_IID') }}"
+#     ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_01') }}"
+#     ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_02') }}"
+#     # client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO').value }}"
+#     user: ubuntu
+
+
+#   tasks:
+
+#     # Check if Ansible can connect and use sudo
+#     - name: Connection check --> make two text files
+#       ansible.builtin.shell:
+#         cmd: |
+#           echo "Started the nginx installation step" > ~/nginx.begin.message
+#           sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+
+
+#     # Install and configure nginx
+#     - name: Update the repository cache and install Nginx
+#       ansible.builtin.apt:
+#         name: nginx
+#         state: latest
+#         update_cache: true
+#       become: true
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+    
+#     - name: Allow Nginx through the firewall
+#       ansible.builtin.shell:
+#         cmd: |
+#           sudo ufw allow 'Nginx HTTP'
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Create nginx directory
+#       ansible.builtin.file:
+#         path: "/home/{{user}}/nginx"
+#         state: directory
+#         mode: '700'
+#         owner: "{{user}}"
+#         group: "{{user}}"
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Copy nginx.conf onto the remote host
+#       ansible.builtin.copy:
+#         src: "{{ci_project_dir}}/nginx/nginx.conf"
+#         dest: "/home/{{user}}/nginx/"
+#         mode: '600'
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Add IP address to the nginx config file
+#       ansible.builtin.shell:
+#         cmd: |
+#           "pwd"
+#           "echo ~"
+#           "ls -lah /home/{{user}}/nginx/"    # check the directory
+#           "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+
+
+#     # Install and configure docker
+#     - name: Update apt-get repositories and install ca-certificates
+#       ansible.builtin.apt:
+#         name: ca-certificates, curl
+#         state: latest
+#         update_cache: true
+#       become: true
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Download and install Docker keyrings
+#       ansible.builtin.shell:
+#         cmd: |
+#           sudo install -m 0755 -d /etc/apt/keyrings
+#           sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+#           sudo chmod a+r /etc/apt/keyrings/docker.asc
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Add Docker repository to Apt resources
+#       ansible.builtin.shell:
+#         cmd: |
+#           echo \
+#             "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+#             $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+#             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+    
+#     - name: Update the repository cache and install Docker
+#       ansible.builtin.apt:
+#         name: docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
+#         state: latest
+#         update_cache: true
+#       become: true
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Start and enable the docker daemon
+#       ansible.builtin.systemd_service:
+#         state: started
+#         enabled: true
+#         name: docker
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+
+
+#     # Install Minesweeper
+#     - name: Create minesweeper directory
+#       ansible.builtin.file:
+#         path: "/home/{{user}}/rusty-minesweeper"
+#         state: directory
+#         mode: '700'
+#         owner: "{{user}}"
+#         group: "{{user}}"
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
+#     - name: Copy minesweeper onto the remote host
+#       ansible.builtin.unarchive:
+#         src: "{{ci_project_dir}}/rusty-minesweeper_v0.{{ci_pipeline_iid}}.tar.gz"
+#         dest: "/home/{{user}}/rusty-minesweeper/"
+#         copy: true
+#         mode: '700'
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+    
+#     - name: Launch minesweeper
+#       ansible.builtin.shell:
+#         cmd: |
+#           'cd rusty-minesweeper/'
+#           'docker load -i rusty-minesweeper.tar'
+#           'docker compose up -d'
+#       register: out
+#     - debug: var=out.stdout_lines
+#     - debug: var=out.stderr_lines
+
 ---
 - name: Install the necessary software on the remote hosts
   hosts: webservers
@@ -11,7 +179,7 @@
     ci_pipeline_iid: "{{ lookup('ansible.builtin.env', 'CI_PIPELINE_IID') }}"
     ip_server_01: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_01') }}"
     ip_server_02: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='VM_IP_02') }}"
-    client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO').value }}"
+    # client_public_key: "{{ lookup('infisical.vault.read_secrets', universal_auth_client_id=infisical_cid, universal_auth_client_secret=infisical_cs, project_id=infisical_pid, path='/', env_slug='dev', secret_name='SSHKEY_ABAARS_SOGYO').value }}"
     user: ubuntu
 
 
@@ -25,7 +193,6 @@
           sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
 
 
@@ -38,7 +205,6 @@
       become: true
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
     
     - name: Allow Nginx through the firewall
       ansible.builtin.shell:
@@ -46,7 +212,6 @@
           sudo ufw allow 'Nginx HTTP'
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Create nginx directory
       ansible.builtin.file:
@@ -57,7 +222,6 @@
         group: "{{user}}"
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Copy nginx.conf onto the remote host
       ansible.builtin.copy:
@@ -66,18 +230,14 @@
         mode: '600'
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Add IP address to the nginx config file
       ansible.builtin.shell:
         cmd: |
-          "pwd"
-          "echo ~"
-          "ls -lah /home/{{user}}/nginx/"    # check the directory
+          "sleep 5s"    # wait to ensure that the file is present
           "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
 
 
@@ -90,7 +250,6 @@
       become: true
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Download and install Docker keyrings
       ansible.builtin.shell:
@@ -100,7 +259,6 @@
           sudo chmod a+r /etc/apt/keyrings/docker.asc
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Add Docker repository to Apt resources
       ansible.builtin.shell:
@@ -111,7 +269,6 @@
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
     
     - name: Update the repository cache and install Docker
       ansible.builtin.apt:
@@ -121,7 +278,6 @@
       become: true
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Start and enable the docker daemon
       ansible.builtin.systemd_service:
@@ -130,7 +286,6 @@
         name: docker
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
 
 
@@ -144,7 +299,6 @@
         group: "{{user}}"
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
 
     - name: Copy minesweeper onto the remote host
       ansible.builtin.unarchive:
@@ -154,7 +308,6 @@
         mode: '700'
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
     
     - name: Launch minesweeper
       ansible.builtin.shell:
@@ -164,5 +317,3 @@
           'docker compose up -d'
       register: out
     - debug: var=out.stdout_lines
-    - debug: var=out.stderr_lines
-    
