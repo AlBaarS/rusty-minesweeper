@@ -28,53 +28,6 @@
 
 
 
-    # Install and configure nginx
-    - name: Update the repository cache and install Nginx
-      ansible.builtin.apt:
-        name: nginx
-        state: latest
-        update_cache: true
-      become: true
-      register: out
-    - debug: var=out.stdout_lines
-    
-    - name: Allow Nginx through the firewall
-      ansible.builtin.shell:
-        cmd: |
-          sudo ufw allow 'Nginx HTTP'
-      register: out
-    - debug: var=out.stdout_lines
-
-    - name: Create nginx directory
-      ansible.builtin.file:
-        path: "/home/{{user}}/nginx"
-        state: directory
-        mode: '700'
-        owner: "{{user}}"
-        group: "{{user}}"
-      register: out
-    - debug: var=out.stdout_lines
-
-    - name: Copy nginx.conf onto the remote host
-      ansible.builtin.copy:
-        src: "{{ci_project_dir}}/nginx/nginx.conf"
-        dest: "/home/{{user}}/nginx/"
-        mode: '600'
-      register: out
-    - debug: var=out.stdout_lines
-
-    - name: Add IP address to the nginx config file
-      ansible.builtin.shell:
-        cmd: |
-          "pwd"
-          "echo ~"
-          "ls -lah /home/{{user}}/nginx/"    # check the directory
-          "sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /home/{{user}}/nginx/nginx.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
-      register: out
-    - debug: var=out.stdout_lines
-
-
-
     # Install and configure docker
     - name: Update apt-get repositories and install ca-certificates
       ansible.builtin.apt:
@@ -124,6 +77,52 @@
 
 
 
+    # Install and configure nginx
+    - name: Update the repository cache and install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: true
+      become: true
+      register: out
+    - debug: var=out.stdout_lines
+    
+    - name: Allow Nginx through the firewall
+      ansible.builtin.shell:
+        cmd: |
+          sudo ufw allow 'Nginx HTTP'
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Create nginx directory
+      ansible.builtin.file:
+        path: "/home/{{user}}/nginx"
+        state: directory
+        mode: '700'
+        owner: "{{user}}"
+        group: "{{user}}"
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Copy nginx.conf onto the remote host
+      ansible.builtin.copy:
+        src: "{{ci_project_dir}}/nginx/minesweeper.conf"
+        dest: "/etc/nginx/conf.d/"
+        mode: '600'
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Add IP address to the nginx config file
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          "sudo sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /etc/nginx/conf.d/minesweeper.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
+          "sudo nginx -s reload"
+      register: out
+    - debug: var=out.stdout_lines
+
+
+
     # Install Minesweeper
     - name: Create minesweeper directory
       ansible.builtin.file:
@@ -148,7 +147,8 @@
       ansible.builtin.shell:
         cmd: |
           'cd rusty-minesweeper/'
-          'docker load -i rusty-minesweeper.tar'
-          'docker compose up -d'
+          'sudo docker load -i rusty-minesweeper.tar'
+          'sudo docker compose up -d'
+          'sudo nginx -s reload' # reload just to be safe
       register: out
     - debug: var=out.stdout_lines
