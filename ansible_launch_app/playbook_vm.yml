@@ -20,6 +20,7 @@
     # Check if Ansible can connect and use sudo
     - name: Connection check --> make two text files
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: |
           echo "Started the nginx installation step" > ~/nginx.begin.message
           sudo echo "Sudo also works as it should" > /home/ubuntu/sudo.test.message
@@ -40,6 +41,7 @@
 
     - name: Download and install Docker keyrings
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: |
           sudo install -m 0755 -d /etc/apt/keyrings
           sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
@@ -49,6 +51,7 @@
 
     - name: Add Docker repository to Apt resources
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: |
           echo \
             "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
@@ -89,6 +92,7 @@
     
     - name: Allow Nginx through the firewall
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: |
           sudo ufw allow 'Nginx HTTP'
       register: out
@@ -114,6 +118,7 @@
 
     - name: Move minesweeper.conf to the correct destination
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: |
           "sudo mv /home/{{user}}/nginx/minesweeper.conf /etc/nginx/conf.d/minesweeper.conf"
           "rm -r /home/{{user}}/nginx"
@@ -153,6 +158,7 @@
     
     - name: Launch minesweeper
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: |
           'cd rusty-minesweeper/'
           'sudo docker load -i rusty-minesweeper.tar'
