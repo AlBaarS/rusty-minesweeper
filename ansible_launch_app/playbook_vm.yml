@@ -104,11 +104,19 @@
       register: out
     - debug: var=out.stdout_lines
 
-    - name: Copy nginx.conf onto the remote host
+    - name: Copy nginx minesweeper.conf onto the remote host
       ansible.builtin.copy:
         src: "{{ci_project_dir}}/nginx/minesweeper.conf"
-        dest: "/etc/nginx/conf.d/"
+        dest: "/home/{{user}}/nginx/minesweeper.conf"
         mode: '600'
+      register: out
+    - debug: var=out.stdout_lines
+
+    - name: Move minesweeper.conf to the correct destination
+      ansible.builtin.shell:
+        cmd: |
+          "sudo mv /home/{{user}}/nginx/minesweeper.conf /etc/nginx/conf.d/minesweeper.conf"
+          "rm -r /home/{{user}}/nginx"
       register: out
     - debug: var=out.stdout_lines
 
