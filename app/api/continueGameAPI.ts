@@ -16,7 +16,7 @@ const continueGameAPI = async (user: any): Promise<object> => {
     
     if (response.ok) {
         const gameState = await response.json();
-        console.log("continueGameAPI call successful:", gameState);
+        console.log("continueGameAPI call successful");
         return gameState.playboard as GameState;
     } else {
         return {
