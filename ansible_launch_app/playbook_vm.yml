@@ -109,23 +109,25 @@
     - debug: var=out.stdout_lines
 
     - name: Copy nginx minesweeper.conf onto the remote host
+      become: true
       ansible.builtin.copy:
         src: "{{ci_project_dir}}/nginx/minesweeper.conf"
-        dest: "/home/{{user}}/nginx/minesweeper.conf"
+        dest: "/etc/nginx/conf.d/minesweeper.conf"
         mode: '600'
       register: out
     - debug: var=out.stdout_lines
 
-    - name: Move minesweeper.conf to the correct destination
-      ansible.builtin.shell:
-        executable: /bin/bash
-        cmd: |
-          "sudo mv /home/{{user}}/nginx/minesweeper.conf /etc/nginx/conf.d/minesweeper.conf"
-          "rm -r /home/{{user}}/nginx"
-      register: out
-    - debug: var=out.stdout_lines
+    # - name: Move minesweeper.conf to the correct destination
+    #   ansible.builtin.shell:
+    #     executable: /bin/bash
+    #     cmd: |
+    #       "sudo mv /home/{{user}}/nginx/minesweeper.conf /etc/nginx/conf.d/minesweeper.conf"
+    #       "rm -r /home/{{user}}/nginx"
+    #   register: out
+    # - debug: var=out.stdout_lines
 
     - name: Add IP address to the nginx config file
+      become: true
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
@@ -155,12 +157,17 @@
         mode: '700'
       register: out
     - debug: var=out.stdout_lines
+
+    - name: Get the address of the back-end onto the VM
+      ansible.builtin.copy:
+        content: NEXT_PUBLIC_API_URL={{ansible_host}}/backend
+        dest: "/home/{{user}}/rusty-minesweeper/.env"
     
     - name: Launch minesweeper
       ansible.builtin.shell:
         executable: /bin/bash
+        chdir: /home/{{user}}/rusty-minesweeper
         cmd: |
-          'cd rusty-minesweeper/'
           'sudo docker load -i rusty-minesweeper.tar'
           'sudo docker compose up -d'
           'sudo nginx -s reload' # reload just to be safe

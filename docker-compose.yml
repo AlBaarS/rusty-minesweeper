@@ -12,6 +12,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
 
   mongo:
     image: mongo:8
