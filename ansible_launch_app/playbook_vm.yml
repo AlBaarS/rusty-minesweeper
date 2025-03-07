@@ -131,7 +131,7 @@
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
-          "sudo sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /etc/nginx/conf.d/minesweeper.conf"  # ansible_host is a built-in variable to parse the IP address (and possibly other things)
+          "sudo sed -i 's/_PLACEHOLDER_IP_/{{ansible_host}}/g' /etc/nginx/conf.d/minesweeper.conf"
           "sudo nginx -s reload"
       register: out
     - debug: var=out.stdout_lines
@@ -170,6 +170,6 @@
         cmd: |
           'sudo docker load -i rusty-minesweeper.tar'
           'sudo docker compose up -d'
-          'sudo nginx -s reload' # reload just to be safe
+          'sudo nginx -s reload'
       register: out
     - debug: var=out.stdout_lines
