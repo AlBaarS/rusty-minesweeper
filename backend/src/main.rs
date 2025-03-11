@@ -40,7 +40,7 @@ async fn main() {
         .layer(cors); // Attach the CORS layer
 
     // Start the server
-    axum::Server::bind(&api_uri.parse().unwrap())
+    axum::Server::bind(&"127.0.0.1".parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
