@@ -151,7 +151,7 @@
 
     - name: Get the address of the back-end onto the VM
       ansible.builtin.copy:
-        content: NEXT_PUBLIC_API_URL=http://{{ansible_host}}/backend
+        content: NEXT_PUBLIC_API_URL="http://{{ansible_host}}/backend\n"
         dest: "/home/{{user}}/rusty-minesweeper/.env"
     
     - name: Launch minesweeper
