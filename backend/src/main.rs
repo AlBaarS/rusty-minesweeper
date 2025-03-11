@@ -2,6 +2,8 @@ mod api;
 mod domain;
 mod db_connection;
 
+use std::env;
+
 use axum::{
     http::Method,
     routing::{get, post},
@@ -11,6 +13,12 @@ use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
 async fn main() {
+    // Get the IP address of the running server
+    let api_uri: String = match env::var("NEXT_PUBLIC_API_URL") {
+        Ok(val) => val,
+        Err(e) => panic!("Could not find NEXT_PUBLIC_API_URL environment variable, {}", e),
+    };
+
     // Define the CORS layer
     let cors = CorsLayer::new()
         .allow_origin(Any) // Allow all origins
@@ -32,7 +40,7 @@ async fn main() {
         .layer(cors); // Attach the CORS layer
 
     // Start the server
-    axum::Server::bind(&"0.0.0.0:3001".parse().unwrap())
+    axum::Server::bind(&api_uri.parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
