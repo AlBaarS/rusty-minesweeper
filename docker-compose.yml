@@ -6,7 +6,6 @@ services:
       - "3001:3001"
     environment:
       DATABASE_URL: "mongodb://mongo:27017/mydb"
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
 
   frontend:
     image: rusty-minesweeper-frontend:latest

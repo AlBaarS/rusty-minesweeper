@@ -13,12 +13,6 @@ use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
 async fn main() {
-    // Get the IP address of the running server
-    let api_uri: String = match env::var("NEXT_PUBLIC_API_URL") {
-        Ok(val) => val,
-        Err(e) => panic!("Could not find NEXT_PUBLIC_API_URL environment variable, {}", e),
-    };
-
     // Define the CORS layer
     let cors = CorsLayer::new()
         .allow_origin(Any) // Allow all origins
