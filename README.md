@@ -56,6 +56,14 @@ The script assumes the user has access to the systemctl command. Use 'sudo' if y
 
 To terminate, simply do `Ctrl + C` __twice__ while in your terminal window that is running the programme.
 
+# Deploy using Ansible
+
+This feature was sadly not completed before I had to move on to my new employer, but it is very close. Sadly, the final step doesn't seem to be possible without a major revision.
+
+Currently, Ansible puts all the required files and installs the required programmes onto a virtual machine and starts the docker container. It gets the authentication and addresses for these VMs dynamically from an Infisical vault. But sadly the docker container doesn't work properly because the IP addresses need to be passed dynamically at build time. The Ansible step only triggers *after* the build has been made. I suspect that the solution would be to add a new script (with Ansible or something else) to retrieve the IP addresses from the vault before build time, build a container for each VM, and then send each individual container off to their respective machine. But sadly, I do not have the time to implement that.
+
+To find out how the machines are created, I direct you to take a look at my [terraform](https://git.sogyo.nl/abaars/mancala-terraform) project ([github link](https://github.com/AlBaarS/terraform_experimentation) for non-sogyo users).
+
 # MoSCoW
 ## Must
 * Generate a board with clickable squares
