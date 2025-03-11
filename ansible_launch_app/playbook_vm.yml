@@ -160,7 +160,7 @@
         chdir: /home/{{user}}/rusty-minesweeper
         cmd: |
           sudo docker load -i rusty-minesweeper.tar
-          sudo docker compose up -d
+          sudo docker compose --env-file .env up -d
           sudo nginx -s reload
       register: out
     - debug: var=out.stdout_lines
