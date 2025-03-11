@@ -77,10 +77,10 @@ export const MinesweeperStart = () => {
         let button_text: string = "";
         if (continue_game === undefined) {
             button_text = "Check DB";
-        } else if (continue_game === false) {
-            button_text = "Game not found"
-        } else {
+        } else if (continue_game === true) {
             button_text = "Game found"
+        } else {
+            button_text = "Game not found"
         };
 
         return(
@@ -104,10 +104,10 @@ export const MinesweeperStart = () => {
                 className={getButtonMarkup("blue")}
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                disabled={!continue_game}
+                disabled={!(continue_game === true)}
                 onClick={() => onSubmitContinue()}
             >
-                Continue
+                Continue game
             </button>
         )
     }
